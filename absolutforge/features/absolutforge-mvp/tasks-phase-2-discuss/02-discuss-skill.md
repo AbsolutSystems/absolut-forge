@@ -1,7 +1,7 @@
 # Phase 2: Implement the discuss skill contract
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss.md`
@@ -51,7 +51,7 @@ intent through amendments, and hand the accepted Brief directly to `build`.
 ## Tasks
 
 ### Task 1: Define failing discuss contract tests
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-7, AC-8, AC-9, AC-12, AC-13, AC-15
 **Test-first:** yes
 **Produces:** `tests.test_discuss_contract.DiscussSkillContractTests`
@@ -74,7 +74,7 @@ intent through amendments, and hand the accepted Brief directly to `build`.
 - `test_untrusted_content_and_secret_redaction_AC12_AC13` contains `[AC-12] [AC-13]`; `test_explicit_only_activation_AC15` contains `[AC-15]`.
 
 ### Task 2: Implement the discuss skill
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-7, AC-8, AC-9, AC-12, AC-13, AC-15
 **Test-first:** yes
 **Produces:** explicit-only host-agnostic `skills/discuss/SKILL.md` plus `skills/discuss/agents/openai.yaml`
@@ -118,4 +118,6 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Implemented one host-agnostic explicit-only discovery contract with native Claude/Codex handoff examples.
+- Contract tests use only the Python standard library and assert all traced AC tokens plus forbidden-stage absence.
+- PyYAML-based quick validation was unavailable; the Codex metadata was parsed successfully with Ruby's standard YAML parser.
