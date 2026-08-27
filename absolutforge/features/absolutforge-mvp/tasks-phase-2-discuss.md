@@ -37,14 +37,14 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Extend canonical contracts and record consultation ADR
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss/01-contracts-and-adr.md`
 **Depends on:** none
 **Write scope:** `references/artifact-contracts.md`, `references/harness-command-contract.md`, `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`
 **Risk:** low
 
 ### Phase 2: Implement the discuss skill contract
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss/02-discuss-skill.md`
 **Depends on:** Phase 1
 **Write scope:** `skills/discuss/SKILL.md`, `skills/discuss/agents/openai.yaml`, `tests/test_discuss_contract.py`
