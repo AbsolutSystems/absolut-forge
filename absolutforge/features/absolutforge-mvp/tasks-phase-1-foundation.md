@@ -1,7 +1,7 @@
 # Tasks: Phase 1 — Product foundation
 
 ## Status
-in-progress
+completed
 
 ## Source
 
@@ -73,3 +73,10 @@ orchestrated
 - Workers own only their phase file, their declared Write Scope, and `implementation-context.md`.
 - Do not mark a phase completed until focused verification and phase review pass.
 - Do not install or enable either plugin as part of verification.
+
+## Decision Review
+- Report: `docs/onboarding/implementation-decisions-phase-1-foundation-2026-08-27.html`
+- Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008, DEC-009, DEC-010, DEC-011, DEC-012, DEC-013, DEC-014, DEC-015
+- Status: accepted
+- Reviewed: 2026-08-27
+- Notes: User accepted DEC-001 through DEC-015 without requested changes.

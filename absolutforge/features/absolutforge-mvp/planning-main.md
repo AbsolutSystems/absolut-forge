@@ -89,7 +89,7 @@ implementation phases when their exact contracts are finalized.
 
 | Phase | Name | Goal | Status | Plan |
 |---|---|---|---|---|
-| 1 | Product foundation | Establish the repository, contracts, shared skill tree, and Claude/Codex manifests | Planned | `planning-phase-1-foundation.md` |
+| 1 | Product foundation | Establish the repository, contracts, shared skill tree, and Claude/Codex manifests | Zrobiona | `planning-phase-1-foundation.md` |
 | 2 | Discuss | Deliver adaptive discovery, immutable Feature Briefs, amendments, and ADR capture | To plan | `planning-phase-2-discuss.md` |
 | 3 | Build | Deliver autonomous implementation, conditional Execution Maps, resumption, and verification | To plan | `planning-phase-3-build.md` |
 | 4 | Review | Deliver one independent evidence-based review and focused fix loop | To plan | `planning-phase-4-review.md` |

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AbsolutForge — decyzje implementacyjne Fazy 1</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#fffaf5; --panel:#ffffff; --text:#292524; --muted:#78716c; --line:#fed7aa; --accent:#c2410c; --ok:#166534; --warn:#9a3412; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --panel:#292524; --text:#fafaf9; --muted:#d6d3d1; --line:#7c2d12; --accent:#fb923c; --ok:#86efac; --warn:#fdba74; } }
+    * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui,sans-serif; }
+    main { width:min(1080px, calc(100% - 32px)); margin:40px auto 80px; }
+    h1,h2 { line-height:1.15; } h1 { font-size:clamp(2rem,5vw,3.5rem); margin-bottom:.4rem; } h2 { margin-top:2.5rem; }
+    .lead,.muted { color:var(--muted); } .summary { border-left:5px solid var(--accent); padding:16px 20px; background:var(--panel); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; }
+    .card h3 { margin:0 0 8px; } .tag { color:var(--accent); font-weight:700; } .risk-low { color:var(--ok); } .risk-medium { color:var(--warn); }
+    code { overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; background:var(--panel); } th,td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    .question { font-weight:700; color:var(--accent); } a { color:var(--accent); }
+  </style>
+</head>
+<body><main>
+  <p class="tag">AbsolutForge · Faza 1 · 2026-08-27</p>
+  <h1>Decyzje implementacyjne</h1>
+  <p class="lead">Checkpoint po finalnym review implementacji. Raport opisuje fakty, wybory i ograniczenia powstałe podczas budowy fundamentu produktu.</p>
+
+  <section class="summary">
+    <h2>TL;DR</h2>
+    <p>Zapisano 15 remarks: 12 potwierdzonych faktów lub realizacji zaakceptowanego planu oraz 3 wybory implementacyjne. Ryzyko ogólne jest niskie. Jedyna niepełna walidacja to opcjonalny walidator Codex, pominięty bez instalowania PyYAML; pokrywają go testy deterministyczne i walidacja JSON.</p>
+    <p class="question">Decyzja człowieka: Akceptuję wszystkie DEC-001–DEC-015 / Proszę zmienić wskazane DEC-N.</p>
+  </section>
+
+  <h2>Decyzje wymagające akceptacji</h2>
+  <div class="grid">
+    <article class="card"><h3>DEC-001 · Tożsamość pilota</h3><p><strong>Oryginał:</strong> Created matching private-pilot Claude and Codex manifests at version <code>0.1.0</code>.</p><p><strong>Ocena:</strong> realizacja planu; ryzyko <span class="risk-low">niskie</span>, odwracalne przez zmianę obu manifestów i testów. Alternatywa: różne wersje per harness — odrzucona przez kontrakt spójności.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-002 · Minimalne capabilities</h3><p><strong>Oryginał:</strong> Codex exposes only the shared <code>./skills/</code> tree; neither manifest defines hooks, MCP servers, apps, or public metadata.</p><p><strong>Ocena:</strong> plan + ADR-002; niskie ryzyko, wysoka zgodność z explicit activation. Alternatywa: globalna integracja — sprzeczna z wizją.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-003 · Lokalne marketplace</h3><p><strong>Oryginał:</strong> Added local marketplace entries resolving the repository root (<code>.</code>), plus reservation READMEs and the requested ignore policy.</p><p><strong>Ocena:</strong> fakt implementacyjny; niskie ryzyko i łatwa odwracalność.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-004 · Właściciel kontraktów artefaktów</h3><p><strong>Oryginał:</strong> Canonical delivery paths, ownership, statuses, lifecycle transitions, immutable intent, amendments, and complete artifact templates live in <code>references/artifact-contracts.md</code>.</p><p><strong>Ocena:</strong> wybór w ramach planu; eliminuje duplikację. Alternatywa: szablony w Product Vision — zwiększa ryzyko driftu. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-005 · Właściciel kontraktu pamięci</h3><p><strong>Oryginał:</strong> Memory routing, active/superseded/archived states, candidate capture, and explicit promotion approval live in <code>references/project-memory.md</code>; no memory entry was promoted.</p><p><strong>Ocena:</strong> wybór zgodny z planem; brak niejawnej mutacji pamięci. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-006 · Rozdzielenie handoffów od narzędzi Codex</h3><p><strong>Oryginał:</strong> Native Claude/Codex handoffs and non-mutating plugin isolation are defined in <code>references/harness-command-contract.md</code>; Codex dispatch/fallback behavior is isolated in <code>references/codex-tools.md</code>.</p><p><strong>Ocena:</strong> wybór strukturalny; ułatwia kolejne harnessy bez forkowania skilli. Niskie ryzyko, odwracalne.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-007 · Dwa ADR-y fundamentu</h3><p><strong>Oryginał:</strong> ADR-001 records one shared host-agnostic skill tree and the thin future-harness procedure; ADR-002 records explicit activation, the narrow <code>debug</code> exception, and no hooks.</p><p><strong>Ocena:</strong> realizacja zaakceptowanej architektury; niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-008 · Weryfikacja kontraktów i ADR</h3><p><strong>Oryginał:</strong> Phase verification passed for all four references and both accepted ADR files.</p><p><strong>Ocena:</strong> potwierdzony fakt, nie nowa decyzja.</p><p class="question">Rekomendacja: Przyjmuję do wiadomości.</p></article>
+    <article class="card"><h3>DEC-009 · Product Vision bez duplikacji schema</h3><p><strong>Oryginał:</strong> Product Vision retains behavioral contracts and links exact artifact and memory schemas to their canonical references.</p><p><strong>Ocena:</strong> wybór zgodny z planem; ogranicza drift przy zachowaniu semantyki. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-010 · Jeden bootstrap sesji</h3><p><strong>Oryginał:</strong> README and CLAUDE.md now document the same fresh-session read order, private-pilot non-mutating validation boundary, and AbsolutPowers isolation rule.</p><p><strong>Ocena:</strong> fakt + wybór dokumentacyjny; wspólny kontekst obu harnessów. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-011 · Pusty project-memory</h3><p><strong>Oryginał:</strong> Seeded <code>absolutforge/project-memory.md</code> as an empty canonical store with allowed statuses and an explicit-approval promotion boundary.</p><p><strong>Ocena:</strong> realizacja planu; nie promowano żadnych niezweryfikowanych lekcji. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-012 · Testy tylko stdlib</h3><p><strong>Oryginał:</strong> Added a standard-library-only conformance suite with explicit AC-mapped test methods.</p><p><strong>Ocena:</strong> wybór implementacyjny; brak zależności pilota i deterministyczne AC. Alternatywa: framework testowy — zbędny na tym etapie. Niskie ryzyko.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-013 · Pakiet testowy dla Python 3.14</h3><p><strong>Oryginał:</strong> Added <code>tests/__init__.py</code> so the prescribed unittest discovery command works on Python 3.14.</p><p><strong>Ocena:</strong> kompatybilnościowy wybór poza literalną listą jednego pliku, uzasadniony failing commandem; niskie ryzyko i pełna odwracalność.</p><p class="question">Rekomendacja: Akceptuję.</p></article>
+    <article class="card"><h3>DEC-014 · Wynik walidacji bazowej</h3><p><strong>Oryginał:</strong> Tracked and untracked JSON parse checks, the full foundation suite, and strict Claude validation passed.</p><p><strong>Ocena:</strong> potwierdzony fakt. Finalny gate potwierdził 12/12 AC.</p><p class="question">Rekomendacja: Przyjmuję do wiadomości.</p></article>
+    <article class="card"><h3>DEC-015 · Skip walidatora Codex</h3><p><strong>Oryginał:</strong> Canonical Codex validation was skipped transparently because PyYAML is unavailable; no dependency or plugin configuration was changed.</p><p><strong>Ocena:</strong> kontrolowane odstępstwo przewidziane w planie; ryzyko <span class="risk-medium">niskie–średnie</span>. Alternatywa: instalacja PyYAML zmieniłaby środowisko. Reperkusja: przed aktywacją pilota warto uruchomić ten validator w środowisku z PyYAML.</p><p class="question">Rekomendacja: Akceptuję jako jawny follow-up walidacyjny.</p></article>
+  </div>
+
+  <h2>Interakcje i skumulowane konsekwencje</h2>
+  <p>DEC-002, DEC-004–DEC-007 i DEC-009–DEC-011 razem tworzą jeden model: explicit-only plugin, wspólne źródło skilli, kanoniczne kontrakty poza Product Vision i pamięć aktualizowana wyłącznie za zgodą. Ułatwia to dodanie Pi/Grok później bez zmiany istniejących skilli. DEC-012–DEC-015 utrzymują walidację bez nowych zależności, kosztem jednego jawnie pominiętego validatora.</p>
+
+  <h2>Informacyjne fakty implementacyjne</h2>
+  <p>DEC-001, DEC-003, DEC-008, DEC-014 opisują przede wszystkim stan repo i wykonane kontrole. Nie wprowadzają odchyleń od zaakceptowanego planu.</p>
+
+  <h2>Brakujące lub niejednoznaczne uzasadnienie</h2>
+  <p>Nie wykryto nieudokumentowanej zmiany kierunku. Jedyny otwarty element to moment ponownego uruchomienia walidatora Codex z PyYAML; rekomendowany jest etap przed pierwszą aktywacją pilota, bez instalowania zależności w tej fazie.</p>
+
+  <h2>Mapa dowodów</h2>
+  <table><thead><tr><th>Zakres</th><th>Źródło remarks</th><th>Główne dowody</th></tr></thead><tbody>
+    <tr><td>DEC-001–003</td><td><code>01-manifests-and-layout.md</code></td><td><code>.codex-plugin/</code>, <code>.claude-plugin/</code>, <code>.agents/plugins/</code>, <code>skills/README.md</code>, <code>agents/README.md</code></td></tr>
+    <tr><td>DEC-004–008</td><td><code>02-contracts-and-adrs.md</code></td><td><code>references/*.md</code>, <code>docs/adr/*.md</code></td></tr>
+    <tr><td>DEC-009–011</td><td><code>03-context-and-documentation.md</code></td><td><code>README.md</code>, <code>CLAUDE.md</code>, <code>docs/product-vision.md</code>, <code>absolutforge/project-memory.md</code></td></tr>
+    <tr><td>DEC-012–015</td><td><code>04-foundation-validation.md</code></td><td><code>tests/test_foundation.py</code>, <code>tests/__init__.py</code>, <code>99-final-verification.md</code></td></tr>
+  </tbody></table>
+</main></body></html>
