@@ -1,7 +1,7 @@
 # Tasks: Phase 2 — Discuss and optional consultation
 
 ## Status
-pending
+in-progress
 
 ## Source
 
@@ -37,7 +37,7 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Extend canonical contracts and record consultation ADR
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss/01-contracts-and-adr.md`
 **Depends on:** none
 **Write scope:** `references/artifact-contracts.md`, `references/harness-command-contract.md`, `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`
