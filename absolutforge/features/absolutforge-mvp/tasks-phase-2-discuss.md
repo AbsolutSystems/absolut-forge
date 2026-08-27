@@ -75,3 +75,10 @@ orchestrated
 - Do not mark a phase completed until focused verification and phase-review pass.
 - No runtime behavioral model test is required in Phase 2; Phase 7 owns deliberate behavioral execution.
 - Do not install, enable, disable, or otherwise mutate plugin configuration during implementation or verification.
+
+## Decision Review
+- Report: `docs/onboarding/implementation-decisions-phase-2-discuss-2026-08-27.html`
+- Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008, DEC-009, DEC-010, DEC-011, DEC-012, DEC-013, DEC-014
+- Status: pending-human-review
+- Reviewed: pending
+- Notes: Awaiting acceptance of implementation choices; final review passed with AC Fulfillment 15/15.
