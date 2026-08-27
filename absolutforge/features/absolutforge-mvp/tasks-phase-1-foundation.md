@@ -50,14 +50,14 @@ orchestrated
 **Risk:** low
 
 ### Phase 3: Wire repository context and product documentation
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/03-context-and-documentation.md`
 **Depends on:** Phase 2
 **Write scope:** `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `absolutforge/project-memory.md`, `absolutforge/features/absolutforge-mvp/planning-main.md`, `absolutforge/features/absolutforge-mvp/planning-phase-1-foundation.md`
 **Risk:** low
 
 ### Phase 4: Add deterministic foundation validation
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/04-foundation-validation.md`
 **Depends on:** Phases 1-3
 **Write scope:** `tests/**`, foundation files when a validator exposes a defect
