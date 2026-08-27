@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "absolutforge",
+  "description": "AbsolutForge — intent-driven development workflow for strong coding models",
+  "owner": {
+    "name": "Absolut Systems"
+  },
+  "plugins": [
+    {
+      "name": "absolutforge",
+      "description": "Intent-driven development workflow for strong coding models",
+      "source": ".",
+      "category": "development"
+    }
+  ]
+}

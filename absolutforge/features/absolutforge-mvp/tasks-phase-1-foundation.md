@@ -1,7 +1,7 @@
 # Tasks: Phase 1 — Product foundation
 
 ## Status
-pending
+in-progress
 
 ## Source
 
@@ -36,7 +36,7 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Create manifests and extensible repository layout
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/01-manifests-and-layout.md`
 **Depends on:** none
 **Write scope:** `.codex-plugin/**`, `.claude-plugin/**`, `.agents/plugins/**`, `skills/README.md`, `agents/README.md`, `.gitignore`
@@ -73,4 +73,3 @@ orchestrated
 - Workers own only their phase file, their declared Write Scope, and `implementation-context.md`.
 - Do not mark a phase completed until focused verification and phase review pass.
 - Do not install or enable either plugin as part of verification.
-

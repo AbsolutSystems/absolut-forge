@@ -50,7 +50,7 @@ Create the private-pilot plugin descriptors and reserve the host-agnostic source
 ## Tasks
 
 ### Task 1: Create Codex plugin and marketplace descriptors
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-5, AC-6, AC-9, AC-10, AC-11
 **Test-first:** no (JSON configuration scaffolding)
 **Produces:** `.codex-plugin/plugin.json` identity `absolutforge@0.1.0` with `skills: "./skills/"`, and `.agents/plugins/marketplace.json` source `.`
@@ -73,7 +73,7 @@ Create the private-pilot plugin descriptors and reserve the host-agnostic source
 - `test_no_implicit_capabilities_AC9_AC10_AC11` with `[AC-9] [AC-10] [AC-11]` evidence will observe absence of hooks, MCP, and apps.
 
 ### Task 2: Create Claude plugin and marketplace descriptors
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-5, AC-6, AC-9, AC-10, AC-11
 **Test-first:** no (JSON configuration scaffolding)
 **Produces:** `.claude-plugin/plugin.json` identity `absolutforge@0.1.0` and `.claude-plugin/marketplace.json` source `.`
@@ -94,7 +94,7 @@ Create the private-pilot plugin descriptors and reserve the host-agnostic source
 - `test_no_implicit_capabilities_AC9_AC10_AC11` with `[AC-9] [AC-10] [AC-11]` evidence covers absence of injected behavior.
 
 ### Task 3: Reserve non-discoverable shared directories
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-2, AC-7, AC-10
 **Test-first:** no (directory documentation and ignore configuration)
 **Produces:** `skills/README.md`, `agents/README.md`, and repository ignore policy
@@ -130,4 +130,6 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Created matching private-pilot Claude and Codex manifests at version `0.1.0`.
+- Codex exposes only the shared `./skills/` tree; neither manifest defines hooks, MCP servers, apps, or public metadata.
+- Added local marketplace entries resolving the repository root (`.`), plus reservation READMEs and the requested ignore policy.
