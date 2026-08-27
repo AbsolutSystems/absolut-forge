@@ -130,6 +130,13 @@ class DiscussSkillContractTests(unittest.TestCase):
         for status in ("Draft", "Ready", "Building", "In Review"):
             self.assertIn(status, body)
 
+    def test_brief_schema_uses_headings_and_status_without_yaml_frontmatter(self) -> None:
+        """Canonical Brief validation uses required headings/status, not Brief YAML frontmatter."""
+        _, body = _frontmatter_and_body(SKILL)
+        self.assertIn("canonical required headings", body.lower())
+        self.assertIn("## Status", body)
+        self.assertNotRegex(body, r"(?i)(?:YAML\s+)?frontmatter")
+
     def test_no_classic_pipeline_stages(self) -> None:
         """Discuss must not embed the classic task and review pipeline."""
         _, body = _frontmatter_and_body(SKILL)

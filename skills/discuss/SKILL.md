@@ -27,8 +27,9 @@ First determine which explicit input the user supplied:
   slug, then use `absolutforge/features/{slug}/feature-brief.md` as the only
   candidate artifact path.
 - For an existing Brief, validate that the supplied path is the canonical
-  Feature Brief path and that its Markdown, frontmatter, and status are valid.
-  Read its current content before proposing any change.
+  Feature Brief path, that it contains the canonical required headings
+  (including `## Status`), and that its status is valid. Validate it as
+  heading-only Markdown. Read the current content before proposing any change.
 - A `Draft` resumes discovery from its current evidence and decisions. A
   `Ready` Brief is an immutable intent baseline: do not silently rewrite it.
   A material change must use the amendment flow below. Do not mutate a

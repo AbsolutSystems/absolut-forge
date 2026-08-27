@@ -121,3 +121,4 @@ Run:
 - Implemented one host-agnostic explicit-only discovery contract with native Claude/Codex handoff examples.
 - Contract tests use only the Python standard library and assert all traced AC tokens plus forbidden-stage absence.
 - PyYAML-based quick validation was unavailable; the Codex metadata was parsed successfully with Ruby's standard YAML parser.
+- Final-review fix: input validation now checks canonical required headings and `## Status` in heading-only Markdown; no Brief frontmatter is required.

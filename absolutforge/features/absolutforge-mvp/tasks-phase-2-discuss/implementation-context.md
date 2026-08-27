@@ -32,3 +32,4 @@ Concise durable handoff between Phase 2 workers. Add only facts needed by later 
 - Integrated verification: all tracked/untracked JSON descriptors parsed successfully; `claude plugin validate --strict .` passed.
 - Integrated verification: `AGENTS.md` symlink and both skill frontmatter preflights passed; AC-1 through AC-15 token check passed.
 - Codex validator skipped because PyYAML is unavailable (`ModuleNotFoundError: No module named 'yaml'`); no dependency was installed.
+- Final-review fix verified: discuss and consult validate canonical headings plus `## Status` without requiring Brief frontmatter.

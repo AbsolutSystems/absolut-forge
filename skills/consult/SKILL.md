@@ -21,9 +21,11 @@ Use that contract rather than copying or inventing a consultation schema.
 
 Require an explicit repository-relative path to
 `absolutforge/features/{slug}/feature-brief.md`. Reject absolute paths, path
-traversal, missing or malformed Markdown/frontmatter, unrelated files, and
-invalid status. Explain the expected path or contract and leave all unrelated
-artifacts unchanged; do not create or overwrite a Brief to repair bad input.
+traversal, missing or malformed Markdown (including missing canonical required headings
+or `## Status`), unrelated files, and invalid status. Briefs are
+heading-only Markdown. Explain the expected path or contract and leave all
+unrelated artifacts unchanged; do not create or overwrite a Brief to repair bad
+input.
 Read the complete Brief and verify its current status before inspecting other
 context.
 

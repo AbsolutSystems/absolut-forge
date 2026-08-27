@@ -120,3 +120,4 @@ Run:
 - The consult contract is explicit-only on both harnesses, validates only `Draft`/`Ready` inputs, and keeps findings conversational until explicit acceptance.
 - Draft findings merge into canonical sections; Ready findings become accepted `## Amendments`, preserving the immutable baseline and producing no consultation artifact.
 - `tests.test_consult_contract` covers all traced AC tokens and canonical owner links.
+- Final-review fix: input validation now checks canonical required headings and `## Status` in heading-only Markdown; no Brief frontmatter is required.

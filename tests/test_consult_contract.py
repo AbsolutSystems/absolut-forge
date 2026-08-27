@@ -131,6 +131,13 @@ class ConsultSkillContractTests(unittest.TestCase):
         self.assertRegex(lowered, r"complete brief|read.*brief")
         self.assertRegex(lowered, r"current (?:repository )?context|current code|adr")
 
+    def test_brief_schema_uses_headings_and_status_without_yaml_frontmatter(self) -> None:
+        """Canonical Brief validation uses required headings/status, not Brief YAML frontmatter."""
+        _, body = _frontmatter_and_body(SKILL)
+        self.assertIn("canonical required headings", body.lower())
+        self.assertIn("## Status", body)
+        self.assertNotRegex(body, r"(?i)(?:YAML\s+)?frontmatter")
+
     def test_no_automatic_build_or_persistent_consultation_report(self) -> None:
         """Consult remains a bounded opinion, not an automatic build or report stage."""
         _, body = _frontmatter_and_body(SKILL)
