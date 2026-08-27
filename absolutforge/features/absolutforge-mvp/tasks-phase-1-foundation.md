@@ -43,14 +43,14 @@ orchestrated
 **Risk:** low
 
 ### Phase 2: Establish canonical contracts and ADRs
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/02-contracts-and-adrs.md`
 **Depends on:** Phase 1
 **Write scope:** `references/**`, `docs/adr/**`
 **Risk:** low
 
 ### Phase 3: Wire repository context and product documentation
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/03-context-and-documentation.md`
 **Depends on:** Phase 2
 **Write scope:** `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `absolutforge/project-memory.md`, `absolutforge/features/absolutforge-mvp/planning-main.md`, `absolutforge/features/absolutforge-mvp/planning-phase-1-foundation.md`
