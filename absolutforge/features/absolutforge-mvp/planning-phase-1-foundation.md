@@ -7,6 +7,14 @@
 - Epic planning: `absolutforge/features/absolutforge-mvp/planning-main.md`
 - Dependencies: none
 
+Canonical contracts for this phase:
+
+- [`references/artifact-contracts.md`](../../../references/artifact-contracts.md)
+- [`references/project-memory.md`](../../../references/project-memory.md)
+- [`references/harness-command-contract.md`](../../../references/harness-command-contract.md)
+- [`docs/adr/2026-08-27-host-agnostic-skill-tree.md`](../../../docs/adr/2026-08-27-host-agnostic-skill-tree.md)
+- [`docs/adr/2026-08-27-explicit-activation-without-hooks.md`](../../../docs/adr/2026-08-27-explicit-activation-without-hooks.md)
+
 ## Status
 Ready — 2026-08-27
 

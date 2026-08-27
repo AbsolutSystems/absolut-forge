@@ -30,3 +30,9 @@ Concise durable handoff between Phase 1 workers. Add only facts needed by later 
 
 ## Verification History
 - JSON parse loop and Claude marketplace strict validation passed; Codex validator was unavailable because PyYAML is not installed.
+
+## Phase 3 Handoff
+- Fresh-session read order is documented in `CLAUDE.md` (mirrored by `AGENTS.md`): Product Vision, epic main, phase plan, canonical references, then ADRs and active memory.
+- `README.md` documents private-pilot, non-mutating validation and requires disabling AbsolutPowers before later AbsolutForge activation.
+- `docs/product-vision.md` retains semantic behavior and links exact schemas to canonical references; Phase 1 ADR links are included.
+- `absolutforge/project-memory.md` is the empty canonical store; only `active` entries are operational and promotion requires explicit approval.

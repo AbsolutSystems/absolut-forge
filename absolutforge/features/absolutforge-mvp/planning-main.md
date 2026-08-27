@@ -4,6 +4,13 @@
 > implementing any phase. This main document is the lightweight roadmap; the
 > vision document preserves the accepted cross-phase contracts.
 
+Canonical operational contracts used by every phase:
+[`references/artifact-contracts.md`](../../../references/artifact-contracts.md),
+[`references/project-memory.md`](../../../references/project-memory.md), and
+[`references/harness-command-contract.md`](../../../references/harness-command-contract.md).
+The permanent memory store is
+[`absolutforge/project-memory.md`](../../project-memory.md).
+
 ## Status
 Accepted — 2026-08-27
 
@@ -45,6 +52,9 @@ The standard workflow is `discuss -> build -> review -> ship`.
 
 - `docs/product-vision.md` is the durable source of truth for accepted product
   behavior and cross-phase contracts.
+- Exact artifact schemas and lifecycle: [`references/artifact-contracts.md`](../../../references/artifact-contracts.md).
+- Memory routing and promotion: [`references/project-memory.md`](../../../references/project-memory.md).
+- Native command and handoff rules: [`references/harness-command-contract.md`](../../../references/harness-command-contract.md).
 - Separate repository and product identity from AbsolutPowers.
 - Product name: **AbsolutForge**; repository: `absolut-forge`; plugin identifier:
   `absolutforge`.

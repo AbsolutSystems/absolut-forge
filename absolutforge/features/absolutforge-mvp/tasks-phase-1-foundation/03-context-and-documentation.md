@@ -1,7 +1,7 @@
 # Phase 3: Wire repository context and product documentation
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation.md`
@@ -51,7 +51,7 @@ Make every fresh Claude or Codex session find the same product truth and operati
 ## Tasks
 
 ### Task 1: Refactor Product Vision to canonical references
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-3
 **Test-first:** no (documentation source-of-truth refactor)
 **Produces:** Product Vision with stable semantic contracts and canonical reference links
@@ -70,7 +70,7 @@ Make every fresh Claude or Codex session find the same product truth and operati
 - Manual diff review confirms no accepted behavioral invariant was removed.
 
 ### Task 2: Complete repository entry points and memory seed
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-3, AC-4, AC-12
 **Test-first:** no (repository documentation and empty memory seed)
 **Produces:** README validation guide, fresh-session bootstrap, and `absolutforge/project-memory.md`
@@ -108,4 +108,9 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Product Vision retains behavioral contracts and links exact artifact and memory
+  schemas to their canonical references.
+- README and CLAUDE.md now document the same fresh-session read order, private-
+  pilot non-mutating validation boundary, and AbsolutPowers isolation rule.
+- Seeded `absolutforge/project-memory.md` as an empty canonical store with
+  allowed statuses and an explicit-approval promotion boundary.

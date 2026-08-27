@@ -5,7 +5,13 @@ It gives the model a precise product goal, durable context, and room to execute
 autonomously, while concentrating quality control on verification and one final,
 independent review.
 
-> Status: design and planning. The plugin is not implemented yet.
+> Status: private pilot foundation. The workflow skills are not implemented yet;
+> local manifests and documentation are being validated without activation.
+
+AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
+repository is the plugin root and uses one shared `skills/` tree for Claude Code
+and Codex, with thin per-harness manifests. Pi and Grok support is deferred.
+There is no SessionStart hook, MCP server, app, or globally injected workflow.
 
 ## Product thesis
 
@@ -63,6 +69,37 @@ Two standalone workflows complement the core:
 The MVP targets Claude Code and Codex through one host-agnostic skill tree with
 thin per-harness manifests. Pi and Grok are intentionally deferred until the
 workflow is validated on real changes.
+
+## Canonical documentation
+
+Start with the [Product Vision](docs/product-vision.md), then the [MVP
+roadmap](absolutforge/features/absolutforge-mvp/planning-main.md) and the
+relevant phase plan. Exact operational schemas are owned by the [Delivery
+Artifact Contracts](references/artifact-contracts.md), memory routing by the
+[Project-Memory Contract](references/project-memory.md), and native handoffs by
+the [Harness Command Contract](references/harness-command-contract.md).
+Architecture decisions are recorded in [`docs/adr/`](docs/adr/), and durable
+cross-cutting lessons are kept in [`absolutforge/project-memory.md`](absolutforge/project-memory.md).
+
+## Private-pilot validation and isolation
+
+The pilot is intentionally validated locally and non-mutating. These checks
+inspect metadata, layout, links, and tests; they do not install or enable
+AbsolutForge:
+
+```text
+python3 -m unittest discover -s tests -t . -p 'test_*.py'
+for f in $(git ls-files '*.json' --others --exclude-standard); do python3 -m json.tool "$f" >/dev/null; done
+claude plugin validate --strict .
+python3 /Users/kamil/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
+```
+
+The Codex validator is optional when its PyYAML dependency is unavailable; the
+deterministic JSON checks remain the non-mutating fallback. Activation is
+deferred until product validation. Before any later normal use, disable the
+overlapping AbsolutPowers workflow first; both workflows must not be enabled at
+the same time. Validation commands and documentation never toggle that
+user-owned configuration automatically.
 
 ## Artifact lifecycle
 

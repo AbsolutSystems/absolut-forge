@@ -54,6 +54,8 @@ tech-debt
 
 One host-agnostic skill tree serves both harnesses through thin integrations.
 Pi and Grok are deferred until the workflow has been validated on real work.
+This architecture is recorded in [ADR-001: One Host-Agnostic Skill
+Tree](adr/2026-08-27-host-agnostic-skill-tree.md).
 
 ### Activation and isolation
 
@@ -67,6 +69,10 @@ Pi and Grok are deferred until the workflow has been validated on real work.
   Installation may coexist, but exactly one overlapping workflow is enabled.
 - The product is model-agnostic but intentionally optimized for strong frontier
   coding models rather than compensating for weak planning ability with ceremony.
+
+The explicit activation, no-hooks, and workflow-isolation decision is recorded
+in [ADR-002: Explicit Activation Without SessionStart
+Hooks](adr/2026-08-27-explicit-activation-without-hooks.md).
 
 ### Deliberate exclusions
 
@@ -103,6 +109,13 @@ The transient Execution Map is not archived. Its useful outcome and verification
 facts are consolidated into the Feature Record. The original intent must remain
 distinguishable from the as-built result.
 
+The exact artifact paths, ownership, statuses, lifecycle transitions, and
+Markdown schemas are maintained in the canonical [Delivery Artifact
+Contracts](../references/artifact-contracts.md). This vision defines the
+behavioral meaning and boundaries of those artifacts.
+Native command syntax and stage handoffs are defined in the [Harness Command
+Contract](../references/harness-command-contract.md).
+
 ## `discuss` contract
 
 `discuss` is the only deliberately interactive core stage. It determines what
@@ -125,84 +138,32 @@ QA enrichment, or a review-plan gate.
 
 ### Feature Brief format
 
-```markdown
-# Feature: {name}
+The complete Feature Brief schema, stable headings, and status values are
+defined in the [Feature Brief contract](../references/artifact-contracts.md#feature-brief-contract).
+The brief captures the problem, users, current evidence, expected behavior
+(including meaningful variants, failures, and boundaries), scope, constraints,
+solution direction, assumptions with their basis and build response, decisions
+with rationale and ADR links, grounded risks and edge cases, and observable
+outcomes. It must distinguish current-system evidence from future
+implementation details; expected outcomes are not expanded into tasks or an
+acceptance-criteria taxonomy, and the brief must not become a file-by-file task
+recipe.
 
-## Status
-Draft | Ready | Building | In Review
-
-## Change type
-Feature | Fix | Refactor
-
-## Problem and goal
-What is wrong today, why it matters, and what outcome is required.
-
-## Users
-Who benefits or which system process changes.
-
-## Current state and evidence
-Observed behavior and repository-relative evidence anchors. This is evidence
-about the current system, not a future file-change list.
-
-## Expected behavior
-Externally observable happy path, meaningful variants, failures, and boundaries.
-
-## Scope
-### In scope
-### Out of scope
-
-## Constraints and invariants
-Contracts, compatibility, security, data, performance, and binding project rules.
-
-## Solution direction
-Architecture at component and data-flow level, without symbol-level tasks.
-
-## Assumptions
-- Assumption
-- Basis
-- What build must do if it proves false
-
-## Decisions
-Decisions with rationale and ADR links where appropriate.
-
-## Risks and edge cases
-Only risks grounded in the domain or current code.
-
-## Expected outcomes
-Observable conditions that demonstrate the change is correct. This is not an
-automatically expanded acceptance-criteria taxonomy.
-
-## Open questions
-No question that changes contract, scope, security, data, migration, or material
-cost may remain when status becomes Ready.
-
-## Amendments
-Explicitly accepted changes made after Ready.
-
----
-
-## Build Evidence
-Append-only delivery evidence owned by build.
-```
+`discuss` owns the accepted intent; `build` may update lifecycle status and
+append Build Evidence, but may not rewrite the accepted sections to match its
+implementation. Exact amendment syntax and Execution Map fields are likewise
+owned by the [canonical artifact contracts](../references/artifact-contracts.md).
 
 ### Immutable intent and amendments
 
-When status becomes `Ready`, sections from `Problem and goal` through `Expected
-outcomes` form the immutable intent baseline. `build` may update status and append
-delivery evidence, but may not rewrite the baseline to match its implementation.
-
-A material change uses:
-
-```markdown
-### A-{N} — YYYY-MM-DD
-- Reason:
-- Change:
-- Accepted by:
-```
-
-An amendment is required when new information changes behavior, scope, a public
-contract, security, data handling, migration, or material cost. Non-blocking
-uncertainty belongs under explicit assumptions, not unresolved hidden intent.
+When status becomes `Ready`, the sections from `Problem and goal` through
+`Expected outcomes`, plus accepted amendments, form the immutable intent
+baseline. An amendment is required when new information changes behavior,
+scope, a public contract, security, data handling, migration, or material cost.
+No open question affecting those boundaries may remain at `Ready`.
+Non-blocking uncertainty belongs under explicit assumptions, not unresolved
+hidden intent. See the [Amendment contract](../references/artifact-contracts.md#amendment-contract)
+for the exact append-only record and acceptance rules.
 
 ## `build` contract
 
@@ -231,20 +192,11 @@ durable resumption.
 The decision is based on cohesion, dependencies, uncertainty, and resumability,
 not line count or file count.
 
-Each map section contains only:
-
-```markdown
-## Section {N}: {outcome name}
-- Status: pending | in-progress | complete
-- Goal:
-- Boundaries:
-- Dependencies:
-- Verification:
-- Result:
-- Material deviations:
-```
-
-The map must not contain micro-tasks, symbol recipes, or a prescriptive file list.
+Each map section contains only an outcome, status, goal, boundaries,
+dependencies, verification, result, and material deviations, as defined by the
+[Execution Map contract](../references/artifact-contracts.md#execution-map-contract).
+The map must not contain micro-tasks, symbol recipes, or a prescriptive file
+list.
 
 ### Autonomous execution
 
@@ -359,38 +311,11 @@ fact.
 
 ### Feature Record format
 
-The final `feature-record.md` contains:
-
-```markdown
-# Feature: {name}
-
-## Status
-Shipped date and commit.
-
-## Original intent
-Preserved accepted intent baseline.
-
-## What was built
-Outcome summary derived from the final diff.
-
-## Deviations from the Brief
-Different implementation, omitted scope, added scope, or explicitly none.
-
-## Verification
-Final commands, results, and meaningful manual checks.
-
-## Review outcome
-Resolved blockers and accepted follow-ups.
-
-## Architectural decisions
-Links to ADRs.
-
-## Durable knowledge
-Promoted project memory and scoped Gotchas.
-
-## Open follow-ups
-Explicitly deferred work.
-```
+The final `feature-record.md` preserves the original intent separately from the
+as-built outcome and records deviations, verification, review outcome,
+architectural decisions, durable knowledge, and open follow-ups. Its exact
+headings and required fields are defined by the [Feature Record
+contract](../references/artifact-contracts.md#feature-record-contract).
 
 ### Executive Summary HTML
 
@@ -453,6 +378,9 @@ explicit request.
 ### Project memory
 
 - Cross-cutting durable lessons live in `absolutforge/project-memory.md`.
+- The canonical routing, entry, candidate, and promotion rules live in the
+  [Project-Memory Contract](../references/project-memory.md); the store contains
+  lessons, not a second copy of its schema.
 - A trap relevant only inside one package belongs in that package's `CLAUDE.md`
   under `Gotchas`, mirrored to `AGENTS.md` where both harnesses are supported.
 - Memory stores recurring traps, warning signs, root causes, and reusable
@@ -593,4 +521,3 @@ questions remain intentionally deferred to phase planning:
 - precise fresh-context mechanism for review in each harness,
 - self-contained diagram rendering implementation for Executive Summary,
 - representative projects and changes used in the comparative pilot.
-
