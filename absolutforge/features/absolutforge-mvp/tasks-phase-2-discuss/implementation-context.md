@@ -9,6 +9,7 @@ Concise durable handoff between Phase 2 workers. Add only facts needed by later 
 ## Created / Changed API
 - `consult` accepts `Draft`/`Ready` Briefs at `absolutforge/features/{slug}/feature-brief.md`; it has no durable report.
 - `discuss` owns explicit-only discovery, adaptive Draft persistence, and the single Draft → Ready acceptance transition; its Codex metadata disables implicit invocation.
+- Phase 3 consult implementation is complete: `skills/consult/SKILL.md` and Codex metadata enforce explicit, approval-controlled findings with Draft merges and Ready amendments.
 
 ## Decisions Made
 - `consult` is explicit-only and optional; the normal workflow remains `discuss -> build`.
@@ -25,3 +26,5 @@ Concise durable handoff between Phase 2 workers. Add only facts needed by later 
 ## Verification History
 - Phase contract grep checks passed for consultation semantics, statuses, and Claude/Codex command forms.
 - `python3 -m unittest tests.test_discuss_contract` passes; Ruby YAML parsing validates `skills/discuss/agents/openai.yaml`.
+- `python3 -m unittest tests.test_consult_contract` passes; Ruby YAML parsing validates `skills/consult/agents/openai.yaml`.
+- Consult frontmatter, canonical-link, forbidden-string, and YAML checks pass.

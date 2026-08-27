@@ -1,0 +1,7 @@
+interface:
+  display_name: "Consult"
+  short_description: "Pressure-test a Feature Brief"
+  default_prompt: "Use $consult to inspect this existing Feature Brief for material issues."
+
+policy:
+  allow_implicit_invocation: false

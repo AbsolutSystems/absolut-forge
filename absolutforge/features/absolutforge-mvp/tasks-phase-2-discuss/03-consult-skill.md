@@ -1,7 +1,7 @@
 # Phase 3: Implement the consult skill contract
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss.md`
@@ -52,7 +52,7 @@ only explicitly accepted changes through the correct mutability boundary.
 ## Tasks
 
 ### Task 1: Define failing consult contract tests
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-5, AC-6, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** yes
 **Produces:** `tests.test_consult_contract.ConsultSkillContractTests`
@@ -74,7 +74,7 @@ only explicitly accepted changes through the correct mutability boundary.
 - `test_ready_changes_use_amendments_AC14` contains `[AC-14]`; `test_optional_explicit_only_AC15` contains `[AC-15]`.
 
 ### Task 2: Implement the consult skill
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-5, AC-6, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** yes
 **Produces:** explicit-only host-agnostic `skills/consult/SKILL.md` plus `skills/consult/agents/openai.yaml`
@@ -117,4 +117,6 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- The consult contract is explicit-only on both harnesses, validates only `Draft`/`Ready` inputs, and keeps findings conversational until explicit acceptance.
+- Draft findings merge into canonical sections; Ready findings become accepted `## Amendments`, preserving the immutable baseline and producing no consultation artifact.
+- `tests.test_consult_contract` covers all traced AC tokens and canonical owner links.
