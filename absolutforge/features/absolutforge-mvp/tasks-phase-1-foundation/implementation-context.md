@@ -30,7 +30,8 @@ Concise durable handoff between Phase 1 workers. Add only facts needed by later 
 - Accepted architecture decisions: `docs/adr/2026-08-27-host-agnostic-skill-tree.md`, `docs/adr/2026-08-27-explicit-activation-without-hooks.md`.
 
 ## Verification History
-- JSON parse loop and Claude marketplace strict validation passed; Codex validator was unavailable because PyYAML is not installed.
+- Phase 1 JSON descriptors parsed successfully (tracked and untracked loops); foundation suite passed (10 tests).
+- `claude plugin validate --strict .` passed; canonical Codex validator skipped: PyYAML unavailable (`import yaml` failed).
 
 ## Phase 3 Handoff
 - Fresh-session read order is documented in `CLAUDE.md` (mirrored by `AGENTS.md`): Product Vision, epic main, phase plan, canonical references, then ADRs and active memory.
