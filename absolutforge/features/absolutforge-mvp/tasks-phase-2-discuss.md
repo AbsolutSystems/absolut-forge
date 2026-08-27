@@ -51,14 +51,14 @@ orchestrated
 **Risk:** medium
 
 ### Phase 3: Implement the consult skill contract
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss/03-consult-skill.md`
 **Depends on:** Phases 1-2
 **Write scope:** `skills/consult/SKILL.md`, `skills/consult/agents/openai.yaml`, `tests/test_consult_contract.py`
 **Risk:** medium
 
 ### Phase 4: Integrate documentation and foundation validation
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss/04-docs-and-validation.md`
 **Depends on:** Phases 1-3
 **Write scope:** `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `skills/README.md`, `tests/test_foundation.py`, Phase 2 planning artifacts when recording status
