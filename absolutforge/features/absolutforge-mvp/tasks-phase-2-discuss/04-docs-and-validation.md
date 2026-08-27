@@ -16,8 +16,8 @@ Read before starting:
 
 ### Requires (from previous phases)
 - Canonical consultation contracts and ADR from Phase 1.
-- Implemented `skills/discuss/SKILL.md` and passing discuss contract tests from Phase 2.
-- Implemented `skills/consult/SKILL.md` and passing consult contract tests from Phase 3.
+- Implemented `skills/discuss/SKILL.md`, `skills/discuss/agents/openai.yaml`, and passing discuss contract tests from Phase 2.
+- Implemented `skills/consult/SKILL.md`, `skills/consult/agents/openai.yaml`, and passing consult contract tests from Phase 3.
 
 ### Provides (for later phases)
 - Repository entry points and Product Vision documenting seven MVP skills and optional consultation.
@@ -31,7 +31,9 @@ Read before starting:
 - `docs/product-vision.md`
 - `skills/README.md`
 - `skills/discuss/SKILL.md`
+- `skills/discuss/agents/openai.yaml`
 - `skills/consult/SKILL.md`
+- `skills/consult/agents/openai.yaml`
 - `references/artifact-contracts.md`
 - `references/harness-command-contract.md`
 - `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`
@@ -91,7 +93,7 @@ optional consultation, and the absence of global or classic-pipeline behavior.
 
 - Replace the Phase 1 assertion that no `SKILL.md` exists with exact discovery of `skills/discuss/SKILL.md` and `skills/consult/SKILL.md`, while continuing to reject host-specific skill trees.
 - Preserve assertions that no hooks, MCP servers, apps, registered agents, Pi, or Grok integrations exist.
-- Assert both skill files link canonical artifact/handoff owners and their frontmatter names match their directories.
+- Assert both skill files link canonical artifact/handoff owners, their frontmatter names match their directories, Claude disables model invocation, and both Codex policies disable implicit invocation.
 - Add document assertions for explicit-only activation, untrusted-content/secret boundaries, and optional consultation without duplicating focused contract tests.
 
 **Tests:**

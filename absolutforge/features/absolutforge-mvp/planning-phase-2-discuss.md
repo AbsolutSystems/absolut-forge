@@ -200,9 +200,11 @@ contracts instead of duplicating their complete templates.
    `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`, including
    the rejected mandatory-gate and persistent-report alternatives.
 3. Create `skills/discuss/SKILL.md` with narrow explicit invocation metadata and
+   `skills/discuss/agents/openai.yaml` with Codex implicit invocation disabled,
    host-agnostic intake, evidence, frontier, Draft, acceptance, amendment, ADR,
    safety, and handoff behavior.
 4. Create `skills/consult/SKILL.md` with narrow explicit invocation metadata and
+   `skills/consult/agents/openai.yaml` with Codex implicit invocation disabled,
    host-agnostic Brief validation, focused material finding, approval, Draft
    merge, Ready amendment, safety, and no-findings behavior.
 5. Update repository entry points and Product Vision to list seven MVP skills,
@@ -219,7 +221,9 @@ contracts instead of duplicating their complete templates.
 
 - `skills/discuss/SKILL.md` — implement the adaptive discovery and acceptance
   workflow.
+- `skills/discuss/agents/openai.yaml` — keep Codex invocation explicit-only.
 - `skills/consult/SKILL.md` — implement optional second-model Brief consultation.
+- `skills/consult/agents/openai.yaml` — keep Codex invocation explicit-only.
 - `skills/README.md` — list seven planned/implemented skills and their boundaries.
 - `README.md` — document `consult` as optional and preserve the normal core flow.
 - `CLAUDE.md` — add binding `consult` constraints to repository development

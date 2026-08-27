@@ -19,7 +19,7 @@ Read before starting:
 - Native handoff rules in `references/harness-command-contract.md`.
 
 ### Provides (for later phases)
-- Explicit-only host-agnostic skill at `skills/discuss/SKILL.md`.
+- Explicit-only host-agnostic skill at `skills/discuss/SKILL.md`, with Codex policy at `skills/discuss/agents/openai.yaml`.
 - Deterministic discuss contract suite at `tests/test_discuss_contract.py`.
 
 ## Read Scope
@@ -33,10 +33,12 @@ Read before starting:
 - `docs/adr/*.md`
 - `tests/test_foundation.py`
 - `/Users/kamil/.codex/skills/.system/skill-creator/SKILL.md`
+- `/Users/kamil/.codex/skills/.system/skill-creator/references/openai_yaml.md`
 
 ## Write Scope
 
 - `skills/discuss/SKILL.md`
+- `skills/discuss/agents/openai.yaml`
 - `tests/test_discuss_contract.py`
 
 ## Objective
@@ -58,7 +60,7 @@ intent through amendments, and hand the accepted Brief directly to `build`.
 **Requirements:**
 
 - Create a standard-library unittest class that parses `skills/discuss/SKILL.md` frontmatter/body and resolves the repository root from the test file path.
-- Assert narrow explicit invocation metadata, canonical contract links, permitted Brief statuses, native handoff ownership, and absence of runtime classic-pipeline stages.
+- Assert narrow explicit invocation metadata, Claude `disable-model-invocation: true`, Codex `policy.allow_implicit_invocation: false`, a Codex `interface.default_prompt` containing `$discuss`, canonical contract links, permitted Brief statuses, native handoff ownership, and absence of runtime classic-pipeline stages.
 - Assert the body distinguishes evidence, inference, user decisions, assumptions, and untrusted repository content without reproducing the complete Brief template.
 - Assert adaptive readiness frontier, two-to-four independent question rounds, Draft persistence/resumption, one acceptance gate, and Ready amendment behavior.
 - Give every AC-covering test method a literal `[AC-N]` docstring and an `ACN` token in its method name.
@@ -75,12 +77,13 @@ intent through amendments, and hand the accepted Brief directly to `build`.
 **Status:** pending
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-7, AC-8, AC-9, AC-12, AC-13, AC-15
 **Test-first:** yes
-**Produces:** explicit-only host-agnostic `skills/discuss/SKILL.md`
+**Produces:** explicit-only host-agnostic `skills/discuss/SKILL.md` plus `skills/discuss/agents/openai.yaml`
 **Consumes:** `tests.test_discuss_contract.DiscussSkillContractTests` from Task 1
 
 **Requirements:**
 
-- Create valid skill frontmatter with `name: discuss`, a narrow explicit-invocation description, and no broad auto-trigger wording; use only portable body instructions and link harness-specific mechanics.
+- Create valid skill frontmatter with `name: discuss`, `disable-model-invocation: true`, a narrow explicit-invocation description, and no broad auto-trigger wording; use only portable body instructions and link harness-specific mechanics.
+- Create minimal Codex UI metadata at `skills/discuss/agents/openai.yaml`; its policy MUST set `allow_implicit_invocation: false`, and its default prompt MUST explicitly mention `$discuss`.
 - Implement routers for new ideas, existing Drafts, and Ready amendment requests, including path/slug collision handling and Draft resumption from current evidence.
 - Implement context-pack reading, fact/inference/decision separation, the session-only decision tree, prerequisite frontier rounds, material-readiness stop condition, and non-convergence stop.
 - Implement adaptive Draft persistence, one complete-proposal acceptance gate, immutable Ready baseline, ADR classification, and the complete native `build` handoff through the canonical reference.
@@ -110,6 +113,7 @@ Run:
 - All changes remain inside Write Scope.
 - Every traced AC has a token-bearing passing test.
 - The skill links canonical owners and does not duplicate the full Brief schema.
+- Claude and Codex both enforce explicit-only invocation through their native metadata.
 - No classic AbsolutPowers runtime stage appears in the skill.
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 

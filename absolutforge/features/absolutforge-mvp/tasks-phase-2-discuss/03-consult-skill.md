@@ -20,7 +20,7 @@ Read before starting:
 - Discuss boundary at `skills/discuss/SKILL.md` for amendment routing and normal `build` handoff.
 
 ### Provides (for later phases)
-- Explicit-only host-agnostic skill at `skills/consult/SKILL.md`.
+- Explicit-only host-agnostic skill at `skills/consult/SKILL.md`, with Codex policy at `skills/consult/agents/openai.yaml`.
 - Deterministic consult contract suite at `tests/test_consult_contract.py`.
 
 ## Read Scope
@@ -34,10 +34,12 @@ Read before starting:
 - `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`
 - `tests/test_discuss_contract.py`
 - `/Users/kamil/.codex/skills/.system/skill-creator/SKILL.md`
+- `/Users/kamil/.codex/skills/.system/skill-creator/references/openai_yaml.md`
 
 ## Write Scope
 
 - `skills/consult/SKILL.md`
+- `skills/consult/agents/openai.yaml`
 - `tests/test_consult_contract.py`
 
 ## Objective
@@ -62,7 +64,7 @@ only explicitly accepted changes through the correct mutability boundary.
 - Assert accepted input states are exactly `Draft | Ready`, while `Building | In Review` stop without mutation and route material changes through `discuss`.
 - Assert the finding contract covers material ambiguity, contradiction, evidence gap, grounded risk, and unnecessary scope with evidence, impact, and proposed change.
 - Assert one bounded batch, explicit finding selection, Draft merge, Ready amendment, deduplication, `no material findings`, and absence of a consultation artifact.
-- Assert explicit-only activation, optionality, untrusted-content handling, and secret redaction with literal AC tokens.
+- Assert Claude `disable-model-invocation: true`, Codex `policy.allow_implicit_invocation: false`, a Codex `interface.default_prompt` containing `$consult`, optionality, untrusted-content handling, and secret redaction with literal AC tokens.
 
 **Tests:**
 
@@ -75,12 +77,13 @@ only explicitly accepted changes through the correct mutability boundary.
 **Status:** pending
 **Traces to:** AC-5, AC-6, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** yes
-**Produces:** explicit-only host-agnostic `skills/consult/SKILL.md`
+**Produces:** explicit-only host-agnostic `skills/consult/SKILL.md` plus `skills/consult/agents/openai.yaml`
 **Consumes:** `tests.test_consult_contract.ConsultSkillContractTests` from Task 1
 
 **Requirements:**
 
-- Create valid skill frontmatter with `name: consult`, a narrow explicit-invocation description, and no generic review or feature triggers.
+- Create valid skill frontmatter with `name: consult`, `disable-model-invocation: true`, a narrow explicit-invocation description, and no generic review or feature triggers.
+- Create minimal Codex UI metadata at `skills/consult/agents/openai.yaml`; its policy MUST set `allow_implicit_invocation: false`, and its default prompt MUST explicitly mention `$consult`.
 - Validate the supplied repository-relative Brief path and status before analysis; stop safely for malformed paths, unrelated files, `Building`, or `In Review`.
 - Read the complete Brief and relevant current evidence, then emit one focused finding batch with stable IDs, evidence, impact, and exact proposed section/amendment changes.
 - Require explicit acceptance by finding ID or whole batch before mutation; merge Draft changes, group coherent Ready changes into accepted amendments, and leave rejected/unselected findings unapplied.
@@ -109,7 +112,7 @@ Run:
 - Both tasks are completed.
 - All changes remain inside Write Scope.
 - Every traced AC has a token-bearing passing test.
-- Consultation remains optional, explicit-only, approval-controlled, and artifact-free.
+- Consultation remains optional, explicit-only on both Claude and Codex, approval-controlled, and artifact-free.
 - Ready intent can change only through accepted amendments.
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
