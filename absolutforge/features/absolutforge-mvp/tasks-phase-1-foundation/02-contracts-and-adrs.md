@@ -1,7 +1,7 @@
 # Phase 2: Establish canonical contracts and ADRs
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation.md`
@@ -48,7 +48,7 @@ Create the exact shared contracts later skills will consume and record the two a
 ## Tasks
 
 ### Task 1: Extract canonical delivery artifact contracts
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-3, AC-7
 **Test-first:** no (normative Markdown schemas)
 **Produces:** canonical Feature Brief, amendment, Execution Map, review, Feature Record, and Executive Summary contracts
@@ -67,7 +67,7 @@ Create the exact shared contracts later skills will consume and record the two a
 - `test_no_discoverable_stubs_AC7` with `[AC-7]` evidence will distinguish documentation examples from runnable skills.
 
 ### Task 2: Define memory and harness handoff contracts
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-2, AC-3, AC-12
 **Test-first:** no (normative Markdown contracts)
 **Produces:** canonical project-memory routing, native command contract, and Codex tool mapping
@@ -87,7 +87,7 @@ Create the exact shared contracts later skills will consume and record the two a
 - `test_concurrent_workflow_warning_AC12` with `[AC-12]` evidence will require the isolation warning and disable guidance.
 
 ### Task 3: Record cross-harness and activation ADRs
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-2, AC-9, AC-10, AC-11
 **Test-first:** no (architecture decision records)
 **Produces:** two accepted ADRs linked to the product vision and Phase 1 plan
@@ -125,4 +125,8 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Canonical delivery paths, ownership, statuses, lifecycle transitions, immutable intent, amendments, and complete artifact templates live in `references/artifact-contracts.md`.
+- Memory routing, active/superseded/archived states, candidate capture, and explicit promotion approval live in `references/project-memory.md`; no memory entry was promoted.
+- Native Claude/Codex handoffs and non-mutating plugin isolation are defined in `references/harness-command-contract.md`; Codex dispatch/fallback behavior is isolated in `references/codex-tools.md`.
+- ADR-001 records one shared host-agnostic skill tree and the thin future-harness procedure; ADR-002 records explicit activation, the narrow `debug` exception, and no hooks.
+- Phase verification passed for all four references and both accepted ADR files.

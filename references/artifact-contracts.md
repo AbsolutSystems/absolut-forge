@@ -1,0 +1,302 @@
+# AbsolutForge Delivery Artifact Contracts
+
+**Status:** Canonical contract — accepted 2026-08-27  
+**Owner:** AbsolutForge workflow; each artifact is owned by the stage listed below.
+
+This document is the single canonical owner of the exact delivery-artifact paths,
+statuses, transitions, and Markdown schemas. The [Product Vision](../docs/product-vision.md)
+defines the product behavior and links here; skills and ADRs must link to this
+contract instead of copying these templates.
+
+## Artifact locations and ownership
+
+An active change uses a repository-relative slug directory:
+
+```text
+absolutforge/features/{slug}/
+├── feature-brief.md                 # required
+├── execution-map.md                 # optional; build creates when useful
+└── review.md                         # required before ship
+```
+
+After `ship` approves closeout, the durable archive is:
+
+```text
+absolutforge/archives/{slug}/
+├── feature-record.md                 # required
+└── executive-summary.html            # required, self-contained
+```
+
+The transient `execution-map.md` is not archived. Its useful outcome and
+verification facts are consolidated into `feature-record.md`.
+
+| Artifact | Active path | Archive path | Owner | Required status values |
+| --- | --- | --- | --- | --- |
+| Feature Brief | `absolutforge/features/{slug}/feature-brief.md` | content preserved in Feature Record | `discuss` (intent), then `build` (delivery evidence) | `Draft`, `Ready`, `Building`, `In Review` |
+| Amendment | appended to the active Feature Brief under `## Amendments` | preserved under Original intent / deviations | `discuss` with explicit acceptance; `build` records the accepted change | `Proposed`, `Accepted`, `Rejected` |
+| Execution Map | `absolutforge/features/{slug}/execution-map.md` | none | `build` | `pending`, `in-progress`, `complete` |
+| Review | `absolutforge/features/{slug}/review.md` | outcome copied to Feature Record | `review`; `build` owns fixes | `In Review`, `Complete` |
+| Feature Record | none while active | `absolutforge/archives/{slug}/feature-record.md` | `ship` | `Shipped` |
+| Executive Summary | none while active | `absolutforge/archives/{slug}/executive-summary.html` | `ship` | generated after final review; no intermediate status |
+
+## Lifecycle transitions
+
+The normal lifecycle is:
+
+```text
+Feature Brief Draft
+  -> Ready                 (discuss obtains explicit acceptance)
+  -> Building              (build starts)
+  -> In Review             (build verification succeeds and review starts)
+  -> Shipped               (review has no open BLOCKING findings; ship is approved)
+```
+
+If review opens a `BLOCKING` finding, the brief follows the bounded fix loop
+`In Review -> Building -> In Review`; it reaches `Shipped` only after the fix
+and targeted re-review leave no open blocker. A `FOLLOW-UP` does not cause this
+loop.
+
+The brief may move from `Draft` to `Ready` only when no material contract,
+scope, security, data, migration, or cost question remains unresolved. A
+`Ready` brief establishes an immutable intent baseline. `build` may change its
+status and append `## Build Evidence`, but it must not rewrite the baseline to
+match the implementation.
+
+Material new information follows this path:
+
+```text
+Ready baseline -> Proposed amendment -> Accepted amendment -> build continues
+                                  \-> Rejected amendment -> original baseline remains
+```
+
+An accepted amendment is part of the intent baseline for review and ship. A
+transient execution map section may progress `pending -> in-progress ->
+complete` only after that section's verification succeeds. `review` changes its
+artifact from `In Review` to `Complete` after the final review result is
+recorded; a `BLOCKING` result returns work to `build` for fixes and targeted
+re-review. `ship` creates the archive only after review is complete and no open
+`BLOCKING` findings remain. It reports deviations explicitly rather than
+rewriting accepted intent.
+
+## Feature Brief contract
+
+Create `absolutforge/features/{slug}/feature-brief.md` with this complete
+template. Keep the headings and status values stable so later stages can find
+the immutable baseline and delivery evidence.
+
+```markdown
+# Feature: {name}
+
+## Status
+Draft | Ready | Building | In Review
+
+## Change type
+Feature | Fix | Refactor
+
+## Problem and goal
+What is wrong today, why it matters, and what outcome is required.
+
+## Users
+Who benefits or which system process changes.
+
+## Current state and evidence
+Observed behavior and repository-relative evidence anchors. This describes the
+current system, not a future file-change list.
+
+## Expected behavior
+Externally observable happy path, meaningful variants, failures, and boundaries.
+
+## Scope
+### In scope
+### Out of scope
+
+## Constraints and invariants
+Contracts, compatibility, security, data, performance, and binding project rules.
+
+## Solution direction
+Architecture at component and data-flow level, without symbol-level tasks.
+
+## Assumptions
+- Assumption
+- Basis
+- What build must do if it proves false
+
+## Decisions
+Decisions with rationale and links to relevant ADRs.
+
+## Risks and edge cases
+Only risks grounded in the domain or current code.
+
+## Expected outcomes
+Observable conditions demonstrating that the change is correct. Do not expand
+these automatically into a task or acceptance-criteria taxonomy.
+
+## Open questions
+No question changing contract, scope, security, data, migration, or material
+cost may remain when status becomes Ready.
+
+## Amendments
+### A-{N} — YYYY-MM-DD
+- Status: Proposed | Accepted | Rejected
+- Reason:
+- Change:
+- Accepted by:
+
+---
+
+## Build Evidence
+Append-only evidence owned by build:
+- Changed areas:
+- Verification commands and results:
+- Material implementation decisions:
+- Deviations from the accepted baseline:
+```
+
+When the status first becomes `Ready`, the immutable intent baseline comprises
+the sections from `## Problem and goal` through `## Expected outcomes`, plus any
+accepted amendments. `Build Evidence` is not part of that baseline.
+
+## Amendment contract
+
+An amendment is required when discovery changes behavior, scope, a public
+contract, security, data handling, migration, or material cost. Do not silently
+edit the accepted baseline. Append this complete entry to `## Amendments` and
+obtain explicit acceptance before implementing the change:
+
+```markdown
+### A-{N} — YYYY-MM-DD
+- Status: Proposed | Accepted | Rejected
+- Reason: {new evidence or decision}
+- Change: {precise change to the accepted intent}
+- Accepted by: {person or explicit product decision}
+```
+
+Non-blocking uncertainty belongs in `## Assumptions` with a basis and the
+action `build` takes if it proves false. A rejected amendment leaves the
+original baseline unchanged. An accepted amendment is immutable thereafter and
+must be included in review and the Feature Record.
+
+## Execution Map contract
+
+`build` creates `execution-map.md` only when the work has multiple dependent
+outcomes, meaningful uncertainty, or needs durable resumption. It is an
+outcome-oriented map, not a task list, file recipe, or review gate. Every
+section uses this complete shape:
+
+```markdown
+# Execution Map: {feature name}
+
+## Section {N}: {outcome name}
+- Status: pending | in-progress | complete
+- Goal: {observable result}
+- Boundaries: {included and excluded behavior}
+- Dependencies: {other sections or accepted context}
+- Verification: {focused checks proving this outcome}
+- Result: {filled after verification}
+- Material deviations: {none, or an explicit deviation and amendment reference}
+```
+
+The map is transient and is deleted at closeout; it must not be copied into the
+archive as a separate artifact. The Feature Record retains its useful outcomes,
+verification, and deviations.
+
+## Review contract
+
+`review` creates `absolutforge/features/{slug}/review.md` from the accepted
+Feature Brief and amendments, linked ADRs and rules, the complete final diff,
+Build Evidence, and verification results. Findings are evidence-based and use
+only the two severities below. Subjective preferences, unrelated existing
+problems, and hypothetical risks without a concrete failure scenario are not
+findings.
+
+```markdown
+# Review: {feature name}
+
+## Status
+In Review | Complete
+
+## Context
+- Feature Brief: `absolutforge/features/{slug}/feature-brief.md`
+- ADRs:
+- Diff / revision reviewed:
+- Verification evidence:
+
+## Findings
+
+### {BLOCKING|FOLLOW-UP}: {short title}
+- Evidence: `path/to/file:line` or an observable verification result.
+- Impact: {concrete consequence}
+- Smallest sensible correction: {bounded correction}
+- Resolution: {open, or the fix and re-verification}
+
+## Outcome
+- BLOCKING findings open: {number}
+- FOLLOW-UP findings accepted: {number}
+- Decision: Ready for ship | Fixes required
+```
+
+`BLOCKING` findings must be fixed and re-verified before ship. `FOLLOW-UP`
+findings may be accepted and are preserved in the Feature Record. A targeted
+re-review checks prior blockers first, then performs a short regression scan of
+the changed diff.
+
+## Feature Record contract
+
+After approval, `ship` creates
+`absolutforge/archives/{slug}/feature-record.md`. It preserves the accepted
+intent separately from the as-built result and records this complete template:
+
+```markdown
+# Feature: {name}
+
+## Status
+Shipped: YYYY-MM-DD; commit: {local commit or pending local commit}
+
+## Original intent
+The accepted Feature Brief baseline, including accepted amendments, preserved
+without rewriting it to describe the implementation.
+
+## What was built
+Outcome summary derived from the final diff.
+
+## Deviations from the Brief
+Different implementation, omitted scope, added scope, or explicitly none.
+
+## Verification
+Final commands, results, and meaningful manual checks.
+
+## Review outcome
+Resolved BLOCKING findings and accepted FOLLOW-UP findings.
+
+## Architectural decisions
+Links to ADRs; do not duplicate their full text.
+
+## Durable knowledge
+Project-memory entries explicitly approved for promotion and scoped Gotchas.
+
+## Open follow-ups
+Explicitly deferred work.
+```
+
+## Executive Summary contract
+
+`ship` also creates `absolutforge/archives/{slug}/executive-summary.html`
+from the final post-review state. It is for a human PR reviewer and must be a
+self-contained HTML document: all required styles, diagrams, and content are
+embedded or expressed inline; it must not depend on a local server, runtime
+bundle, or unavailable external asset. This contract defines content, not a
+rendering implementation. The summary includes:
+
+- TL;DR, problem, and business value;
+- final scope and primary behavior/data flow;
+- changed-component map;
+- key decisions and rationale, plus material rejected alternatives;
+- deviations from the accepted Brief;
+- tests and verification;
+- blockers found and fixed by review;
+- remaining follow-ups and risks;
+- recommended file review order;
+- links to ADRs and durable documentation.
+
+The HTML is generated only after review fixes finish. It is never model-review
+input and is not a substitute for the Markdown Feature Record.
