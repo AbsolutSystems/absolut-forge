@@ -28,3 +28,7 @@ Concise durable handoff between Phase 2 workers. Add only facts needed by later 
 - `python3 -m unittest tests.test_discuss_contract` passes; Ruby YAML parsing validates `skills/discuss/agents/openai.yaml`.
 - `python3 -m unittest tests.test_consult_contract` passes; Ruby YAML parsing validates `skills/consult/agents/openai.yaml`.
 - Consult frontmatter, canonical-link, forbidden-string, and YAML checks pass.
+- Integrated verification: `python3 -m unittest discover -s tests -t . -p 'test_*.py'` passed (33 tests).
+- Integrated verification: all tracked/untracked JSON descriptors parsed successfully; `claude plugin validate --strict .` passed.
+- Integrated verification: `AGENTS.md` symlink and both skill frontmatter preflights passed; AC-1 through AC-15 token check passed.
+- Codex validator skipped because PyYAML is unavailable (`ModuleNotFoundError: No module named 'yaml'`); no dependency was installed.

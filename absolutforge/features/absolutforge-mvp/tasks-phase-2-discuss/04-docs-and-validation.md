@@ -1,7 +1,7 @@
 # Phase 4: Integrate documentation and foundation validation
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss.md`
@@ -62,7 +62,7 @@ optional consultation, and the absence of global or classic-pipeline behavior.
 ## Tasks
 
 ### Task 1: Update product and repository documentation
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-4, AC-5, AC-6, AC-15
 **Test-first:** no (documentation synchronization)
 **Produces:** documented seven-skill inventory and optional-consultation workflow
@@ -83,7 +83,7 @@ optional consultation, and the absence of global or classic-pipeline behavior.
 - `test_product_docs_keep_explicit_core_AC15` contains `[AC-15]` and verifies the normal flow remains direct.
 
 ### Task 2: Update shared-tree foundation validation
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-12, AC-13, AC-15
 **Test-first:** yes
 **Produces:** Phase 2-compatible `tests.test_foundation.FoundationContractTests`
@@ -103,7 +103,7 @@ optional consultation, and the absence of global or classic-pipeline behavior.
 - `python3 -m unittest tests.test_foundation` exits zero.
 
 ### Task 3: Run integrated Phase 2 verification
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (verification execution)
 **Produces:** integrated Phase 2 verification evidence in `implementation-context.md`
@@ -144,4 +144,6 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Documented `consult` as the seventh MVP skill while keeping `discuss -> build -> review -> ship` as the direct core path; consultation remains optional, explicit-only, bounded, and artifact-free.
+- Foundation tests now discover exactly `skills/discuss/SKILL.md` and `skills/consult/SKILL.md`, enforce canonical links and Claude/Codex explicit-only metadata, and reject unsupported integrations.
+- Integrated standard-library, JSON, strict Claude, symlink/frontmatter, and AC-token validation passed; Codex validation was skipped because PyYAML is unavailable.

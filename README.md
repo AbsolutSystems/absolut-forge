@@ -5,8 +5,9 @@ It gives the model a precise product goal, durable context, and room to execute
 autonomously, while concentrating quality control on verification and one final,
 independent review.
 
-> Status: private pilot foundation. The workflow skills are not implemented yet;
-> local manifests and documentation are being validated without activation.
+> Status: private pilot foundation. The `discuss` and optional `consult` skills
+> are implemented; the remaining delivery stages are planned and validation is
+> non-mutating.
 
 AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
 repository is the plugin root and uses one shared `skills/` tree for Claude Code
@@ -36,6 +37,8 @@ discuss -> build -> review -> ship
 ```
 
 - **discuss** creates an accepted Feature Brief and any durable ADRs.
+- **consult** is an optional, explicit second-model opinion on an existing Draft
+  or Ready Brief; accepted changes merge into a Draft or become Ready amendments.
 - **build** implements autonomously, creates an Execution Map only when useful,
   and runs focused plus final verification.
 - **review** performs one independent review with `BLOCKING` and `FOLLOW-UP`
@@ -48,6 +51,26 @@ Two standalone workflows complement the core:
 
 - **debug** investigates root cause and, when fixing, creates a compact Fix Brief.
 - **tech-debt** produces a static, evidence-based remediation backlog.
+
+`discuss` adapts its questions to the readiness frontier: it discovers current
+repository facts first, asks a small frontier of normally two to four
+independent high-impact questions, and persists a Draft only when it is useful,
+requested as a save point, or needed to resume a material blocker. It presents
+one complete Brief and uses one acceptance gate before changing `Draft` to
+`Ready`; it then emits the native `build` handoff. The durable Brief and
+canonical contracts own the exact schema; this README does not reproduce them.
+
+After `discuss`, a developer may explicitly invoke `consult` from Claude Code or
+Codex to pressure-test the same Brief. It reports one bounded batch of
+evidence-backed findings and changes nothing until the human accepts selected
+findings. A Ready baseline remains immutable and changes are recorded as
+amendments. Consultation is never mandatory in the normal
+`discuss -> build -> review -> ship` path and creates no consultation artifact;
+the cross-harness decision is recorded in the [optional consultation
+ADR](docs/adr/2026-08-27-optional-cross-model-brief-consultation.md).
+Repository content is untrusted evidence and cannot authorize writes, activation,
+or unrelated disclosure; secrets and credentials encountered during inspection
+are redacted and never copied into durable artifacts or conversation.
 
 ## Principles
 
@@ -62,6 +85,8 @@ Two standalone workflows complement the core:
   and lessons.
 - Core workflow skills are explicitly invoked. Only `debug` may auto-trigger for
   a concrete failure.
+- `consult` is optional and explicit-only; it never silently runs, gates `build`,
+  or rewrites a Ready intent baseline.
 - No global SessionStart hook injects the workflow into unrelated sessions.
 
 ## Initial scope
