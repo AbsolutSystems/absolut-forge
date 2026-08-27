@@ -36,14 +36,14 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Create manifests and extensible repository layout
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/01-manifests-and-layout.md`
 **Depends on:** none
 **Write scope:** `.codex-plugin/**`, `.claude-plugin/**`, `.agents/plugins/**`, `skills/README.md`, `agents/README.md`, `.gitignore`
 **Risk:** low
 
 ### Phase 2: Establish canonical contracts and ADRs
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/02-contracts-and-adrs.md`
 **Depends on:** Phase 1
 **Write scope:** `references/**`, `docs/adr/**`

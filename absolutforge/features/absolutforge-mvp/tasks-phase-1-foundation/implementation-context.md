@@ -4,7 +4,7 @@
 Concise durable handoff between Phase 1 workers. Add only facts needed by later phases.
 
 ## Completed Phases
-- None yet.
+- Phase 1: shared plugin manifests, local marketplaces, and non-discoverable `skills/` / `agents/` reservations verified.
 
 ## Created / Changed API
 - Added private-pilot Claude/Codex manifests for `absolutforge@0.1.0`; Codex exposes `./skills/`.
