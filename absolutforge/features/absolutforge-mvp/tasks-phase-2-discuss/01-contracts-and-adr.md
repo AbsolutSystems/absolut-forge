@@ -1,7 +1,7 @@
 # Phase 1: Extend canonical contracts and record consultation ADR
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-2-discuss.md`
@@ -48,7 +48,7 @@ Draft or amendment instead of a new persistent report.
 ## Tasks
 
 ### Task 1: Extend consultation and native handoff contracts
-**Status:** pending
+**Status:** completed
 **Traces to:** none (canonical contract infrastructure consumed by behavior tasks)
 **Test-first:** no (normative Markdown contract update)
 **Produces:** canonical `consult` behavior and native invocation contracts
@@ -67,7 +67,7 @@ Draft or amendment instead of a new persistent report.
 - Contract inspection confirms no persistent consultation artifact or mandatory gate is introduced.
 
 ### Task 2: Record the optional cross-model consultation ADR
-**Status:** pending
+**Status:** completed
 **Traces to:** none (architecture record for the accepted workflow decision)
 **Test-first:** no (architecture documentation)
 **Produces:** accepted ADR `docs/adr/2026-08-27-optional-cross-model-brief-consultation.md`
@@ -102,4 +102,6 @@ Run:
 - Context Contract provides are fulfilled and recorded in `implementation-context.md`.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Added one canonical optional-consultation contract covering Draft/Ready mutation, immutable Ready amendments, no-findings/no-artifact behavior, and routing for Building/In Review.
+- Added native Claude and Codex consult commands using the canonical Feature Brief path.
+- Recorded ADR-003 as Accepted; consultation is human-controlled, cross-harness, optional, and does not record model identity.

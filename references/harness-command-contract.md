@@ -18,8 +18,8 @@ Use the active harness's native prefix:
 | Claude Code | `/absolutforge:{skill} [path and arguments]` |
 | Codex | `$absolutforge {skill} [path and arguments]` |
 
-Core skills `discuss`, `build`, `review`, and `ship`, plus standalone
-`tech-debt`, are explicit-only. `debug` may be auto-triggered only by a
+Core skills `discuss`, `build`, `review`, and `ship`, optional `consult`, plus
+standalone `tech-debt`, are explicit-only. `debug` may be auto-triggered only by a
 concrete failure (error, failing test, crash, regression, or unexpected
 behavior); it remains explicitly invocable as well. No generic coding request
 may be rewritten as an implicit workflow invocation.
@@ -31,8 +31,18 @@ repository-relative path and all arguments needed by the next stage.
 
 Claude Code:
 
+Generic consultation form (replace `{slug}` with the actual feature slug):
+
+```text
+/absolutforge:consult absolutforge/features/{slug}/feature-brief.md
+```
+
 ```text
 /absolutforge:discuss "Add import preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+```text
+/absolutforge:consult absolutforge/features/import-preview/feature-brief.md
 ```
 
 ```text
@@ -57,8 +67,18 @@ Claude Code:
 
 Codex:
 
+Generic consultation form (replace `{slug}` with the actual feature slug):
+
+```text
+$absolutforge consult absolutforge/features/{slug}/feature-brief.md
+```
+
 ```text
 $absolutforge discuss "Add import preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+```text
+$absolutforge consult absolutforge/features/import-preview/feature-brief.md
 ```
 
 ```text
@@ -95,7 +115,9 @@ Handoffs must preserve the accepted intent. A `Ready` Feature Brief is
 immutable from `Problem and goal` through `Expected outcomes`; a change to
 behavior, scope, public contract, security, data, migration, or material cost
 must be an explicitly accepted amendment. Do not hand off a hidden or silently
-rewritten contract.
+rewritten contract. `consult` is an optional, explicit-only handoff for an
+existing `Draft` or `Ready` Brief; it is never required before `build` and
+produces no durable consultation artifact.
 
 ## Activation and isolation
 

@@ -176,6 +176,37 @@ action `build` takes if it proves false. A rejected amendment leaves the
 original baseline unchanged. An accepted amendment is immutable thereafter and
 must be included in review and the Feature Record.
 
+## Optional consultation contract
+
+`consult` is an optional, explicit-only second opinion on an existing Feature
+Brief. It is not a lifecycle stage or gate: the normal workflow remains
+`discuss -> build -> review -> ship`. It accepts only a Brief with status
+`Draft` or `Ready` at
+`absolutforge/features/{slug}/feature-brief.md`.
+
+Each consultation finding is bounded to a material ambiguity, contradiction,
+evidence gap, grounded risk, or unnecessary scope. It must include:
+
+- Evidence: the repository-relative fact, contract, or Brief passage.
+- Impact: the concrete consequence if the issue remains unresolved.
+- Proposed Brief change: the precise change recommended by the finding.
+
+The findings are presented as one batch. `consult` must obtain explicit human
+approval before changing the Brief; unselected findings do not mutate it.
+Accepted findings are merged into the relevant sections of a `Draft`. For a
+`Ready` Brief, an accepted material intent change is appended as an accepted
+amendment under `## Amendments`; the immutable baseline is never edited.
+
+`Building` and `In Review` inputs are not mutated by consultation. A material
+intent change discovered for either status returns to `discuss` and its
+amendment flow. If no material issue remains, consultation returns exactly
+`no material findings`, changes no Brief content, and creates no consultation
+artifact. Findings already represented by an accepted decision or amendment
+are deduplicated rather than recorded again.
+
+Consultation never creates a persistent report, records model identity in the
+Brief, or becomes mandatory between `discuss` and `build`.
+
 ## Execution Map contract
 
 `build` creates `execution-map.md` only when the work has multiple dependent

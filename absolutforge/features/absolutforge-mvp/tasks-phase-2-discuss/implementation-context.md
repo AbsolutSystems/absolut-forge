@@ -4,14 +4,15 @@
 Concise durable handoff between Phase 2 workers. Add only facts needed by later phases.
 
 ## Completed Phases
-- None yet.
+- Phase 2 contracts and ADR: canonical consultation and native handoff boundaries are complete.
 
 ## Created / Changed API
-- None yet.
+- `consult` accepts `Draft`/`Ready` Briefs at `absolutforge/features/{slug}/feature-brief.md`; it has no durable report.
 
 ## Decisions Made
 - `consult` is explicit-only and optional; the normal workflow remains `discuss -> build`.
 - Ready intent changes only through accepted amendments; consultation creates no durable report.
+- Building/In Review consultation routes material changes back to `discuss` without mutation; no-findings returns `no material findings`.
 
 ## Test Utilities / Fixtures
 - Existing standard-library unittest conventions live in `tests/test_foundation.py`.
@@ -21,4 +22,4 @@ Concise durable handoff between Phase 2 workers. Add only facts needed by later 
 - No hooks, MCP, apps, registered agents, Pi/Grok integrations, plugin activation, or dependency installation.
 
 ## Verification History
-- None yet.
+- Phase contract grep checks passed for consultation semantics, statuses, and Claude/Codex command forms.
