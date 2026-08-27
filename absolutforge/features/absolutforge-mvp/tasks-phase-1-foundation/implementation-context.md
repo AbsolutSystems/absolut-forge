@@ -7,6 +7,7 @@ Concise durable handoff between Phase 1 workers. Add only facts needed by later 
 - Phase 1: shared plugin manifests, local marketplaces, and non-discoverable `skills/` / `agents/` reservations verified.
 - Phase 2: canonical artifact, memory, handoff, and Codex contracts plus two accepted foundation ADRs verified.
 - Phase 3: repository bootstrap, private-pilot docs, canonical Product Vision links, and empty project-memory store verified.
+- Phase 4: standard-library conformance suite verified all 12 ACs; strict Claude validation passed and Codex validation was transparently skipped without PyYAML.
 
 ## Created / Changed API
 - Added private-pilot Claude/Codex manifests for `absolutforge@0.1.0`; Codex exposes `./skills/`.

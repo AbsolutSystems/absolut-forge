@@ -57,14 +57,14 @@ orchestrated
 **Risk:** low
 
 ### Phase 4: Add deterministic foundation validation
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/04-foundation-validation.md`
 **Depends on:** Phases 1-3
 **Write scope:** `tests/**`, foundation files when a validator exposes a defect
 **Risk:** low
 
 ## Final Verification
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-1-foundation/99-final-verification.md`
 
 ## Orchestrator Notes
