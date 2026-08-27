@@ -1,7 +1,7 @@
 # Tasks: Phase 2 — Discuss and optional consultation
 
 ## Status
-in-progress
+completed
 
 ## Source
 
@@ -79,6 +79,6 @@ orchestrated
 ## Decision Review
 - Report: `docs/onboarding/implementation-decisions-phase-2-discuss-2026-08-27.html`
 - Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008, DEC-009, DEC-010, DEC-011, DEC-012, DEC-013, DEC-014
-- Status: pending-human-review
-- Reviewed: pending
-- Notes: Awaiting acceptance of implementation choices; final review passed with AC Fulfillment 15/15.
+- Status: accepted
+- Reviewed: 2026-08-27
+- Notes: User accepted DEC-001 through DEC-014 without requested changes; final review passed with AC Fulfillment 15/15.
