@@ -72,7 +72,7 @@ Run:
   - `claude plugin validate --strict .`
   - literal `[AC-1]` through `[AC-11]` scan across `tests/`
 - Results:
-  - Full static suite: exit 0, 50 tests, `OK`.
+  - Full static suite: exit 0, 51 tests, `OK` (re-run after the final ownership test fix).
   - JSON descriptors: exit 0; all 4 tracked/non-ignored descriptors parsed successfully.
   - Diff hygiene: exit 0; no whitespace errors.
   - Claude plugin validation: exit 0, marketplace manifest validation passed.
