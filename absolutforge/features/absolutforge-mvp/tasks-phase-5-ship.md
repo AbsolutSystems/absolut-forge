@@ -1,7 +1,7 @@
 # Tasks: Phase 5 — Ship
 
 ## Status
-pending-human-review
+completed
 
 ## Source
 - Source doc: `absolutforge/features/absolutforge-mvp/planning-phase-5-ship.md`
@@ -99,9 +99,9 @@ orchestrated
 ## Decision Review
 - Report: `docs/onboarding/implementation-decisions-absolutforge-mvp-2026-08-28.html`
 - Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008
-- Status: pending-human-review
-- Reviewed: 2026-08-28 | pending
-- Notes: Final implementation review passed; human acceptance is requested for the documented closeout boundaries and static-test scope.
+- Status: accepted
+- Reviewed: 2026-08-28 | accepted by user
+- Notes: User accepted DEC-001 through DEC-008; final implementation review passed and no changes were requested.
 
 ## Orchestrator Notes
 - This task set implements only Phase 5 of the epic; it does not implement
