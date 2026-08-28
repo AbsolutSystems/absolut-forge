@@ -86,7 +86,7 @@ orchestrated
 **Risk:** high
 
 ### Phase 4: Contract Tests and Product Documentation
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship/04-tests-and-docs.md`
 **Depends on:** Phase 1, Phase 2, and Phase 3
 **Write scope:** `tests/test_review_contract.py`, `tests/test_ship_contract.py`, `tests/test_foundation.py`, `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `skills/README.md`, `.gitignore`
