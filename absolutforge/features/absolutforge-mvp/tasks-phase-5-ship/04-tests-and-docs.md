@@ -1,7 +1,7 @@
 # Phase 4: Contract Tests and Product Documentation
 
 ## Status
-pending
+in-progress
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship.md`
@@ -59,7 +59,7 @@ the AbsolutPowers ceremony or adding remote side effects.
 ## Tasks
 
 ### Task 1: Add deterministic Review and Ship contract coverage
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** yes
 **Produces:** Contract test suite covering Ship and the Review fingerprint handoff
@@ -93,10 +93,12 @@ repository, activate a plugin, or contact a remote service.
 - `test_ship_disallows_remote_effects_AC8_AC15` covers explicit-only local closeout and forbidden push/PR/deploy actions.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Added deterministic text-contract coverage for the Review fingerprint
+  handoff, Ship lifecycle, rendering safety, local-only boundaries, and pure
+  fingerprint/journal/commit-subject fixtures.
 
 ### Task 2: Update product documentation for implemented Ship
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (product documentation and ignore configuration)
 **Produces:** Product, repository, skill-index, and ignore documentation that describes the implemented Ship closeout
@@ -126,7 +128,8 @@ memory routing, local transaction/recovery, and no-remote boundaries.
 - `test_product_docs_ship_AC1_AC2_AC4_AC5_AC6_AC7_AC8_AC9_AC10_AC12_AC13_AC14_AC15` checks product docs expose the implemented closeout without duplicate schema.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Marked Ship as implemented across product and skill documentation, including
+  native commands, transactional recovery, and no-remote boundaries.
 
 ## Phase Verification
 Run:
@@ -141,4 +144,5 @@ Run:
 - `implementation-context.md` records test and documentation coverage.
 
 ## Implementation Decisions / Remarks
-- [to be completed after phase completion]
+- Focused deterministic tests cover every AC token through `AC-15`; canonical
+  schemas remain linked rather than duplicated in product documentation.

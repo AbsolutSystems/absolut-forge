@@ -28,10 +28,10 @@ repository documents take precedence.
 
 ## Current state
 
-The repository is in phased MVP work. Local Claude/Codex manifests, canonical
-references, foundation ADRs, and the explicit-only `discuss`, `consult`,
-`build`, and `review` contracts exist; `ship`, `debug`, and `tech-debt` remain
-planned until their phases are implemented.
+The repository contains the private-pilot MVP. Local Claude/Codex manifests,
+canonical references, foundation ADRs, and the explicit-only `discuss`,
+`consult`, `build`, `review`, and `ship` contracts exist; `debug` and
+`tech-debt` remain separate Phase 6 workflows.
 
 ## Binding product constraints
 
@@ -103,8 +103,9 @@ planned until their phases are implemented.
   handoffs in [`references/harness-command-contract.md`](references/harness-command-contract.md),
   and the design decision in
   [`docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md`](docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).
-- `ship` runs after review fixes and creates a Feature Record plus human-facing
-  Executive Summary HTML.
+- `ship` runs after final Review and is explicit-only: `/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Claude Code or `$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Codex. It validates the Review fingerprint, presents one approval preview, creates a Feature Record and self-contained Executive Summary HTML, routes per-item memory decisions, cleans up approved active artifacts, and commits locally.
+- Ship's Feature Record preserves original intent separately from the as-built outcome, including deviations, verification, Review findings, linked ADRs, durable knowledge, follow-ups, and consolidated Execution Map facts. Its path-only Executive Summary is generated from the final post-review state with inline CSS, escaped content, no source excerpts, and no external assets.
+- Ship writes a journaled local transaction under `.ship-txn/{txid}/journal.json` with advisory lock metadata, output hashes, commit intent, recovery, resume, and rollback. It never pushes, creates a PR, merges, deploys, or rewrites history; a PR description is informational only. Durable archives remain tracked while `.ship-txn/` stays ignored.
 - ADR and project-memory behavior must follow `docs/product-vision.md`.
 - AbsolutPowers and AbsolutForge should not be enabled together as overlapping
   workflows.

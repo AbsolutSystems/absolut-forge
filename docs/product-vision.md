@@ -4,10 +4,10 @@
 
 Accepted product design — 2026-08-27.
 
-Implementation status: `discuss`, optional `consult`, `build`, and `review` are
-currently implemented for the Claude Code and Codex pilot. `ship`, `debug`, and
-`tech-debt` remain later phases; this status does not change the accepted
-product contracts below.
+Implementation status: `discuss`, optional `consult`, `build`, `review`, and
+explicit-only `ship` are implemented for the Claude Code and Codex pilot.
+`debug` and `tech-debt` remain separate Phase 6 workflows; this status does not
+change the accepted product contracts below.
 
 This document is the durable source of truth for the product behavior agreed
 before implementation. Phase plans may refine implementation details, but they
@@ -417,8 +417,33 @@ multi-agent audit may be invoked manually for unusually high-risk work.
 
 ## `ship` contract
 
-`ship` runs only after final review has no open `BLOCKING` findings and all review
-fixes have been re-verified.
+`ship` is implemented and runs only after final Review has no open `BLOCKING`
+findings and all review fixes have been re-verified. Invoke it explicitly with
+matching paths using `/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Claude Code or `$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Codex.
+
+Ship validates `In Review`/`Complete` status, final Review evidence, and the
+Review-owned post-review source manifest/fingerprint before rendering. It
+generates the final Feature Record and path-only, self-contained Executive
+Summary HTML from that final state. The record preserves accepted intent
+separately from the as-built result and carries deviations, verification,
+Review findings, linked ADRs, durable knowledge, follow-ups, and consolidated
+Execution Map facts. The HTML has inline CSS, escaped content, no source
+excerpts, and no external assets.
+
+Before mutation Ship presents one exact preview containing archive files,
+active-file deletions, each memory destination/change, commit message, PR
+description, and staging set. One explicit closeout approval binds the preview
+to the fingerprint; each memory candidate is accepted or rejected separately.
+Approved memory promotion, archive creation, active-artifact cleanup, staging,
+and local commit run as one journaled transaction in `.ship-txn/{txid}/journal.json`
+under an advisory lock. Recovery supports output-hash verification, resume,
+rollback, commit intent, index/ref safety, and post-commit drift routing.
+Archives stay durable; only `.ship-txn/` is transient and ignored.
+
+Ship never pushes, creates a PR, merges, deploys, or rewrites history. A PR
+description is informational and does not authorize a remote action. The exact
+schemas remain in the [Delivery Artifact Contracts](../references/artifact-contracts.md)
+and native commands in the [Harness Command Contract](../references/harness-command-contract.md).
 
 ### Sources of truth
 

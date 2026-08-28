@@ -107,6 +107,33 @@ class ReviewSkillContractTests(unittest.TestCase):
         self.assertRegex(self.handoff, r"(?i)base_commit.*current worktree")
         self.assertRegex(self.handoff, r"(?i)unrelated dirty (?:files|changes)")
 
+    def test_reviewed_manifest_fingerprint_and_ship_handoff_AC3_AC7_AC8_AC9(self) -> None:
+        """[AC-3] [AC-7] [AC-8] [AC-9] Review records the exact Ship freshness handoff."""
+        for document, label in ((self.body, "Review skill"), (self.artifacts, "artifact contract")):
+            self.assertIn("## Reviewed source manifest and fingerprint", document, label)
+            for field in (
+                "path-hex",
+                "state",
+                "mode",
+                "content-sha256",
+                "present",
+                "deleted",
+                "000000",
+                "source fingerprint",
+                "lowercase SHA-256",
+            ):
+                self.assertIn(field, document, f"{label}: {field}")
+        self.assertIn("path manifest", self.body)
+        self.assertIn("Ship recomputes this manifest and fingerprint", self.body)
+        self.assertIn(
+            "$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md",
+            self.body,
+        )
+        self.assertIn(
+            "/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md",
+            self.body,
+        )
+
     def test_findings_AC4_AC5_AC12_AC13_AC14(self) -> None:
         """[AC-4] [AC-5] [AC-12] [AC-13] [AC-14] Findings are actionable, stable, and bounded."""
         for phrase in (

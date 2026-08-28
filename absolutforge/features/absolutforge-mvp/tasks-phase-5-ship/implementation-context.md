@@ -4,7 +4,10 @@
 Short handoff for phase workers. Keep this file concise. Add only facts that future phases need.
 
 ## Completed Phases
-- None yet.
+- Phases 1–3 provide the canonical Ship contract, Review freshness handoff, and
+  explicit-only Ship skill.
+- Phase 4 adds deterministic Review/Ship contract coverage and implemented
+  product/skill documentation.
 
 ## Created / Changed API
 - `references/artifact-contracts.md` now defines Ship preconditions, Review-owned
@@ -20,6 +23,8 @@ Short handoff for phase workers. Keep this file concise. Add only facts that fut
 
 ## Test Utilities / Fixtures
 - Existing tests are text-contract checks using `unittest.TestCase`; no model or repository mutation is required.
+- `tests/test_ship_contract.py` uses pure raw-byte fingerprint and journal
+  fixtures; run its focused suite with Review and foundation coverage.
 
 ## Constraints For Next Phases
 - Preserve explicit-only activation, no remote side effects, and the exact artifact contracts.
@@ -32,3 +37,4 @@ Short handoff for phase workers. Keep this file concise. Add only facts that fut
 - Phase 1 implementation completed after planning and task-review gates passed.
 - `python3 -m unittest tests.test_review_contract` and `git diff --check` passed for Phase 1; source changes are committed as `ee9cf67`.
 - Phase 3: `python3 -m unittest tests.test_review_contract` and `git diff --check` passed.
+- Phase 4: `python3 -m unittest tests.test_review_contract tests.test_foundation tests.test_ship_contract` and `git diff --check` passed.

@@ -244,11 +244,12 @@ class FoundationContractTests(unittest.TestCase):
                 "skills/consult/SKILL.md",
                 "skills/discuss/SKILL.md",
                 "skills/review/SKILL.md",
+                "skills/ship/SKILL.md",
             ],
         )
         self.assertEqual(
             sorted(path.name for path in skills.iterdir()),
-            ["README.md", "build", "consult", "discuss", "review"],
+            ["README.md", "build", "consult", "discuss", "review", "ship"],
         )
         self.assertEqual(
             [path.name for path in (ROOT / "agents").iterdir()],
@@ -261,7 +262,7 @@ class FoundationContractTests(unittest.TestCase):
         }
         self.assertEqual(unsupported_integration_paths, set())
 
-        for skill_name in ("build", "discuss", "consult", "review"):
+        for skill_name in ("build", "discuss", "consult", "review", "ship"):
             skill_dir = skills / skill_name
             skill = skill_dir / "SKILL.md"
             frontmatter, body = _frontmatter_and_body(skill)
@@ -288,6 +289,24 @@ class FoundationContractTests(unittest.TestCase):
             self.assertRegex(document, r"(?i)untrusted")
             self.assertRegex(document, r"(?i)secret|credential")
         self.assertRegex(vision, r"(?i)consult.*optional|optional.*consult")
+
+    def test_ship_discovery_metadata_and_ignore_AC1_AC7_AC8_AC15(self) -> None:
+        """[AC-1] [AC-7] [AC-8] [AC-15] Ship discovery, Codex metadata, and transaction ignore rules are explicit and local."""
+        ship_skill = ROOT / "skills" / "ship" / "SKILL.md"
+        ship_metadata = ROOT / "skills" / "ship" / "agents" / "openai.yaml"
+        self.assertTrue(ship_skill.is_file())
+        self.assertTrue(ship_metadata.is_file())
+        frontmatter, body = _frontmatter_and_body(ship_skill)
+        self.assertEqual(_frontmatter_value(frontmatter, "name"), "ship")
+        self.assertEqual(_frontmatter_value(frontmatter, "disable-model-invocation"), "true")
+        self.assertIn("references/artifact-contracts.md", body)
+        self.assertIn("references/harness-command-contract.md", body)
+        metadata = ship_metadata.read_text(encoding="utf-8")
+        self.assertEqual(_yaml_value(metadata, "allow_implicit_invocation"), "false")
+        self.assertIn("$ship", metadata)
+        gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+        self.assertRegex(gitignore, r"(?m)^\.ship-txn/\s*$")
+        self.assertNotRegex(gitignore, r"archives|absolutforge/features")
 
     def test_product_docs_describe_discuss_AC1_AC4(self) -> None:
         """[AC-1] [AC-4] Product docs describe the adaptive flow and one acceptance gate."""

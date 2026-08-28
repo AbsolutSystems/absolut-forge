@@ -1,9 +1,9 @@
 # AbsolutForge skills
 
 This directory is the single host-agnostic source tree for the seven MVP
-AbsolutForge skills. `discuss`, the optional `consult` skill, `build`, and
-`review` are implemented; `ship` remains the next closeout phase, while
-`debug` and `tech-debt` are planned standalone workflows:
+AbsolutForge skills. `discuss`, the optional `consult` skill, `build`,
+`review`, and explicit-only `ship` are implemented; `debug` and `tech-debt`
+remain separate Phase 6 standalone workflows:
 
 - `discuss` — clarify intent and produce an accepted Feature Brief.
 - `consult` — optionally pressure-test a Draft or Ready Brief in a fresh
@@ -16,7 +16,8 @@ AbsolutForge skills. `discuss`, the optional `consult` skill, `build`, and
   feature-owned untracked files, excludes process/unrelated dirty files, keeps
   stable append-only finding history, and returns open blockers to `build` for
   a bounded fix/re-review loop. Accepted follow-ups remain visible to `ship`.
-- `ship` — prepare the durable delivery record and local closeout.
+- `ship` — explicitly close a final Review into a Feature Record and
+  self-contained Executive Summary HTML, then make one approved local commit.
 - `debug` — investigate concrete failures and, when requested, fix them.
 - `tech-debt` — audit technical debt and produce a remediation backlog.
 
@@ -31,7 +32,7 @@ switching, extra gate, deployment authorization, or partial delivery. Keep
 the exact contract in [`references/artifact-contracts.md`](../references/artifact-contracts.md)
 and the handoff mapping in [`references/harness-command-contract.md`](../references/harness-command-contract.md).
 
-All four implemented skills are explicit-only and live under this shared tree; they
+All five implemented skills are explicit-only and live under this shared tree; they
 link the canonical artifact and handoff contracts instead of copying schemas.
 `consult` is optional, produces no durable consultation artifact, and never gates
 the normal `discuss -> build -> review -> ship` flow.
@@ -62,3 +63,17 @@ triada, deploys, pushes, creates a PR, merges, or rewrites history. Its exact
 schema and native handoffs remain in the [artifact](../references/artifact-contracts.md)
 and [harness](../references/harness-command-contract.md) contracts; see also
 [ADR: Independent Review and Bounded Fix Loop](../docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).
+
+Ship runs only after a complete final Review with a fresh reviewed-source
+fingerprint. Invoke it as
+`/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md`
+in Claude Code or
+`$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md`
+in Codex. It presents one explicit approval preview, routes each memory
+candidate independently, archives the Feature Record and path-only Executive
+Summary, cleans approved active artifacts, and uses a journaled local
+transaction with recovery before its local commit. It does not push, create a
+PR, merge, deploy, or rewrite history. The canonical Ship schema remains in
+[`references/artifact-contracts.md`](../references/artifact-contracts.md) and
+the commands in
+[`references/harness-command-contract.md`](../references/harness-command-contract.md).

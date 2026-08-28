@@ -5,9 +5,9 @@ It gives the model a precise product goal, durable context, and room to execute
 autonomously, while concentrating quality control on verification and one final,
 independent review.
 
-> Status: private pilot foundation. The `discuss`, optional `consult`, `build`,
-> and `review` skills are implemented; `ship` remains the next closeout phase
-> and validation is non-mutating.
+> Status: private pilot MVP. The `discuss`, optional `consult`, `build`,
+> `review`, and explicit-only `ship` skills are implemented; `debug` and
+> `tech-debt` remain separate Phase 6 workflows.
 
 AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
 repository is the plugin root and uses one shared `skills/` tree for Claude Code
@@ -51,9 +51,19 @@ discuss -> build -> review -> ship
   do not block `ship`. An open blocker returns the same Brief to `build` for a
   focused correction, with escalation after two unsuccessful attempts or
   material scope expansion.
-- **ship** creates the final Feature Record, a human-facing Executive Summary
-  HTML, promotes approved project memory, and prepares the local commit and PR
-  description.
+- **ship** is the final, explicit-only local closeout after a complete Review. It
+  validates the post-review fingerprint, presents one approval preview, creates
+  the Feature Record and self-contained Executive Summary HTML, routes each
+  memory candidate independently, cleans up active artifacts, and creates one
+  local conventional commit plus a PR description. It never pushes, creates a
+  PR, merges, deploys, or rewrites history.
+
+Invoke Ship with the native command for the active harness:
+
+```text
+/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
 
 Two standalone workflows complement the core:
 
@@ -104,6 +114,26 @@ and never deploys, pushes, creates a PR, merges, or rewrites history. The comple
 finding and pass schemas live in the [Delivery Artifact Contracts](references/artifact-contracts.md),
 the native handoff is in the [Harness Command Contract](references/harness-command-contract.md),
 and the architecture decision is [ADR: Independent Review and Bounded Fix Loop](docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).
+
+Ship runs only when the Brief is `In Review`, Review is `Complete`, no open
+`BLOCKING` finding remains, and the Review-owned source manifest/fingerprint is
+fresh. It renders from the final post-review state, not from an earlier preview:
+the Feature Record keeps accepted intent separate from the as-built result and
+records deviations, verification, Review findings, ADR links, durable knowledge,
+follow-ups, and a recommended path-only review order. The Executive Summary is
+self-contained HTML with inline CSS, escaped text, repository-relative links,
+and no source excerpts or external assets. Execution Map outcomes are
+consolidated into the record rather than archived separately.
+
+Before mutation, Ship shows the exact archive files, active-file deletions,
+memory destinations, commit message, PR description, and staging set. One
+explicit approval binds that preview to the fingerprint; every memory candidate
+is accepted or rejected individually. The approved archive, memory promotion,
+active-artifact cleanup, staging, and local commit run as one journaled local
+transaction under `.ship-txn/{txid}/journal.json`, with advisory-lock metadata,
+output hashes, recovery, resume, and rollback. Archives remain durable and the
+transaction directory is transient/ignored. A post-approval or pre-freeze drift
+returns the same paths to Review without mutation or history rewriting.
 
 ## Principles
 
@@ -193,6 +223,11 @@ absolutforge/archives/{slug}/
 The Feature Record preserves the original intent separately from the as-built
 result and explicitly records deviations. The HTML summary is generated from the
 final post-review state for human PR review.
+
+Ship removes only the approved active Brief, optional Execution Map, and Review
+after approval; it does not archive the map as a separate file. Remote actions
+remain outside the workflow: a rendered PR description is informational and
+does not authorize push, PR creation, merge, deployment, or history rewrite.
 
 ## Current planning
 
