@@ -1,7 +1,7 @@
 # Phase 99: Final Verification
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship.md`
@@ -44,7 +44,7 @@ PR, merge, or rewrite history.
 ## Tasks
 
 ### Task 1: Run integrated Phase 5 verification
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (final verification only)
 **Produces:** Verified Phase 5 repository state and exact command results recorded in this file
@@ -61,9 +61,9 @@ PR, merge, or rewrite history.
 - Command assertion `python3 - <<'PY' ... for i in range(1, 16): assert f'AC-{i}' in sources ... PY` named `ac_token_scan_AC1_AC2_AC3_AC4_AC5_AC6_AC7_AC8_AC9_AC10_AC11_AC12_AC13_AC14_AC15` independently confirms every traced acceptance token is present in deterministic test sources.
 
 **Implementation decisions / remarks:**
-- Commands executed: [to be completed after verification]
-- Results: [to be completed after verification]
-- Skipped checks: [to be completed after verification or `none`]
+- Commands executed: `python3 -m unittest discover -s tests -t . -p 'test_*.py'`; `python3 -m unittest tests.test_foundation tests.test_review_contract tests.test_ship_contract`; JSON `python3 -m json.tool` loop; `git diff --check`; independent AC token assertion loop; frontmatter/Codex metadata assertion; `claude plugin validate --strict .`.
+- Results: full suite PASS (65 tests); focused Ship/Review/Foundation suite PASS (27 tests); JSON descriptors PASS; diff hygiene PASS; frontmatter/Codex metadata PASS; AC-1..AC-15 independent token scan PASS; Claude plugin validation PASS.
+- Skipped checks: none. No validator limitations observed.
 
 ## Phase Verification
 Run:
