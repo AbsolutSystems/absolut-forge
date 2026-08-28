@@ -83,6 +83,6 @@ deterministic Python `unittest` contract scanners; no runtime application code.
 ## Decision Review
 - Report: `docs/onboarding/implementation-decisions-build-model-recommendation-2026-08-28.html`
 - Decision IDs: `DEC-001` through `DEC-010`
-- Status: pending-human-review
-- Reviewed date: pending
-- Notes: Final implementation review passed with 11/11 AC fulfilled. Human acceptance is required before the feature is treated as closed and handed to any subsequent closeout action.
+- Status: accepted
+- Reviewed date: 2026-08-28
+- Notes: User accepted DEC-001 through DEC-010. Final implementation review passed with 11/11 AC fulfilled; no additional closeout action was authorized.
