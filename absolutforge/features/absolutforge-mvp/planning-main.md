@@ -93,7 +93,7 @@ implementation phases when their exact contracts are finalized.
 | 2 | Discuss | Deliver adaptive discovery, immutable Feature Briefs, amendments, optional consultation, and ADR capture | Zrobiona | `planning-phase-2-discuss.md` |
 | 3 | Build | Deliver autonomous implementation, conditional Execution Maps, resumption, and verification | Zrobiona | `planning-phase-3-build.md` |
 | 4 | Review | Deliver one independent evidence-based review and focused fix loop | Zaplanowana | `planning-phase-4-review.md` |
-| 5 | Ship | Deliver Feature Records, Executive Summary HTML, memory promotion, commit, and PR handoff | Zaplanowana | `planning-phase-5-ship.md` |
+| 5 | Ship | Deliver Feature Records, Executive Summary HTML, memory promotion, commit, and PR handoff | Do akceptacji decyzji | `planning-phase-5-ship.md` |
 | 6 | Autonomous tools | Deliver the adapted `debug` and `tech-debt` workflows | To plan | `planning-phase-6-autonomous-tools.md` |
 | 7 | Product validation | Deliver static checks, behavioral scenarios, docs, and a comparative pilot | To plan | `planning-phase-7-validation.md` |
 
