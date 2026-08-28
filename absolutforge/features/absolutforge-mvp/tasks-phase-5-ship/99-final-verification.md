@@ -78,4 +78,4 @@ Run:
 - This file contains exact evidence and the orchestrator has read it.
 
 ## Implementation Decisions / Remarks
-- [to be completed after phase completion]
+- Final verification completed with full and focused suites, JSON/frontmatter/metadata checks, AC token scan, diff hygiene, and Claude plugin validation all passing; no checks were skipped.

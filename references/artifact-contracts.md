@@ -569,16 +569,20 @@ resources; text and attribute values are escaped.
 
 ### Transaction journal and recovery
 
-Before the first mutation, Ship obtains an exclusive OS advisory lock at
-`.ship-txn/lock`; lock metadata records transaction ID, process, host, and start
-time. A live lock blocks another invocation. Kernel lock release after a crash
-does not make stale metadata authorization to mutate; every resume or rollback
-reacquires the lock.
+After explicit approval and before post-approval revalidation, Ship obtains an
+exclusive OS advisory lock at `.ship-txn/lock`; while holding it, Ship
+revalidates the manifest/fingerprint, archive collision, approved scope, index
+baseline, and transaction preconditions. Before the first mutation, Ship
+captures the exact target ref and expected parent `HEAD` under that lock. Lock
+metadata records transaction ID, process, host, and start time. A live lock
+blocks another invocation. Kernel lock release after a crash does not make
+stale metadata authorization to mutate; every resume or rollback reacquires the
+lock.
 
 Ship writes `.ship-txn/{txid}/journal.json` before mutation. It records the
 transaction state, preview digest, reviewed manifest/fingerprint, approved path
 set, original bytes/modes/existence for each mutable path, pre-transaction index
-tree, individual memory decisions, commit message, and one
+tree, captured target ref and expected parent, individual memory decisions, commit message, and one
 `pending | running | completed` operation record for every memory, archive,
 cleanup, staging, and commit action. An operation is marked `completed` only
 after its expected path/output hash or index/ref result is verified and recorded.
@@ -596,12 +600,14 @@ choice; it never duplicates archive or promotion work. Resume skips a completed
 operation only after verifying its recorded output path and hash; missing or
 mismatched output is rolled back before replay.
 
-Immediately before commit, Ship records immutable `commit_intent`: target ref,
-expected parent `HEAD`, frozen tree ID, and commit-message digest. The commit
+Immediately before commit, Ship records immutable `commit_intent` using the
+captured target ref and expected parent `HEAD`, plus the frozen tree ID and
+commit-message digest. The commit
 subject must match
-`^(feat|fix|refactor|docs|test|chore|perf)(\\([a-z0-9][a-z0-9-]*\\))?!?: [^\\r\\n]+$`.
+`^(feat|fix|refactor|docs|test|chore|perf)(\([a-z0-9][a-z0-9-]*\))?!?: [^\r\n]+$`.
 Ship creates the commit from the frozen tree and atomically updates the target
-ref only when the expected parent still matches. A moved ref leaves recovery
+ref only when the exact expected parent still matches; a newly observed parent
+is never substituted. A moved ref leaves recovery
 open and never creates a second tip or rewrites history. A post-commit drift
 check reports source changes made after the frozen tree and routes the active
 worktree back to Review without altering history.

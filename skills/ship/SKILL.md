@@ -133,12 +133,15 @@ remain unchanged and are omitted while approved closeout may continue.
 
 ## Execute one approved journaled local transaction
 
-Immediately after approval, recompute and compare the Review manifest and
-fingerprint again, before archive, memory, cleanup, or staging mutation. Any
-drift rejects closeout without mutation and emits the native Review handoff.
-Acquire and hold the OS advisory lock through commit. Before the first mutation,
-write `.ship-txn/{txid}/journal.json` and lock metadata with transaction ID,
-process, host, and start time.
+Immediately after approval, acquire and hold the OS advisory lock through
+commit. While holding it, revalidate the Review manifest and fingerprint,
+archive collisions, approved scope, index baseline, and every other transaction
+precondition before archive, memory, cleanup, or staging mutation. Any drift or
+new conflict rejects closeout without mutation and emits the native Review
+handoff. Capture the exact target ref and expected parent `HEAD` while holding
+the lock, before the first mutation; write those values into
+`.ship-txn/{txid}/journal.json` together with lock metadata (transaction ID,
+process, host, and start time).
 
 The journal records at minimum: state; `preview_digest`; reviewed manifest and
 fingerprint; approved path set; original bytes, modes, and existence for every
@@ -167,11 +170,12 @@ After the post-approval check, execute in this strict order:
 5. While locked, recompute the manifest/fingerprint a third time immediately
    before freezing the immutable commit tree. If it differs, enter recovery;
    create no commit.
-6. Record immutable `commit_intent`: target ref, expected parent `HEAD`, frozen
-   tree ID, and commit-message digest. Revalidate the commit subject, create
-   the local commit from the frozen tree, and atomically update the target ref
-   only if the expected parent still matches. Never create a second tip or
-   rewrite history.
+6. Record immutable `commit_intent` using the target ref and expected parent
+   captured before mutation, plus the frozen tree ID and commit-message digest.
+   Revalidate the commit subject, create the local commit from the frozen tree,
+   and atomically update the target ref only if that exact ref still has the
+   journaled expected parent. Never substitute a newly observed parent, create
+   a second tip, or rewrite history.
 7. Replace the real index with the frozen tree only if it still equals the
    journaled original index. Otherwise preserve the external index and report a
    post-commit index conflict.

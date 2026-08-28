@@ -1,7 +1,7 @@
 # Phase 1: Canonical Ship Contracts and Transaction ADR
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship.md`

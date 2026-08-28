@@ -20,6 +20,7 @@ SHIP_UI = ROOT / "skills" / "ship" / "agents" / "openai.yaml"
 REVIEW = ROOT / "skills" / "review" / "SKILL.md"
 ARTIFACTS = ROOT / "references" / "artifact-contracts.md"
 HANDOFF = ROOT / "references" / "harness-command-contract.md"
+ADR = ROOT / "docs" / "adr" / "2026-08-28-ship-post-review-closeout.md"
 DOCS = tuple(ROOT / path for path in ("README.md", "CLAUDE.md", "docs/product-vision.md", "skills/README.md"))
 
 COMMIT_SUBJECT_RE = r"^(feat|fix|refactor|docs|test|chore|perf)(\([a-z0-9][a-z0-9-]*\))?!?: [^\r\n]+$"
@@ -76,6 +77,7 @@ class ShipContractTests(unittest.TestCase):
         self.review = _contract(REVIEW)
         self.artifacts = _contract(ARTIFACTS)
         self.handoff = _contract(HANDOFF)
+        self.adr = _contract(ADR)
 
     def test_ship_validation_AC1_AC2_AC3_AC7_AC9_AC10_AC11(self) -> None:
         """[AC-1] [AC-2] [AC-3] [AC-7] [AC-9] [AC-10] [AC-11] validate eligibility, preview binding, freshness, collisions, and dirty-scope refusal."""
@@ -231,6 +233,9 @@ class ShipContractTests(unittest.TestCase):
         self.assertIn("stale metadata authorization", self.artifacts)
         self.assertIn("a third time immediately before freezing", self.ship)
         self.assertIn("once more while locked immediately before freezing", self.artifacts)
+        self.assertIn("acquire and hold the OS advisory lock through commit", self.ship)
+        self.assertIn("before post-approval revalidation", self.artifacts)
+        self.assertIn("before revalidating the fingerprint", self.adr)
         self.assertEqual(
             tuple(operation["state"] for operation in JOURNAL_FIXTURE["operations"]),
             ("completed",),
@@ -249,7 +254,8 @@ class ShipContractTests(unittest.TestCase):
         self.assertIn("pending | running | completed", self.artifacts)
         self.assertIn("individual promotion decisions", self.ship)
         self.assertIn("individual memory decisions", self.artifacts)
-        self.assertIn(COMMIT_SUBJECT_RE, self.ship)
+        for owner in (self.ship, self.artifacts, self.adr):
+            self.assertIn(COMMIT_SUBJECT_RE, owner)
         accepted = ("feat: ship closeout", "fix(core): recover transaction", "docs!: revise contract")
         rejected = ("feature: missing type", "feat(scope_with_underscore): bad", "feat: newline\nforbidden")
         for subject in accepted:

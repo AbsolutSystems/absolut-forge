@@ -48,13 +48,16 @@ Ship presents one complete preview gate covering generated artifacts, cleanup,
 memory destinations, commit message, and PR description. Memory items are
 accepted or rejected individually; rejected candidates remain unchanged while
 the approved closeout proceeds. After explicit approval, Ship acquires an OS
-advisory lock at `.ship-txn/lock`, writes the ignored canonical journal
+advisory lock at `.ship-txn/lock` before revalidating the fingerprint, archive
+collisions, approved scope, index baseline, and other transaction preconditions.
+While holding the lock and before the first mutation it captures the exact
+target ref and expected parent `HEAD`, writes the ignored canonical journal
 `.ship-txn/{txid}/journal.json`, and holds the lock through commit. Lock
 metadata records transaction ID, process, host, and start time; the kernel
 releases the lock on process death, and stale metadata alone never authorizes
 mutation. The journal stores the fingerprint/manifest, preview digest,
 approved path set, original bytes/modes/existence, pre-transaction index tree,
-promotion decisions, commit message, and per-operation
+captured target ref/expected parent, promotion decisions, commit message, and per-operation
 `pending|running|completed` records. The normal state machine is `prepared ->
 applying -> staged -> committing -> committed`; each operation is marked
 `completed` only after its output path/hash or index/ref result is verified and
@@ -69,7 +72,7 @@ approved memory first, writes the archive, removes active Brief/map/Review
 files, stages only the agreed paths, uses the pre-existing index as the
 restoration baseline, freezes an immutable commit tree after the final
 fingerprint check. Before creating the commit, Ship records `commit_intent`
-with the target ref, expected parent `HEAD`, frozen tree ID, and commit-message
+with the previously captured target ref and expected parent `HEAD`, frozen tree ID, and commit-message
 digest, creates a local commit from that tree whose subject matches
 `^(feat|fix|refactor|docs|test|chore|perf)(\([a-z0-9][a-z0-9-]*\))?!?: [^\r\n]+$`,
 atomically updates the target ref with the expected parent, and replaces the

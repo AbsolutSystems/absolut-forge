@@ -1,7 +1,7 @@
 # Tasks: Phase 5 — Ship
 
 ## Status
-pending
+completed
 
 ## Source
 - Source doc: `absolutforge/features/absolutforge-mvp/planning-phase-5-ship.md`
