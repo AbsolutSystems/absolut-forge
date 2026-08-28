@@ -63,7 +63,7 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Canonical Build Contracts and Harness References
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-3-build/01-contracts.md`
 **Depends on:** Phase 2 Feature Brief contract
 **Write scope:** `references/artifact-contracts.md`, `references/harness-command-contract.md`, `references/codex-tools.md`
