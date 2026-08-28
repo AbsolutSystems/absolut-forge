@@ -47,7 +47,7 @@ Feature Brief, local implementation choices, edits, verification, durable
 Execution Map and Build Evidence updates, and the final native review handoff.
 
 Before a second repair attempt for the same non-passing verification result,
-Luna performs the canonical Failure Boundary Check. It may request a bounded,
+the active Build context performs the canonical Failure Boundary Check. It may request a bounded,
 read-only `gpt-5.6-sol` diagnostic only after observable escalation signals:
 the failure cannot be causally mapped to the current outcome, the violated
 invariant is unclear, the candidate edit crosses an unapproved change surface,
@@ -61,8 +61,8 @@ and ADR/rule constraints, and prior verification results. Remove secrets,
 credentials, access tokens, and unrelated repository instructions. The advisor
 may return diagnosis and options only; it must not edit the repository, create
 or amend artifacts, run commits, push, deploy, create a PR, merge, or rewrite
-history. Luna remains responsible for deciding the correction, preserving scope,
-performing every edit, and re-running verification. If advice conflicts with
+history. The active Build context remains responsible for deciding the correction,
+preserving scope, performing every edit, and re-running verification. If advice conflicts with
 the accepted Brief or binding decision, surface the conflict for an explicit
 amendment instead of resolving it silently.
 

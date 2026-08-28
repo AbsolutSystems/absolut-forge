@@ -1,7 +1,7 @@
 # Tasks: Build model recommendation in Discuss
 
 ## Status
-pending
+completed
 
 ## Source
 - Source doc: `absolutforge/features/build-model-recommendation/planning-build-model-recommendation.md`

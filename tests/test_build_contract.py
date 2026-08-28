@@ -161,6 +161,16 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertRegex(self.body, r"(?i)cannot authorize unrelated edits")
         self.assertRegex(self.body, r"(?i)deployment.*partial delivery")
 
+    def test_selected_model_owns_build_and_escalation_AC4_AC8(self) -> None:
+        """[AC-4] [AC-8] Both recommendation profiles retain Build and escalation ownership in the selected context."""
+        for profile, model in (("simple`/`single", "gpt-5.6-luna"), ("complex`/`phased", "gpt-5.6-terra")):
+            self.assertIn(profile, self.body)
+            self.assertIn(model, self.body)
+        self.assertRegex(self.body, r"(?i)Whichever model/profile is selected.*owns implementation.*verification.*Execution Map.*Build Evidence.*escalation decisions")
+        self.assertRegex(self.body, r"(?i)active Build context may request.*gpt-5.6-sol")
+        self.assertRegex(self.body, r"(?i)active Build context remains responsible for decisions, edits, escalation, and verification")
+        self.assertNotRegex(self.body, r"(?i)Luna remains responsible")
+
     def test_recommendation_handoff_AC1_AC4_AC5_AC6_AC7_AC8_AC11(self) -> None:
         """[AC-1] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11] Handoff preserves advisory metadata and immutable intent."""
         self.assertIn("optional `## Build Recommendation` travels", self.handoff)

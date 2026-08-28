@@ -65,6 +65,8 @@ harness, its configured model, and an explicit user choice remain authoritative;
 this skill does not invoke, switch, install, or configure models
 automatically. A recommendation for another harness is not evidence that the
 current harness can provide that model.
+Whichever model/profile is selected for the invocation owns implementation,
+verification, Execution Map, Build Evidence, and escalation decisions.
 
 For every Build invocation, append concise, secret-redacted Build Evidence
 recording the recommendation received, the profile/model actually used, and
@@ -166,15 +168,15 @@ change; do not preserve inaccurate Javadoc, doc comments, or user guidance.
 
 ## Escalate and resume without hidden state
 
-The primary Codex route is `gpt-5.6-luna` with `xhigh` reasoning, as mapped in
-[Codex tools](../../references/codex-tools.md). When the Failure Boundary Check
-shows genuine need, Luna may request an optional, bounded, read-only
+The active Build model/profile is the primary route, with Codex tier and
+reasoning mapped in [Codex tools](../../references/codex-tools.md). When the
+Failure Boundary Check shows genuine need, the active Build context may request an optional, bounded, read-only
 `gpt-5.6-sol` diagnostic. Give Sol only the smallest redacted package: the
 observable failure, relevant invariant, scoped code or diff evidence, Brief and
 ADR/rule constraints, and prior verification results. Sol may return diagnosis
 and options only; it must not edit files, amend artifacts, commit, push, deploy,
-create a PR, merge, or rewrite history. Luna remains responsible for decisions,
-edits, and verification. Surface advice that conflicts with the accepted Brief
+create a PR, merge, or rewrite history. The active Build context remains responsible for decisions,
+edits, escalation, and verification. Surface advice that conflicts with the accepted Brief
 or binding decisions for an explicit amendment instead of silently choosing it.
 
 Subagents and independent research are optional, never mandatory workers,
