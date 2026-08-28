@@ -70,17 +70,17 @@ orchestrated
 **Risk:** high
 
 ### Phase 2: Autonomous Build Skill
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-3-build/02-build-skill.md`
 **Depends on:** Phase 1
 **Write scope:** `skills/build/SKILL.md`, `skills/build/agents/openai.yaml`
 **Risk:** high
 
 ### Phase 3: Contract Tests and Product Documentation
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-3-build/03-tests-and-docs.md`
 **Depends on:** Phase 2
-**Write scope:** `tests/test_build_contract.py`, `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `skills/README.md`
+**Write scope:** `tests/test_build_contract.py`, `tests/test_foundation.py`, `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `skills/README.md`
 **Risk:** medium
 
 ## Final Verification
