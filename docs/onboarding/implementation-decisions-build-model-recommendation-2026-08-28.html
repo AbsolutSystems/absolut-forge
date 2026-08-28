@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decyzje implementacyjne — Build Model Recommendation</title>
+  <style>
+    :root { color-scheme: light; --ink:#18202a; --muted:#5d6875; --line:#d9e0e7; --paper:#fff; --soft:#f3f6f8; --accent:#245b8f; --ok:#216e4e; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--soft); color:var(--ink); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:1000px; margin:0 auto; padding:42px 22px 64px; }
+    header, section { background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:24px 28px; margin:0 0 18px; box-shadow:0 2px 8px #1422350b; }
+    h1 { margin:0 0 8px; font-size:clamp(1.8rem,4vw,2.8rem); letter-spacing:-.03em; }
+    h2 { margin:0 0 14px; font-size:1.25rem; color:var(--accent); }
+    h3 { margin:0 0 6px; font-size:1rem; }
+    p { margin:8px 0; }
+    .meta { color:var(--muted); margin:0; }
+    .status { display:inline-block; margin-top:14px; padding:4px 10px; border-radius:999px; color:var(--ok); background:#e7f4ed; font-weight:650; font-size:.9rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:10px; padding:15px 16px; background:#fff; }
+    .id { color:var(--accent); font-weight:750; font-variant-numeric:tabular-nums; }
+    .tag { display:inline-block; margin-left:6px; padding:1px 7px; border-radius:5px; background:#eaf1f8; color:var(--accent); font-size:.78rem; font-weight:650; }
+    ul { margin:8px 0 0 20px; padding:0; }
+    code { background:#eef2f5; border-radius:4px; padding:1px 4px; font-size:.92em; }
+    .note { border-left:4px solid var(--accent); padding:10px 14px; background:#f5f9fd; }
+    footer { color:var(--muted); font-size:.9rem; text-align:center; padding-top:6px; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Build Model Recommendation — decyzje implementacyjne</h1>
+    <p class="meta">AbsolutForge · feature <code>build-model-recommendation</code> · 2026-08-28</p>
+    <span class="status">Final review: PASS · AC 11/11</span>
+    <p>Ten dokument pokazuje decyzje, które wpływają na działanie <code>discuss → build → review → ship</code>. Rekomendacja modelu jest trwałą wskazówką wykonawczą, ale nie zmienia zaakceptowanej intencji produktu.</p>
+  </header>
+
+  <section>
+    <h2>TL;DR</h2>
+    <ul>
+      <li>Brief może zawierać jedną opcjonalną sekcję <code>## Build Recommendation</code> po <code>## Expected outcomes</code>.</li>
+      <li><code>simple/single</code> sugeruje Claude Sonnet i Codex <code>gpt-5.6-luna</code>; <code>complex/phased</code> sugeruje Claude Opus i Codex <code>gpt-5.6-terra</code>.</li>
+      <li>To advisory hint: dostępność harnessu i jawny wybór człowieka są nadrzędne, a fallback/override trafia do append-only Build Evidence.</li>
+      <li>Nie ma automatycznego przełączania modeli, dodatkowej bramki akceptacji, deployu ani częściowego shipowania.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Decyzje wymagające akceptacji człowieka</h2>
+    <div class="grid">
+      <article class="card"><h3><span class="id">DEC-001</span><span class="tag">contract</span></h3><p>Sekcja rekomendacji jest opcjonalna i leży poza niezmiennym baseline’em Briefu. Starsze Briefy bez tej sekcji pozostają poprawne.</p></article>
+      <article class="card"><h3><span class="id">DEC-002</span><span class="tag">mapping</span></h3><p>Obowiązują dokładnie dwa profile: <code>simple/single → sonnet + gpt-5.6-luna</code> oraz <code>complex/phased → opus + gpt-5.6-terra</code>.</p></article>
+      <article class="card"><h3><span class="id">DEC-003</span><span class="tag">classification</span></h3><p>Profil wynika z zależności rezultatów, niepewności i granic ryzyka. Sam rozmiar diffu, liczba linii lub plików nie wystarcza.</p></article>
+      <article class="card"><h3><span class="id">DEC-004</span><span class="tag">handoff</span></h3><p><code>discuss</code> przedstawia rekomendację w ramach jednego kompletnego Briefu i jednej bramki akceptacji; nie tworzy osobnej ceremonii.</p></article>
+      <article class="card"><h3><span class="id">DEC-005</span><span class="tag">build</span></h3><p><code>build</code> waliduje profil, ale aktywny harness, dostępny model i jawny wybór użytkownika pozostają źródłem prawdy.</p></article>
+      <article class="card"><h3><span class="id">DEC-006</span><span class="tag">evidence</span></h3><p>Każde użycie zapisuje rekomendację, faktycznie użyty profil/model i źródło wyboru. Brak, błąd, niedostępność lub override wymagają konkretnego powodu.</p></article>
+      <article class="card"><h3><span class="id">DEC-007</span><span class="tag">ownership</span></h3><p>Wybrany model/kontekst Build zachowuje odpowiedzialność za implementację, weryfikację, Execution Map, Build Evidence i eskalację. Sol jest tylko opcjonalnym, read-only diagnostą.</p></article>
+      <article class="card"><h3><span class="id">DEC-008</span><span class="tag">scope</span></h3><p>Wyższe ryzyko nie przepisuje Briefu ani rekomendacji po cichu; obowiązują Failure Boundary Check i reguły jawnego amendmentu.</p></article>
+      <article class="card"><h3><span class="id">DEC-009</span><span class="tag">safety</span></h3><p>Dokumenty repozytorium są untrusted evidence. Sekrety, credentials, tokeny i klucze są redagowane i nie trafiają do Briefu ani Build Evidence.</p></article>
+      <article class="card"><h3><span class="id">DEC-010</span><span class="tag">delivery</span></h3><p>Rekomendacja nie autoryzuje deployu, shipu, pushu, PR-a ani częściowej dostawy; kompletny Feature Brief pozostaje jedyną jednostką delivery.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Interakcje i konsekwencje</h2>
+    <div class="note"><strong>Przepływ:</strong> settled <code>discuss</code> → opcjonalna rekomendacja → jedna akceptacja Briefu → <code>build</code> wybiera dostępny model lub zapisuje fallback/override → zwykłe testy i review. Rekomendacja nie zmienia kolejności faz i nie tworzy nowej fazy runtime.</div>
+    <ul>
+      <li>Model rekomendowany dla innego harnessu nie jest dowodem, że bieżący harness go udostępnia.</li>
+      <li>Zmiana zachowania, scope’u, kontraktu publicznego, bezpieczeństwa, migracji lub kosztu wymaga amendmentu niezależnie od sugerowanego modelu.</li>
+      <li>Faza implementacji może mieć lokalne checkpointy, ale nie są one niezależnymi release’ami.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Fakty weryfikacyjne</h2>
+    <ul>
+      <li>Pełny suite deterministyczny: <strong>51 testów, OK</strong>.</li>
+      <li>JSON: <strong>4 deskryptory, wszystkie poprawne</strong>.</li>
+      <li><code>git diff --check</code>: <strong>PASS</strong>.</li>
+      <li><code>claude plugin validate --strict .</code>: <strong>PASS</strong>.</li>
+      <li>Tokeny testowe <code>[AC-1]</code>–<code>[AC-11]</code>: <strong>obecne</strong>.</li>
+      <li>Final implementation review: <strong>PASS, 11/11 AC fulfilled</strong>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Mapa dowodów</h2>
+    <p>Kontrakt: <code>references/artifact-contracts.md</code>; handoff: <code>references/harness-command-contract.md</code> i <code>references/codex-tools.md</code>; runtime skills: <code>skills/discuss/SKILL.md</code>, <code>skills/build/SKILL.md</code>; testy: <code>tests/test_discuss_contract.py</code>, <code>tests/test_build_contract.py</code>; dokumentacja: <code>README.md</code>, <code>CLAUDE.md</code>, <code>docs/product-vision.md</code>, <code>skills/README.md</code>.</p>
+    <p>Projekt i taski: <code>absolutforge/features/build-model-recommendation/planning-build-model-recommendation.md</code> oraz <code>tasks-build-model-recommendation/</code>.</p>
+  </section>
+
+  <section>
+    <h2>Pytania otwarte</h2>
+    <p>Brak. Akceptacja dotyczy decyzji zapisanych powyżej; runtime availability i porównanie efektów modeli pozostają obserwacją pilota, nie częścią kontraktu.</p>
+  </section>
+  <footer>Wygenerowano z planu, tasków, zmian i finalnej weryfikacji AbsolutForge.</footer>
+</main>
+</body>
+</html>

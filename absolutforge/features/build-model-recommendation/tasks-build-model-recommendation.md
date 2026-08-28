@@ -79,3 +79,10 @@ deterministic Python `unittest` contract scanners; no runtime application code.
 - Workers update only their phase file and `implementation-context.md`; the orchestrator updates parent phase statuses and the progress ledger.
 - Existing immutable Brief semantics remain authoritative. The recommendation is execution guidance and may not silently change accepted intent.
 - No plugin activation, model invocation, deployment, push, PR, merge, or history rewrite is part of these tasks.
+
+## Decision Review
+- Report: `docs/onboarding/implementation-decisions-build-model-recommendation-2026-08-28.html`
+- Decision IDs: `DEC-001` through `DEC-010`
+- Status: pending-human-review
+- Reviewed date: pending
+- Notes: Final implementation review passed with 11/11 AC fulfilled. Human acceptance is required before the feature is treated as closed and handed to any subsequent closeout action.
