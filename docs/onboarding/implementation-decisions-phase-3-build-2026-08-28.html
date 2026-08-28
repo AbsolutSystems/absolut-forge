@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AbsolutForge — decyzje implementacyjne Phase 3</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f6f7f9; --fg:#18202a; --muted:#5d6875; --card:#fff; --line:#d9dee5; --accent:#2e6fdb; --warn:#8a5a00; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#11151b; --fg:#edf1f5; --muted:#aab5c1; --card:#1b222c; --line:#35404d; --accent:#82b1ff; --warn:#e5b85c; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { max-width:1100px; margin:0 auto; padding:32px 20px 56px; }
+    h1,h2,h3 { line-height:1.2; }
+    h1 { margin:0 0 8px; font-size:clamp(1.8rem,4vw,2.8rem); }
+    h2 { margin-top:36px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+    .lead { color:var(--muted); max-width:850px; }
+    .summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:24px 0; }
+    .metric,.card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+    .metric strong { display:block; font-size:1.5rem; color:var(--accent); }
+    .decision-grid { display:grid; gap:16px; }
+    .card h3 { margin:0 0 10px; color:var(--accent); }
+    .meta { color:var(--muted); font-size:.92rem; }
+    .kind { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 8px; margin-left:6px; color:var(--warn); font-size:.8rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--accent); background:color-mix(in srgb, var(--accent) 8%, transparent); }
+    dl { margin:10px 0 0; display:grid; grid-template-columns:minmax(125px,190px) 1fr; gap:6px 16px; }
+    dt { color:var(--muted); font-weight:600; }
+    dd { margin:0; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em; }
+    .question { margin-top:12px; font-weight:650; }
+    ul { margin-top:8px; }
+    footer { margin-top:40px; color:var(--muted); font-size:.9rem; }
+    @media (max-width:620px) { dl { grid-template-columns:1fr; gap:2px; } dt { margin-top:8px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>AbsolutForge — Phase 3 Build</h1>
+    <p class="lead">Checkpoint ludzkiego przeglądu decyzji implementacyjnych po final verification i review-implementation. Raport nie jest kolejnym code review: pokazuje, co zostało przyjęte, jakie są konsekwencje i co wymaga akceptacji.</p>
+  </header>
+
+  <section>
+    <h2>TL;DR</h2>
+    <div class="summary">
+      <div class="metric"><strong>12</strong>decyzji / grup uwag</div>
+      <div class="metric"><strong>15/15</strong>AC spełnionych</div>
+      <div class="metric"><strong>46</strong>testów deterministycznych</div>
+      <div class="metric"><strong>Średnie</strong>ryzyko całości</div>
+    </div>
+    <p>Najważniejsza decyzja produktowa pozostaje bez zmian: Build działa explicit-only, prowadzi model przez outcome’y i trwałe evidence, ale cały Feature Brief jest jedną jednostką dostawy. Nie ma częściowego deploymentu ani ukrytej ceremonii agentów. Ryzyko jest średnie, bo zmiana definiuje granice autonomii i wznowienia, lecz kontrakty, testy, manifesty i walidacja Claude przeszły.</p>
+  </section>
+
+  <section>
+    <h2>Decyzje wymagające akceptacji</h2>
+    <div class="decision-grid">
+      <article class="card"><h3>DEC-001 — Canonical Execution Map i Build Evidence <span class="kind">wybór implementacyjny</span></h3><div class="meta">Źródło: <code>01-contracts.md</code>, Task 1</div><blockquote>Extended the canonical map and added append-only Build Evidence without changing the immutable Brief baseline or Review/Record schemas.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>references/artifact-contracts.md</code> definiuje statusy mapy, <code>base_commit</code>, checkpointy i evidence.</dd><dt>Rationale</dt><dd>Fakt zgodny z planem: trwały stan ma być odtwarzalny, a intencja Briefu nie może być przepisywana przez implementację.</dd><dt>Alternatywy</dt><dd>Brak znanej alternatywy w materiale; możliwe byłoby kopiowanie schematów do skilla, ale naruszałoby single source of truth.</dd><dt>Konsekwencje / ryzyko</dt><dd>Więcej trwałych artefaktów do utrzymania, za to bezpieczne wznowienie i pełna historia decyzji. Ryzyko: niskie; odwracalność: średnia, bo zmiana kontraktu wpływa na kolejne fazy.</dd><dt>Rekomendacja</dt><dd>Zaakceptować jako bazę dla Phase 4–5.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-002 — Native handoff jest jawny i niemutujący <span class="kind">wybór implementacyjny</span></h3><div class="meta">Źródło: <code>01-contracts.md</code>, Task 2</div><blockquote>Added generic, complete native build/review paths and made resume, whole-diff review, and non-mutating handoff boundaries explicit.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>references/harness-command-contract.md</code> zawiera kompletne formy Claude/Codex z repozytoryjnymi ścieżkami.</dd><dt>Rationale</dt><dd>Handoff ma być kopiowalny między harnessami i nie może przypadkiem instalować, wdrażać ani zmieniać historii.</dd><dt>Alternatywy</dt><dd>Brak znanej alternatywy; host-specific fork zwiększałby koszt i ryzyko rozjazdu.</dd><dt>Konsekwencje / ryzyko</dt><dd>Użytkownik musi jawnie wywołać następną fazę. Ryzyko: niskie; odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-003 — Sol tylko jako bounded, read-only advisor <span class="kind">wybór bezpieczeństwa</span></h3><div class="meta">Źródło: <code>01-contracts.md</code>, Task 3</div><blockquote>Kept Sol optional and diagnostic-only; durable artifacts remain the resume authority when native compaction is unavailable.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>references/codex-tools.md</code> mapuje Luna jako wykonawcę i Sol jako opcjonalną eskalację po Failure Boundary Check.</dd><dt>Rationale</dt><dd>Rozdziela diagnozę od własności zmian; brak compaction nie może tworzyć ukrytego stanu.</dd><dt>Alternatywy</dt><dd>Obowiązkowy drugi model lub pełny subagent review byłyby cięższe tokenowo i sprzeczne z wizją AbsolutForge.</dd><dt>Konsekwencje / ryzyko</dt><dd>Sol może doradzić, ale nie naprawi problemu; Luna musi ocenić poradę. Ryzyko: średnie na granicy eskalacji, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować z zachowaniem redakcji sekretów i read-only.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-004 — Internal progress ≠ review-ready / release <span class="kind">fakt kontraktowy</span></h3><div class="meta">Źródło: <code>01-contracts.md</code>, podsumowanie fazy</div><blockquote>Canonical contracts now separate verified internal progress from whole-feature review readiness and preserve no-deployment boundaries.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>ADR-004 i ADR-005 oraz Build skill blokują traktowanie map section/checkpoint jako osobno shippable.</dd><dt>Rationale</dt><dd>To bezpośrednia realizacja zaakceptowanej tezy o jednej jednostce dostawy.</dd><dt>Alternatywy</dt><dd>Wcześniejszy deployment faz zwiększałby ryzyko niespójnego feature'a i został wykluczony.</dd><dt>Konsekwencje / ryzyko</dt><dd>Brak częściowych wydań; większa odpowiedzialność za final verification. Ryzyko: niskie produktowo, średnie operacyjnie.</dd><dt>Rekomendacja</dt><dd>Zaakceptować jako niezmiennik.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-005 — Schematy pozostają canonical, planning jest conditional <span class="kind">wybór architektoniczny</span></h3><div class="meta">Źródło: <code>02-build-skill.md</code>, Task 1</div><blockquote>Linked canonical artifact and harness contracts rather than duplicating schemas; durable outcome facts support resume while delivery remains whole-feature only.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>skills/build/SKILL.md</code> linkuje kontrakty i tworzy Execution Map tylko przy zależnych outcome’ach, niepewności lub potrzebie wznowienia.</dd><dt>Rationale</dt><dd>Zmniejsza prompt i ryzyko sprzecznych definicji, zachowując autonomię modelu.</dd><dt>Alternatywy</dt><dd>Stały szczegółowy task plan byłby podejściem AbsolutPowers, świadomie odrzuconym dla tego produktu.</dd><dt>Konsekwencje / ryzyko</dt><dd>Model sam dobiera granice outcome’ów; wymaga dobrego Briefu. Ryzyko: średnie, odwracalność: średnia.</dd><dt>Rekomendacja</dt><dd>Zaakceptować; obserwować w pilotażu.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-006 — Minimalny Codex descriptor dla <code>$build</code> <span class="kind">fakt integracyjny</span></h3><div class="meta">Źródło: <code>02-build-skill.md</code>, Task 2</div><blockquote>Matched the existing minimal Codex metadata shape with explicit <code>$build</code> usage and no implicit or capability declarations.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>skills/build/agents/openai.yaml</code> ma <code>policy.allow_implicit_invocation: false</code>; manifest przechodzi strict validation.</dd><dt>Rationale</dt><dd>Nowy produkt nie może aktywować workflow samoczynnie ani rozszerzać uprawnień.</dd><dt>Alternatywy</dt><dd>Hooks, MCP, apps lub automatyczne agenty są poza MVP i zostały wykluczone.</dd><dt>Konsekwencje / ryzyko</dt><dd>Jawne wywołanie jest wymagane; bezpieczeństwo i przewidywalność rosną. Ryzyko: niskie, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-007 — Build jako host-agnostic, explicit-only workflow <span class="kind">fakt produktowy</span></h3><div class="meta">Źródło: <code>02-build-skill.md</code>, podsumowanie fazy</div><blockquote>Build is a host-agnostic, explicit-only workflow that links canonical schemas, keeps planning conditional, and treats the whole feature as the sole delivery unit.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>Wspólne <code>skills/build/SKILL.md</code> i referencje obsługują Claude Code/Codex bez osobnych forków.</dd><dt>Rationale</dt><dd>To realizuje osobną tożsamość AbsolutForge i izolację od AbsolutPowers.</dd><dt>Alternatywy</dt><dd>Dziedziczenie ciężkiej ceremonii AbsolutPowers byłoby prostsze mechanicznie, ale sprzeczne z celem produktu.</dd><dt>Konsekwencje / ryzyko</dt><dd>Mniej gate’ów, większa autonomia modelu i ciężar final review. Ryzyko: średnie, odwracalność: średnia.</dd><dt>Rekomendacja</dt><dd>Zaakceptować jako główną hipotezę produktu.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-008 — Deterministyczne testy AC-1…AC-15 <span class="kind">wybór jakościowy</span></h3><div class="meta">Źródło: <code>03-tests-and-docs.md</code>, Task 1</div><blockquote>Added a static, whitespace-normalized <code>unittest</code> scanner with literal [AC-1] through [AC-15] tokens; it checks the Build skill, manifests, canonical contracts, and product-doc boundary without model calls.<br>Extended the foundation active-skill allowlist to include <code>build</code>, keeping the full deterministic suite aligned with the new explicit-only skill.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd><code>tests/test_build_contract.py</code> oraz <code>tests/test_foundation.py</code>; pełny suite ma 46 testów.</dd><dt>Rationale</dt><dd>Kontrakty Markdown/JSON/YAML można sprawdzić tanio, powtarzalnie i bez zużycia modelu.</dd><dt>Alternatywy</dt><dd>Testy behawioralne z realnym modelem są odłożone do walidacji produktu, bo byłyby kosztowne i niedeterministyczne.</dd><dt>Konsekwencje / ryzyko</dt><dd>Suite nie dowodzi jakości implementacji modelowej w runtime; daje silną ochronę granic repozytorium. Ryzyko: średnie, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować jako test statyczny; uzupełnić pilotem w Phase 7.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-009 — Dokumentacja Build i izolacja od AbsolutPowers <span class="kind">wybór dokumentacyjny</span></h3><div class="meta">Źródło: <code>03-tests-and-docs.md</code>, Task 2</div><blockquote>Marked Build implemented in contributor/product indexes and documented conditional maps, durable resume, Failure Boundary Check, scout/documentation rules, optional redacted Sol advice, no partial deployment, and AbsolutPowers isolation.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>Zmieniono <code>README.md</code>, <code>CLAUDE.md</code>, <code>docs/product-vision.md</code> i <code>skills/README.md</code>; test sprawdza granice per plik.</dd><dt>Rationale</dt><dd>Opis produktu musi być zgodny ze stanem implementacji i nie może sugerować równoległego aktywowania obu workflow.</dd><dt>Alternatywy</dt><dd>Minimalna dokumentacja odłożona do końca zwiększałaby ryzyko utraty kontekstu przy nowej sesji.</dd><dt>Konsekwencje / ryzyko</dt><dd>Większa powierzchnia dokumentacji do utrzymania; ryzyko: niskie, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-010 — Review follow-up i testy granic <span class="kind">fakt jakościowy</span></h3><div class="meta">Źródło: <code>03-tests-and-docs.md</code>, podsumowanie fazy</div><blockquote>Phase verification passed: <code>python3 -m unittest discover -s tests -t . -p 'test_*.py'</code> (46 tests) and <code>git diff --check</code>.<br>Review follow-up tightened AC-6/AC-10/AC-11 assertions and made product-doc boundary checks file-specific; corrected the three-skill documentation wording.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>Phase review PASS; osobne testy obejmują accepted/rejected amendment, dirty worktree i untouched-code failure.</dd><dt>Rationale</dt><dd>To zapis reakcji na niezależny review, nie zmiana celu produktu.</dd><dt>Alternatywy</dt><dd>Można było pozostawić testy obecnościowe, ale zwiększałoby to ryzyko fałszywego PASS.</dd><dt>Konsekwencje / ryzyko</dt><dd>Większa precyzja testów przy niewielkim koszcie. Ryzyko: niskie, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-011 — Zestaw final verification jest statyczny i pełny <span class="kind">fakt weryfikacyjny</span></h3><div class="meta">Źródło: <code>99-final-verification.md</code>, Task 1</div><blockquote>Commands executed and results are recorded below; no required check was skipped.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>Suite, JSON descriptors, diff check, AC token scan i Claude strict validation zakończyły się exit 0.</dd><dt>Rationale</dt><dd>Final verification ma potwierdzić kontrakty repozytorium bez instalacji, aktywacji, deploymentu ani model calls.</dd><dt>Alternatywy</dt><dd>Brak znanej bezpiecznej alternatywy dla pełnego zestawu przed review.</dd><dt>Konsekwencje / ryzyko</dt><dd>Nie jest to runtime pilot; ryzyko statycznej nadinterpretacji pozostaje średnie i jest jawnie opisane. Odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować wyniki jako gate Phase 3.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+
+      <article class="card"><h3>DEC-012 — Dowody final verification <span class="kind">fakt weryfikacyjny</span></h3><div class="meta">Źródło: <code>99-final-verification.md</code>, sekcja końcowa</div><blockquote><code>python3 -m unittest discover -s tests -t . -p 'test_*.py'</code> — exit 0; 46 tests passed.<br><code>for f in $(git ls-files '*.json' --others --exclude-standard); do python3 -m json.tool "$f" &gt;/dev/null; done</code> — exit 0; all JSON descriptors parsed.<br><code>git diff --check</code> — exit 0; no whitespace errors.<br>AC token scan over <code>tests/</code> — exit 0; every literal <code>AC-1</code> through <code>AC-15</code> is present.<br><code>claude plugin validate --strict .</code> — exit 0; Claude CLI available and validation passed.<br>Verification is static and non-mutating; no plugin activation, model invocation, deployment, push, PR, merge, or history rewrite was performed.</blockquote><dl><dt>Zweryfikowany kontekst</dt><dd>Wyniki zostały ponownie uruchomione po korekcie handoffu i zapisane w commit <code>d70fea8</code>.</dd><dt>Rationale</dt><dd>Świeży, powtarzalny dowód przed zamknięciem implementacji.</dd><dt>Alternatywy</dt><dd>Można pominąć Claude CLI, lecz był dostępny i przeszedł; pominięcie osłabiłoby dowód.</dd><dt>Konsekwencje / ryzyko</dt><dd>Potwierdza stan repozytorium, nie przyszłe zachowanie runtime. Ryzyko: niskie w zakresie kontraktów, odwracalność: wysoka.</dd><dt>Rekomendacja</dt><dd>Zaakceptować, a runtime pilot zaplanować w Phase 7.</dd></dl><p class="question">Akceptuję / Proszę zmienić tę decyzję?</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Interakcje i konsekwencje zbiorcze</h2>
+    <ul>
+      <li>Canonical schemas (DEC-001, DEC-005) + explicit-only metadata (DEC-006, DEC-007) utrzymują jedną, przewidywalną ścieżkę bez globalnego zachowania.</li>
+      <li>Outcome map, evidence, checkpointy i jedna jednostka dostawy (DEC-001, DEC-004, DEC-005) pozwalają wznowić pracę, ale nie tworzą wcześniejszego deploymentu.</li>
+      <li>Failure Boundary Check, opcjonalny Sol i statyczne AC tests (DEC-003, DEC-008, DEC-010) przesuwają kontrolę z ciężkiej ceremonii na granice, dowody i final review.</li>
+      <li>Dokumentacja i izolacja AbsolutPowers (DEC-009) są warunkiem bezpiecznego rozpoczęcia nowej sesji w osobnym repozytorium.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Uwagi informacyjne i fakty implementacyjne</h2>
+    <ul>
+      <li>Zmiany są zapisane w commitach od <code>7f6d2c6</code> do <code>d70fea8</code>; nie wykonano push, PR, merge ani deploymentu.</li>
+      <li>Phase review i final implementation review zwróciły <strong>PASS</strong>; finalna ocena to <strong>AC Fulfillment: 15/15 FULFILLED</strong>.</li>
+      <li>Handoff jest obecnie celowo zatrzymany na ludzkiej akceptacji decyzji; ten raport nie uruchamia Phase 4.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Brakujące lub niejednoznaczne uzasadnienie</h2>
+    <p>Nie ma otwartego blockera technicznego. Najważniejsze pytanie produktowe pozostaje empiryczne: czy autonomia Build i conditional Execution Map dają lepszy stosunek jakości do kosztu niż ceremonia AbsolutPowers. Odpowiedź wymaga pilotu porównawczego w Phase 7; nie została założona na podstawie samych testów statycznych.</p>
+  </section>
+
+  <section>
+    <h2>Evidence map</h2>
+    <ul>
+      <li>Plan i AC: <code>absolutforge/features/absolutforge-mvp/planning-phase-3-build.md</code></li>
+      <li>Task index i status: <code>absolutforge/features/absolutforge-mvp/tasks-phase-3-build.md</code></li>
+      <li>Fazy: <code>absolutforge/features/absolutforge-mvp/tasks-phase-3-build/01-contracts.md</code>, <code>02-build-skill.md</code>, <code>03-tests-and-docs.md</code>, <code>99-final-verification.md</code></li>
+      <li>Implementacja: <code>references/artifact-contracts.md</code>, <code>references/harness-command-contract.md</code>, <code>references/codex-tools.md</code>, <code>skills/build/SKILL.md</code>, <code>skills/build/agents/openai.yaml</code></li>
+      <li>Testy i docs: <code>tests/test_build_contract.py</code>, <code>tests/test_foundation.py</code>, <code>README.md</code>, <code>CLAUDE.md</code>, <code>docs/product-vision.md</code>, <code>skills/README.md</code></li>
+      <li>Decyzje architektoniczne: <code>docs/adr/2026-08-28-outcome-oriented-build-and-checkpoints.md</code>, <code>docs/adr/2026-08-28-single-delivery-unit-no-partial-deployment.md</code></li>
+    </ul>
+  </section>
+
+  <footer>Wygenerowano 2026-08-28. Odpowiedź człowieka powinna zostać zapisana w sekcji <code>## Decision Review</code> głównego task setu.</footer>
+</main>
+</body>
+</html>

@@ -92,3 +92,10 @@ orchestrated
 - Orchestrator updates phase statuses; workers update only their phase file and `implementation-context.md`.
 - ADR-004 and ADR-005 already exist from accepted planning and must be linked/referenced, not duplicated or rewritten unless implementation discovers a genuine deviation.
 - No deployment, plugin activation, push, PR, merge, or history rewrite is part of these tasks.
+
+## Decision Review
+- Report: `docs/onboarding/implementation-decisions-phase-3-build-2026-08-28.html`
+- Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008, DEC-009, DEC-010, DEC-011, DEC-012
+- Status: pending-human-review
+- Reviewed: 2026-08-28 | pending
+- Notes: Final implementation review passed; human acceptance is requested for the recorded Phase 3 implementation decisions before the normal handoff.
