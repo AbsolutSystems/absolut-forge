@@ -79,7 +79,7 @@ orchestrated
 **Risk:** high
 
 ### Phase 3: Ship Skill and Codex Metadata
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship/03-ship-skill.md`
 **Depends on:** Phase 1 and Phase 2
 **Write scope:** `skills/ship/SKILL.md`, `skills/ship/agents/openai.yaml`
