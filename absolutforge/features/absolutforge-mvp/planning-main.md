@@ -91,7 +91,7 @@ implementation phases when their exact contracts are finalized.
 |---|---|---|---|---|
 | 1 | Product foundation | Establish the repository, contracts, shared skill tree, and Claude/Codex manifests | Zrobiona | `planning-phase-1-foundation.md` |
 | 2 | Discuss | Deliver adaptive discovery, immutable Feature Briefs, amendments, optional consultation, and ADR capture | Zrobiona | `planning-phase-2-discuss.md` |
-| 3 | Build | Deliver autonomous implementation, conditional Execution Maps, resumption, and verification | Do akceptacji decyzji | `planning-phase-3-build.md` |
+| 3 | Build | Deliver autonomous implementation, conditional Execution Maps, resumption, and verification | Zrobiona | `planning-phase-3-build.md` |
 | 4 | Review | Deliver one independent evidence-based review and focused fix loop | To plan | `planning-phase-4-review.md` |
 | 5 | Ship | Deliver Feature Records, Executive Summary HTML, memory promotion, commit, and PR handoff | To plan | `planning-phase-5-ship.md` |
 | 6 | Autonomous tools | Deliver the adapted `debug` and `tech-debt` workflows | To plan | `planning-phase-6-autonomous-tools.md` |

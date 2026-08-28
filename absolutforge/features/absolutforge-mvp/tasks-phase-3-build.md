@@ -96,6 +96,6 @@ orchestrated
 ## Decision Review
 - Report: `docs/onboarding/implementation-decisions-phase-3-build-2026-08-28.html`
 - Decisions: DEC-001, DEC-002, DEC-003, DEC-004, DEC-005, DEC-006, DEC-007, DEC-008, DEC-009, DEC-010, DEC-011, DEC-012
-- Status: pending-human-review
-- Reviewed: 2026-08-28 | pending
-- Notes: Final implementation review passed; human acceptance is requested for the recorded Phase 3 implementation decisions before the normal handoff.
+- Status: accepted
+- Reviewed: 2026-08-28 | accepted
+- Notes: Human accepted DEC-001 through DEC-012; no changes requested.
