@@ -49,7 +49,7 @@ activation behavior.
 ## Tasks
 
 ### Task 1: Add the reviewed-scope manifest and fingerprint handoff to Review
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-3, AC-6, AC-7, AC-9, AC-10, AC-11, AC-13, AC-15
 **Test-first:** no (host-agnostic Markdown skill contract)
 **Produces:** `skills/review/SKILL.md` Review instructions that record the Ship-reviewed path manifest and canonical SHA-256 fingerprint
@@ -76,10 +76,10 @@ re-review behavior.
 - `test_review_scope_redaction_AC9_AC15` checks safe-scope exclusions and untrusted-input boundaries remain intact.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Review now records the canonical raw-byte manifest and SHA-256 only after the final assessment and before `Complete`; unsafe or stale scope remains an input blocker.
 
 ### Task 2: Add native Ship mappings without changing Review activation
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-7, AC-8, AC-9, AC-12, AC-15
 **Test-first:** no (harness mapping and explicit-only metadata)
 **Produces:** Native Claude/Codex Ship handoff forms and explicit-only Review metadata in the declared harness references
@@ -106,7 +106,7 @@ new activation path, registry, hook, or remote operation.
 - `test_harness_ship_handoffs_AC1_AC7_AC8_AC9_AC12_AC15` checks native commands, artifact paths, local-only boundaries, and explicit metadata.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Claude and Codex references provide standalone repository-relative Ship handoffs; Review Codex metadata remains unchanged with explicit-only activation.
 
 ## Phase Verification
 Run:
@@ -121,4 +121,5 @@ Run:
 - `implementation-context.md` records the Review-to-Ship handoff fields.
 
 ## Implementation Decisions / Remarks
-- [to be completed after phase completion]
+- Added the final Review-to-Ship source-state handoff while preserving one fresh read-only reviewer, current finding taxonomy, and the existing Build return for blockers.
+- Ship mappings state explicit-only local closeout and output-only local commit/PR description preparation, with no remote side effects.

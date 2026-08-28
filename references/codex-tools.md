@@ -118,6 +118,21 @@ The same fallback applies to any optional independent research: preserve the
 scope and evidence boundary, but do not create a mandatory role or gate that
 the product contract does not define.
 
+## Review-to-Ship local handoff
+
+Ship is explicit-only and local-only. After Review is `Complete`, has no open
+`BLOCKING` finding, and records the canonical safe-scope source fingerprint,
+present this standalone native handoff with matching repository-relative paths:
+
+```text
+$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
+
+Ship receives the Review fingerprint and recomputes it before rendering or
+closeout. A rejected, missing, or stale Review input returns to Review without
+mutation. Ship may prepare a local commit and PR description as outputs only;
+it never pushes, creates a remote PR, merges, deploys, or rewrites history.
+
 ## Local plugin isolation
 
 The repository's local manifests and marketplace entries describe a private

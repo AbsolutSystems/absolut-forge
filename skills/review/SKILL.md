@@ -63,6 +63,12 @@ cannot be separated safely from the feature change, record an input `BLOCKING`
 finding, preserve the worktree, and stop; do not inspect them as feature scope
 or modify them.
 
+The safe scope is also Ship's source-state boundary. Keep the eligible paths
+separable through the final assessment: the eventual reviewed-path manifest
+uses the union of the base-revision feature scope and this current safe
+worktree scope, so a deleted reviewed path remains visible. It never includes
+`review.md`, review/process artifacts, or unrelated dirty files.
+
 ## Load review context, not implementation authority
 
 Before assessment, read the accepted immutable intent baseline, accepted
@@ -184,9 +190,40 @@ then perform a short regression scan of only the change since the prior pass.
 Keep the original `base_commit` and compare it through the current worktree;
 do not restart an open-ended style search.
 
-When no `BLOCKING` finding remains open, set `review.md` to `Complete`, keep
-the Brief at `In Review` for `ship` to close, record `Decision: Ready for ship`,
-and present exactly one complete native Ship handoff for the active harness:
+After the final review assessment, and before setting `review.md` to `Complete`,
+persist the exact safe source scope that was assessed in `review.md` under the
+canonical `## Reviewed source manifest and fingerprint` fields. Its sorted
+path manifest covers committed, staged, unstaged, and feature-owned untracked
+files, plus deleted paths from the base-revision feature scope; it excludes
+`review.md`, review/process artifacts, and unrelated dirty files. Sort entries
+by raw repository-relative path bytes and encode each exact line as:
+
+```text
+path-hex NUL state NUL mode NUL content-sha256 LF
+```
+
+`path-hex` is lowercase hexadecimal of raw path bytes; `state` is `present` or
+`deleted`; and `mode` is Git mode `100644`, `100755`, `120000`, or `160000` for
+present content, or deletion sentinel `000000`. Hash Git content bytes with
+lowercase SHA-256: ordinary file bytes, symlink target bytes, or gitlink object
+ID bytes as applicable. A deleted entry uses the deletion sentinel of exactly
+64 ASCII `0` characters for `content-sha256`. `NUL` is byte `0x00` and `LF` is
+byte `0x0a`; mtimes, non-Git permission bits, and filesystem order do not
+participate. Record the canonical source fingerprint as the lowercase SHA-256
+of the complete concatenated manifest bytes, alongside the ordered manifest.
+The exact schema remains owned by the
+[canonical artifact contract](../../references/artifact-contracts.md#reviewed-source-manifest-and-fingerprint).
+
+Missing, malformed, stale, or inseparable safe scope or manifest is an input
+blocker: keep Review incomplete, preserve the worktree, and do not emit a Ship
+handoff. Ship recomputes this manifest and fingerprint; a rejected or stale
+Review input returns to Review without source or lifecycle mutation.
+
+When no `BLOCKING` finding remains open *and* the final manifest/fingerprint
+was captured successfully, set `review.md` to `Complete`, keep the Brief at
+`In Review` for `ship` to close, record `Decision: Ready for ship`, and present
+exactly one complete native Ship handoff for the active harness with both the
+matching Brief and Review paths (and the recorded source fingerprint):
 
 ```text
 /absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md

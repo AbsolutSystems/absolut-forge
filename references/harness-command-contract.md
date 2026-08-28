@@ -154,6 +154,15 @@ Evidence, and current worktree. Review may hand off to `ship` only when there
 are no open `BLOCKING` findings. Concrete accepted `FOLLOW-UP` items remain
 visible for ship and do not create a task handoff.
 
+Before its final Ship handoff, Review records the canonical sorted reviewed-path
+manifest and source fingerprint in `review.md`. The manifest covers the safe
+feature scope across committed, staged, unstaged, and feature-owned untracked
+files (including relevant deleted paths), while excluding `review.md`,
+review/process artifacts, and unrelated dirty files. Ship receives that Review
+fingerprint with the matching Brief and Review paths and recomputes it before
+rendering or local closeout. A missing, rejected, or stale Review input returns
+to Review without mutation.
+
 Render the native forms above exactly for the active harness; for example:
 
 Claude Code:
@@ -188,10 +197,26 @@ If Review reports a blocker, the bounded return is to Build for the same Brief:
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 ```
 
+When Review is `Complete` with no open `BLOCKING` finding and its source
+fingerprint is current, it hands the matching Brief and Review paths to the
+explicit-only, local-only Ship stage:
+
+```text
+/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
+
+```text
+$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
+
 Review uses the active configured model; it does not inherit or automatically
 select a model from the Brief's `## Build Recommendation`. A blocker handoff is
 for a focused Build correction and targeted re-review only. It does not
 authorize deployment, push, PR creation, merge, or history rewrite.
+
+Ship prepares a local commit and PR description as human-facing local outputs
+only. Neither a Ship handoff nor its closeout preview pushes, creates a remote
+PR, merges, deploys, or rewrites history.
 
 Rendering or presenting a handoff never installs, enables, disables, deploys,
 pushes, creates a PR, merges, or rewrites history.

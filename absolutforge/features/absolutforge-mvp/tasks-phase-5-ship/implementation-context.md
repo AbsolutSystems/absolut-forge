@@ -9,6 +9,8 @@ Short handoff for phase workers. Keep this file concise. Add only facts that fut
 ## Created / Changed API
 - `references/artifact-contracts.md` now defines Ship preconditions, Review-owned
   source manifest/fingerprint validation, archive outputs, and recovery contract.
+- `skills/review/SKILL.md` records the final reviewed-path manifest and canonical SHA-256 fingerprint for Ship freshness validation.
+- Claude and Codex harness references provide explicit-only, local Review-to-Ship handoffs with matching Brief and Review paths.
 
 ## Decisions Made
 - ADR `2026-08-28-ship-post-review-closeout.md` binds post-review rendering to

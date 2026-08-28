@@ -72,7 +72,7 @@ orchestrated
 **Risk:** high
 
 ### Phase 2: Review Fingerprint and Harness Handoffs
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship/02-review-and-harness.md`
 **Depends on:** Phase 1
 **Write scope:** `skills/review/SKILL.md`, `skills/review/agents/openai.yaml`, `references/harness-command-contract.md`, `references/claude-tools.md`, `references/codex-tools.md`
