@@ -50,7 +50,7 @@ deterministic Python `unittest` contract scanners; no runtime application code.
 ## Phase Overview
 
 ### Phase 1: Canonical Recommendation Contract and Harness Mapping
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation/01-contracts.md`
 **Depends on:** Existing Feature Brief and Build contracts
 **Write scope:** `references/artifact-contracts.md`, `references/harness-command-contract.md`, `references/codex-tools.md`
