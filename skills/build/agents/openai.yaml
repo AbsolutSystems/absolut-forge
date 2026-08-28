@@ -1,0 +1,7 @@
+interface:
+  display_name: "Build"
+  short_description: "Autonomously implement an accepted Feature Brief into a review-ready change"
+  default_prompt: "Use $build to implement this accepted Feature Brief as one verified delivery unit."
+
+policy:
+  allow_implicit_invocation: false

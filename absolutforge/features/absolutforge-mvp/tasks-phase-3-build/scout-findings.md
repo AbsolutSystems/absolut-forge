@@ -1,0 +1,1 @@
+- Phase 3 must update `tests/test_foundation.py` active-skill allowlists to include `skills/build/SKILL.md` and `build` before the prescribed suite can pass.

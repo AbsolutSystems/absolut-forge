@@ -1,7 +1,7 @@
 # Phase 2: Autonomous Build Skill
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-3-build.md`
@@ -45,7 +45,7 @@ mandatory worker gates, or partial deployment behavior.
 ## Tasks
 
 ### Task 1: Implement the explicit-only autonomous build workflow
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (host-agnostic Markdown skill contract)
 **Produces:** `skills/build/SKILL.md` with the complete explicit build workflow and native `$absolutforge review` handoff
@@ -71,10 +71,10 @@ checks; it must remain explicit-only and never deploy or perform release work.
 - Contract tests planned in Phase 3: `test_build_skill_contract` with display names `[AC-1]` through `[AC-15]`, one literal token per assertion.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Linked canonical artifact and harness contracts rather than duplicating schemas; durable outcome facts support resume while delivery remains whole-feature only.
 
 ### Task 2: Add Codex explicit-activation metadata for build
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-15
 **Test-first:** no (manifest metadata)
 **Produces:** `skills/build/agents/openai.yaml` policy metadata declaring explicit-only `$build` activation
@@ -97,12 +97,16 @@ command and a concise activation description.
 - Contract scanner: `test_build_manifest_explicit_only` with display names `[AC-1]` and `[AC-15]`.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Matched the existing minimal Codex metadata shape with explicit `$build` usage and no implicit or capability declarations.
 
 ## Phase Verification
 Run:
-- `python3 -m unittest discover -s tests -t . -p 'test_*.py'`
+- `python3 -m unittest tests.test_discuss_contract tests.test_consult_contract`
 - `git diff --check`
+
+## Verification History
+- `python3 -m unittest tests.test_discuss_contract tests.test_consult_contract` — PASS (22 tests).
+- `git diff --check` — PASS.
 
 ## Completion Criteria
 - All phase tasks are completed.
@@ -112,4 +116,4 @@ Run:
 - All `Context Contract -> Provides` items are fulfilled.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Build is a host-agnostic, explicit-only workflow that links canonical schemas, keeps planning conditional, and treats the whole feature as the sole delivery unit.
