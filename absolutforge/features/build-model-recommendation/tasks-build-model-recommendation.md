@@ -64,7 +64,7 @@ deterministic Python `unittest` contract scanners; no runtime application code.
 **Risk:** high
 
 ### Phase 3: Contract Tests and Product Documentation
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation/03-tests-and-docs.md`
 **Depends on:** Phase 2
 **Write scope:** `tests/test_discuss_contract.py`, `tests/test_build_contract.py`, `README.md`, `CLAUDE.md`, `docs/product-vision.md`, `skills/README.md`
