@@ -20,8 +20,9 @@ Use one generic read-only reviewer in a fresh context. The primary `review`
 skill passes the Feature Brief path, review path, and Build's `base_commit`; the
 reviewer extracts the current change itself from the current worktree, including
 feature-owned untracked files. The primary context owns `review.md`, lifecycle
-transitions, finding normalization, and all fixes. Review-process artifacts and
-unrelated dirty changes are excluded from the reviewed scope.
+transitions, and finding normalization; Build exclusively owns implementation
+fixes and their verification. Review-process artifacts and unrelated dirty
+changes are excluded from the reviewed scope.
 
 Findings use only `BLOCKING` and `FOLLOW-UP`. Blockers return the Brief to
 `Building` for a bounded Build fix and targeted re-review. Follow-ups do not
