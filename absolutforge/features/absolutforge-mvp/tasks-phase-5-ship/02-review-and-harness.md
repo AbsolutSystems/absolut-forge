@@ -123,3 +123,5 @@ Run:
 ## Implementation Decisions / Remarks
 - Added the final Review-to-Ship source-state handoff while preserving one fresh read-only reviewer, current finding taxonomy, and the existing Build return for blockers.
 - Ship mappings state explicit-only local closeout and output-only local commit/PR description preparation, with no remote side effects.
+- Verification: `python3 -m unittest tests.test_review_contract` -> pass (5 tests).
+- Verification: `git diff --check` -> pass.
