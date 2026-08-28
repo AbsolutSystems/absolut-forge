@@ -18,8 +18,9 @@ Use the active harness's native prefix:
 | Claude Code | `/absolutforge:{skill} [path and arguments]` |
 | Codex | `$absolutforge {skill} [path and arguments]` |
 
-Core skills `discuss`, `build`, `review`, and `ship`, optional `consult`, plus
-standalone `tech-debt`, are explicit-only. `debug` may be auto-triggered only by a
+Core skills `discuss`, `build`, `review`, and `ship`, optional `consult`, pause
+helpers `save` and `load`, plus standalone `tech-debt`, are explicit-only.
+`debug` may be auto-triggered only by a
 concrete failure (error, failing test, crash, regression, or unexpected
 behavior); it remains explicitly invocable as well. No generic coding request
 may be rewritten as an implicit workflow invocation.
@@ -47,6 +48,14 @@ Generic consultation form (replace `{slug}` with the actual feature slug):
 
 ```text
 /absolutforge:build absolutforge/features/import-preview/feature-brief.md
+```
+
+```text
+/absolutforge:save absolutforge/features/import-preview/feature-brief.md
+```
+
+```text
+/absolutforge:load absolutforge/features/import-preview/save-import-preview.md
 ```
 
 ```text
@@ -83,6 +92,14 @@ $absolutforge consult absolutforge/features/import-preview/feature-brief.md
 
 ```text
 $absolutforge build absolutforge/features/import-preview/feature-brief.md
+```
+
+```text
+$absolutforge save absolutforge/features/import-preview/feature-brief.md
+```
+
+```text
+$absolutforge load absolutforge/features/import-preview/save-import-preview.md
 ```
 
 ```text
@@ -131,22 +148,29 @@ switching or provider configuration and never authorizes partial delivery.
 
 ## Build and review handoff semantics
 
-`build` accepts the complete repository-relative Feature Brief path. It may
-resume a `Building` feature from its durable `execution-map.md` (when present)
-and append-only `## Build Evidence`; neither an internal map section nor a
-local checkpoint is a separate handoff or delivery unit. After all accepted
-outcomes and final verification succeed, `build` changes the Brief to `In
-Review` and hands the complete feature to `review` with the matching
-repository-relative review artifact path.
+`build` accepts the complete repository-relative Feature Brief path. It starts
+only on a clean, non-detached local feature branch, records its `HEAD` as
+`base_commit`, and may resume a `Building` feature from its durable
+`execution-map.md` (when present) and append-only `## Build Evidence`; neither
+an internal map section nor a local checkpoint is a separate handoff or delivery
+unit. After all accepted outcomes and final verification succeed, `build`
+commits the feature state locally, changes the Brief to `In Review`, and hands
+the complete feature to `review` with the matching repository-relative review
+artifact path.
+
+While a Brief is `Building`, `save` accepts its Brief path and writes only the
+matching `save-{slug}.md` context artifact. It never commits, stashes, switches
+branches, or saves source bytes. The developer must commit the save with WIP
+source, or stash both, before changing branches. `load` accepts the canonical
+save path, verifies the matching branch and `base_commit`, loads its context,
+and hands back to `build`; it never restores source or mutates repository state.
 
 `review` accepts only the repository-relative Feature Brief path and matching
 repository-relative review artifact path. It reads `base_commit` from Build
-Evidence, then derives the complete feature change from that revision through
-the current worktree itself. Its scope includes committed, staged, unstaged, and
-feature-owned untracked files. It excludes generated review/process artifacts
-and unrelated dirty changes; when unrelated changes cannot be safely separated,
-review records an input blocker and preserves the worktree. It never receives
-only an internal section, checkpoint, partial result, or pre-generated diff.
+Evidence, then derives the complete feature change as `base_commit..HEAD`.
+Staged, unstaged, or untracked source changes are an input blocker; only the
+active `review.md` may be uncommitted. It never receives only an internal
+section, checkpoint, partial result, or pre-generated diff.
 
 The normal lifecycle is `build -> review -> ship`: after Build verification,
 review evaluates the accepted Brief and amendments, linked ADRs/rules, Build
@@ -154,13 +178,10 @@ Evidence, and current worktree. Review may hand off to `ship` only when there
 are no open `BLOCKING` findings. Concrete accepted `FOLLOW-UP` items remain
 visible for ship and do not create a task handoff.
 
-Before its final Ship handoff, Review records the canonical sorted reviewed-path
-manifest and source fingerprint in `review.md`. The manifest covers the safe
-feature scope across committed, staged, unstaged, and feature-owned untracked
-files (including relevant deleted paths), while excluding `review.md`,
-review/process artifacts, and unrelated dirty files. Ship receives that Review
-fingerprint with the matching Brief and Review paths and recomputes it before
-rendering or local closeout. A missing, rejected, or stale Review input returns
+Before its final Ship handoff, Review records the reviewed `HEAD` in `review.md`.
+Ship requires that the branch still points to that revision and that only the
+active `review.md` is uncommitted. If source changes, commit it and invoke
+Review again before Ship. A missing, rejected, or changed Review input returns
 to Review without mutation.
 
 Render the native forms above exactly for the active harness; for example:
@@ -197,8 +218,8 @@ If Review reports a blocker, the bounded return is to Build for the same Brief:
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 ```
 
-When Review is `Complete` with no open `BLOCKING` finding and its source
-fingerprint is current, it hands the matching Brief and Review paths to the
+When Review is `Complete` with no open `BLOCKING` finding and a recorded
+reviewed revision, it hands the matching Brief and Review paths to the
 explicit-only, local-only Ship stage:
 
 ```text

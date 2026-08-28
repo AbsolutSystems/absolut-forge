@@ -40,34 +40,25 @@ validate the canonical `## Status`, append-only review-pass structure, allowed
 classifications, and resolutions before appending; never silently rewrite its
 history.
 
-Read append-only `## Build Evidence` (and `execution-map.md` when present) and
-find the feature's recorded `base_commit`. It must be readable and resolve to a
-commit in this repository. Validate the base revision against the current
-repository and record the initial worktree state. The reviewed boundary is the
-recorded `base_commit` through the **current worktree**, not only
-`base_commit..HEAD`, a checkpoint, an internal map section, or a generated diff
-package.
+Read append-only `## Build Evidence` (and `execution-map.md` when present), load
+the required Build start entry, and find the feature's recorded `base_commit`.
+The branch and base must be readable and resolve in this repository. Validate
+the recorded start evidence against the current repository. The reviewed boundary
+is exactly `base_commit..HEAD`, not a checkpoint, internal map section, or
+generated diff package.
 
-If `base_commit` is absent, malformed, unreadable, or cannot be resolved, do
-not claim that code review ran. Create or append only a secret-redacted input
-`BLOCKING` finding in the canonical Review artifact, keep its status `In
-Review`, preserve the worktree, and report that Build must restore verifiable
-evidence before another review. This is input evidence, not permission to fix
-code here.
+If the Build start entry or `base_commit` is absent, malformed, incomplete,
+unreadable, or cannot be resolved, do not claim that code review ran. Create or
+append only a secret-redacted input `BLOCKING` finding in the canonical Review
+artifact, keep its status `In Review`, preserve the worktree, and report that
+Build must restore verifiable evidence before another review. This is input
+evidence, not permission to fix code here.
 
-Determine safe worktree scope before dispatch. Include feature-owned committed,
-staged, unstaged, and feature-owned untracked files. Exclude `review.md`,
-review-process/generated process artifacts, and unrelated dirty files. Do not
-absorb unrelated changes because they happen to be dirty. If unrelated changes
-cannot be separated safely from the feature change, record an input `BLOCKING`
-finding, preserve the worktree, and stop; do not inspect them as feature scope
-or modify them.
-
-The safe scope is also Ship's source-state boundary. Keep the eligible paths
-separable through the final assessment: the eventual reviewed-path manifest
-uses the union of the base-revision feature scope and this current safe
-worktree scope, so a deleted reviewed path remains visible. It never includes
-`review.md`, review/process artifacts, or unrelated dirty files.
+Before dispatch, require a clean source worktree and empty index. The active
+`review.md` may be created or updated by Review; no other staged, unstaged, or
+untracked file is permitted. If extra worktree entries exist, record an input
+`BLOCKING` finding, preserve the worktree, and stop. Do not inspect those entries
+as feature scope or modify them.
 
 ## Load review context, not implementation authority
 
@@ -101,16 +92,15 @@ generic, read-only** reviewer (`Agent` on Claude Code when available;
 `spawn_agent` on Codex with `multi_agent=true` when available). It is not a
 named reviewer registry or a triada. Pass a bounded, secret-redacted prompt
 containing only the repository-relative Brief path, matching review path,
-recorded `base_commit`, safe-scope constraints, and the requested structured
+recorded `base_commit`, committed-range constraint, and the requested structured
 result.
 
 The reviewer must independently read the complete Brief, amendments, Build
 Evidence, Execution Map when present, linked ADRs/rules, active relevant
-memory, current source/tests, and current worktree. It must derive committed,
-staged, unstaged, and feature-owned untracked changes itself from `base_commit`
-through the current worktree; it must not receive or trust a pre-generated diff
-or snapshot. It must exclude review/process artifacts and unrelated dirty
-changes. Its mandate is read-only: it must not edit source, feature artifacts,
+memory, current source/tests, and committed branch. It must derive the complete
+`base_commit..HEAD` change itself; it must not receive or trust a pre-generated
+diff or snapshot. It ignores the active review artifact. Its mandate is
+read-only: it must not edit source, feature artifacts,
 or lifecycle state; it cannot run implementation, deploy, push, create a PR,
 merge, or rewrite history.
 
@@ -187,43 +177,21 @@ it, and record the result as evidence.
 For a first review, inspect the complete scoped change. For a targeted
 re-review, first resolve each prior open `BLOCKING` finding by its stable ID,
 then perform a short regression scan of only the change since the prior pass.
-Keep the original `base_commit` and compare it through the current worktree;
-do not restart an open-ended style search.
+Keep the original `base_commit` and compare it to `HEAD`; do not restart an
+open-ended style search.
 
 After the final review assessment, and before setting `review.md` to `Complete`,
-persist the exact safe source scope that was assessed in `review.md` under the
-canonical `## Reviewed source manifest and fingerprint` fields. Its sorted
-path manifest covers committed, staged, unstaged, and feature-owned untracked
-files, plus deleted paths from the base-revision feature scope; it excludes
-`review.md`, review/process artifacts, and unrelated dirty files. Sort entries
-by raw repository-relative path bytes and encode each exact line as:
+record the exact current `HEAD` as `Reviewed revision` and the range
+`base_commit..HEAD` in the canonical Review context. Review accepts no source
+change outside the committed range. A missing, malformed, or changed revision is
+an input blocker: keep Review incomplete, preserve the worktree, and do not emit
+a Ship handoff.
 
-```text
-path-hex NUL state NUL mode NUL content-sha256 LF
-```
-
-`path-hex` is lowercase hexadecimal of raw path bytes; `state` is `present` or
-`deleted`; and `mode` is Git mode `100644`, `100755`, `120000`, or `160000` for
-present content, or deletion sentinel `000000`. Hash Git content bytes with
-lowercase SHA-256: ordinary file bytes, symlink target bytes, or gitlink object
-ID bytes as applicable. A deleted entry uses the deletion sentinel of exactly
-64 ASCII `0` characters for `content-sha256`. `NUL` is byte `0x00` and `LF` is
-byte `0x0a`; mtimes, non-Git permission bits, and filesystem order do not
-participate. Record the canonical source fingerprint as the lowercase SHA-256
-of the complete concatenated manifest bytes, alongside the ordered manifest.
-The exact schema remains owned by the
-[canonical artifact contract](../../references/artifact-contracts.md#reviewed-source-manifest-and-fingerprint).
-
-Missing, malformed, stale, or inseparable safe scope or manifest is an input
-blocker: keep Review incomplete, preserve the worktree, and do not emit a Ship
-handoff. Ship recomputes this manifest and fingerprint; a rejected or stale
-Review input returns to Review without source or lifecycle mutation.
-
-When no `BLOCKING` finding remains open *and* the final manifest/fingerprint
-was captured successfully, set `review.md` to `Complete`, keep the Brief at
+When no `BLOCKING` finding remains open and the final scope was captured, set
+`review.md` to `Complete`, keep the Brief at
 `In Review` for `ship` to close, record `Decision: Ready for ship`, and present
 exactly one complete native Ship handoff for the active harness with both the
-matching Brief and Review paths (and the recorded source fingerprint):
+matching Brief and Review paths:
 
 ```text
 /absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -247,8 +215,9 @@ $absolutforge build absolutforge/features/{slug}/feature-brief.md
 ```
 
 Build, not Review or the reviewer, owns the focused correction and verification.
-After Build returns the Brief to `In Review`, invoke Review again with the same
-Brief/review paths and original `base_commit` for targeted re-review.
+After Build returns the Brief to `In Review` with its correction committed,
+invoke Review again with the same Brief/review paths and original `base_commit`
+for targeted re-review.
 
 Count attempts per stable blocker from append-only Review passes. If the same
 blocker remains after two fix attempts, or a proposed correction materially

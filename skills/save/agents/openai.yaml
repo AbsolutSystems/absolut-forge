@@ -1,0 +1,7 @@
+interface:
+  display_name: "Save Progress"
+  short_description: "Capture Build context before pausing work"
+  default_prompt: "Use $save to capture the current Building feature state before I switch branches."
+
+policy:
+  allow_implicit_invocation: false

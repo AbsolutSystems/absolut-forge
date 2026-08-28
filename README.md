@@ -11,9 +11,9 @@ change before one independent review.
 discuss -> build -> review -> ship
 ```
 
-It also includes the optional `consult` workflow for a bounded second opinion on
-an existing Feature Brief. `debug` and `tech-debt` are not part of this release
-candidate.
+It also includes the optional `consult` workflow for a bounded second opinion,
+the guardian `debug` workflow for concrete failures, and the explicit-only,
+read-only `tech-debt` audit.
 
 ## What the workflow does
 
@@ -28,21 +28,29 @@ choices within the accepted boundary.
   approval.
 - `build` implements the accepted Brief, maintains optional durable outcome
   state, and runs focused and final verification.
+- `save` captures concise Build context before pausing or switching feature
+  branches; it does not preserve dirty code by itself.
+- `load` validates a saved Build context and hands the feature back to `build`.
 - `review` performs one fresh, read-only, evidence-based review of the complete
   change and records only `BLOCKING` and `FOLLOW-UP` findings.
 - `ship` closes a review-complete feature into durable documentation and one
   local commit after a single approval preview.
+- `debug` diagnoses a concrete failure from evidence and implements a fix only
+  when explicitly requested and the expected behavior is unambiguous.
+- `tech-debt` statically audits a repository or bounded path and returns a
+  prioritized, evidence-backed remediation backlog without changing files.
 
-Core skills are explicit-only. There is no SessionStart hook, global workflow
-prompt, MCP server, or automatic activation.
+Core skills, `consult`, `save`, `load`, and `tech-debt` are explicit-only. Only `debug` may
+auto-trigger, and only for a concrete failure. There is no SessionStart hook,
+global workflow prompt, MCP server, or generic automatic workflow activation.
 
 ## Requirements
 
 - Claude Code or Codex.
 - A repository with the AbsolutForge plugin installed through the host's normal
   local plugin mechanism.
-- A cleanly separable worktree. Existing unrelated changes may remain, but
-  they must not overlap the feature being delivered.
+- A local feature branch with a clean worktree before Build starts. Commit or
+  set aside existing work before choosing the feature's base revision.
 
 The repository is the plugin root. It contains one shared `skills/` tree and
 thin metadata for each supported harness. The skill bodies are host-agnostic;
@@ -145,7 +153,9 @@ Codex:
 $absolutforge build absolutforge/features/import-preview/feature-brief.md
 ```
 
-Build records the starting `base_commit` and initial worktree state. For a
+Before Build starts, create or select a local feature branch and commit the
+accepted Brief and any existing work. Build requires a clean worktree, records
+that branch's `HEAD` as `base_commit`, then works only on that branch. For a
 cohesive change it may work without a map. For dependent outcomes, meaningful
 uncertainty, or cross-session work it may create an `execution-map.md`.
 
@@ -157,8 +167,58 @@ implementation -> focused verification -> diagnosis -> bounded fix
 ```
 
 After all outcomes are complete, Build runs relevant broader checks, inspects
-the whole diff against the Brief, and changes the Brief to `In Review`. It does
-not deploy, push, create a pull request, merge, or rewrite history.
+the whole diff against the Brief, updates the Brief to `In Review`, and commits
+the feature state locally. Review starts only when all feature changes are
+committed. Build does not deploy, push, create a pull request, merge, or rewrite
+history.
+
+### Pause and resume Build
+
+While a Brief is `Building`, save the current agent context before changing to
+another feature:
+
+```text
+build -> save -> local WIP commit (or stash) -> switch branch
+return to branch -> load -> build
+```
+
+The WIP commit must include both the current feature changes and the generated
+save file. Saving only the context file does not make dirty source safe to leave
+behind.
+
+Claude Code:
+
+```text
+/absolutforge:save absolutforge/features/import-preview/feature-brief.md
+```
+
+Codex:
+
+```text
+$absolutforge save absolutforge/features/import-preview/feature-brief.md
+```
+
+Save writes `absolutforge/features/import-preview/save-import-preview.md` with
+the verified work, current work, next action, and open items. It does not save
+the source itself. Commit the save together with any WIP code, or stash both,
+before switching branches.
+
+On the original branch, restore that context:
+
+Claude Code:
+
+```text
+/absolutforge:load absolutforge/features/import-preview/save-import-preview.md
+```
+
+Codex:
+
+```text
+$absolutforge load absolutforge/features/import-preview/save-import-preview.md
+```
+
+Load validates the branch and base revision, reads the actual repository state,
+and hands the feature back to Build. It never restores or overwrites source.
 
 If the same verification failure needs a second speculative repair, Build first
 checks that the symptom, violated invariant, and proposed edit are causally
@@ -182,9 +242,9 @@ $absolutforge review absolutforge/features/import-preview/feature-brief.md absol
 ```
 
 Review reads the accepted intent, amendments, ADRs, Build Evidence, and the
-current worktree. Its scope starts at `base_commit` and includes committed,
-staged, unstaged, and feature-owned untracked files. It excludes review-process
-artifacts and unrelated dirty files.
+committed branch. Its source scope is exactly `base_commit..HEAD`. It rejects
+staged, unstaged, or untracked source changes; the active `review.md` is the
+only permitted uncommitted workflow artifact.
 
 One fresh generic read-only reviewer checks intent fidelity, correctness,
 concrete edge cases, security and data integrity, test value, compatibility,
@@ -198,14 +258,14 @@ Review findings use stable IDs and only two classes:
 
 An open blocker returns the same Brief to Build for a focused correction and
 targeted re-review. The same blocker may be attempted twice before escalation.
-When no blockers remain, Review records a canonical source manifest and SHA-256
-fingerprint, marks `review.md` `Complete`, and makes the feature eligible for
-Ship.
+When no blockers remain, Review records the reviewed branch revision, marks
+`review.md` `Complete`, and makes the feature eligible for Ship.
 
 ### 5. Ship locally
 
 Run Ship only after Review is `Complete`, has no open `BLOCKING` findings, and
-its source fingerprint still matches the current worktree:
+the branch still points at the revision recorded by Review. If source changes,
+commit it and run Review again before Ship:
 
 Claude Code:
 
@@ -221,18 +281,54 @@ $absolutforge ship absolutforge/features/import-preview/feature-brief.md absolut
 
 Ship renders a complete preview before mutation. The preview includes the
 archive files, active-artifact cleanup, memory decisions, commit message, PR
-description, and exact staging set. One explicit approval binds the preview to
-the reviewed source fingerprint.
+description, and exact staging set.
 
-After approval, Ship runs one journaled local transaction. It creates the
-Feature Record and Executive Summary, promotes only individually approved
-memory entries, removes the active Brief/map/Review artifacts, stages only the
-approved paths, and creates one local conventional commit.
+After approval, Ship creates the Feature Record and Executive Summary, promotes
+only individually approved memory entries, removes the active Brief/map/Review
+artifacts, stages only the approved paths, and creates one local conventional
+commit. It never pushes, creates a remote pull request, merges, deploys, or
+rewrites history.
 
-The transaction is recoverable through `.ship-txn/{txid}/journal.json`. Ship
-never pushes, creates a remote pull request, merges, deploys, or rewrites
-history. A source change after review routes the feature back to Review instead
-of silently shipping stale documentation.
+## Standalone workflows
+
+### Debug a concrete failure
+
+`debug` may auto-trigger only for an error, failing test, crash, regression, or
+other unexpected behavior. Auto-triggering authorizes diagnosis, not a fix. An
+explicit diagnosis-and-fix request creates a compact Fix Brief and proceeds to
+Review only when root cause and expected behavior are unambiguous; material
+product or architecture ambiguity returns to `discuss`.
+
+Claude Code:
+
+```text
+/absolutforge:debug "tests/test_import.py::test_preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+Codex:
+
+```text
+$absolutforge debug "tests/test_import.py::test_preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+### Audit technical debt
+
+`tech-debt` is explicit-only, static, and read-only. It accepts the whole
+codebase or one repository-relative path, runs no application commands, changes
+no files, and returns evidence-backed findings routed to `discuss`, `debug`, or
+`WATCH`.
+
+Claude Code:
+
+```text
+/absolutforge:tech-debt src/imports
+```
+
+Codex:
+
+```text
+$absolutforge tech-debt src/imports
+```
 
 ## Artifact lifecycle
 
@@ -242,6 +338,7 @@ Active feature artifacts live under one canonical directory:
 absolutforge/features/{slug}/
 ├── feature-brief.md       # intent and lifecycle state
 ├── execution-map.md       # optional Build resume state
+├── save-{slug}.md         # optional pause context
 └── review.md              # Review passes and findings
 ```
 
@@ -251,8 +348,8 @@ The lifecycle is:
 Draft -> Ready -> Building -> In Review -> Complete -> Shipped
 ```
 
-The Brief remains `In Review` while Ship performs closeout. After a successful
-transaction, active artifacts are removed and the durable archive is:
+The Brief remains `In Review` while Ship performs closeout. After successful
+closeout, active artifacts are removed and the durable archive is:
 
 ```text
 absolutforge/archives/{slug}/
@@ -286,7 +383,7 @@ The canonical contracts are:
 
 - [Product Vision](docs/product-vision.md) — accepted product behavior.
 - [Delivery Artifact Contracts](references/artifact-contracts.md) — exact
-  Brief, Build, Review, Ship, memory, and fingerprint schemas.
+  Brief, Build, Save, Review, Ship, and memory schemas.
 - [Project-Memory Contract](references/project-memory.md) — memory routing and
   promotion rules.
 - [Harness Command Contract](references/harness-command-contract.md) — native

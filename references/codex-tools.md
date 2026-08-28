@@ -82,10 +82,9 @@ AbsolutForge does not define or require a named review agent. When Codex exposes
 read-only prompt. The prompt supplies the repository-relative Feature Brief
 path, recorded `base_commit`, repository-relative review path, and repository
 safety constraints. The reviewer reads the Brief, Build Evidence, linked
-ADRs/rules, and current worktree itself; it derives the change from
-`base_commit` through committed, staged, unstaged, and feature-owned untracked
-files instead of accepting a pre-generated diff package. It excludes
-review/process artifacts and unrelated dirty changes.
+ADRs/rules, and committed branch itself; it derives `base_commit..HEAD` instead
+of accepting a pre-generated diff package. Uncommitted source changes block
+Review; only the active `review.md` may be uncommitted.
 
 The generic agent is a fresh context, not a registered role. Do not attempt to
 resolve a Claude-only named agent type or invent a required review-agent
@@ -121,17 +120,16 @@ the product contract does not define.
 ## Review-to-Ship local handoff
 
 Ship is explicit-only and local-only. After Review is `Complete`, has no open
-`BLOCKING` finding, and records the canonical safe-scope source fingerprint,
-present this standalone native handoff with matching repository-relative paths:
+`BLOCKING` finding, and records the reviewed branch revision, present
+this standalone native handoff with matching repository-relative paths:
 
 ```text
 $absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
 
-Ship receives the Review fingerprint and recomputes it before rendering or
-closeout. A rejected, missing, or stale Review input returns to Review without
-mutation. Ship may prepare a local commit and PR description as outputs only;
-it never pushes, creates a remote PR, merges, deploys, or rewrites history.
+If source changes after Review, commit it and invoke Review again before Ship. Ship may prepare
+a local commit and PR description as outputs only; it never pushes, creates a
+remote PR, merges, deploys, or rewrites history.
 
 ## Local plugin isolation
 

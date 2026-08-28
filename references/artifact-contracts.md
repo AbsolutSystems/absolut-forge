@@ -16,6 +16,7 @@ An active change uses a repository-relative slug directory:
 absolutforge/features/{slug}/
 ├── feature-brief.md                 # required
 ├── execution-map.md                 # optional; build creates when useful
+├── save-{slug}.md                   # optional; save creates while Building
 └── review.md                         # required before ship
 ```
 
@@ -35,6 +36,7 @@ verification facts are consolidated into `feature-record.md`.
 | Feature Brief | `absolutforge/features/{slug}/feature-brief.md` | content preserved in Feature Record | `discuss` (intent), then `build` (delivery evidence) | `Draft`, `Ready`, `Building`, `In Review` |
 | Amendment | appended to the active Feature Brief under `## Amendments` | preserved under Original intent / deviations | `discuss` with explicit acceptance; `build` records the accepted change | `Proposed`, `Accepted`, `Rejected` |
 | Execution Map | `absolutforge/features/{slug}/execution-map.md` | none | `build` | `pending`, `in-progress`, `complete` |
+| Build Save | `absolutforge/features/{slug}/save-{slug}.md` | none | `save` | `Saved` |
 | Review | `absolutforge/features/{slug}/review.md` | outcome copied to Feature Record | `review`; `build` owns fixes | `In Review`, `Complete` |
 | Feature Record | none while active | `absolutforge/archives/{slug}/feature-record.md` | `ship` | `Shipped` |
 | Executive Summary | none while active | `absolutforge/archives/{slug}/executive-summary.html` | `ship` | generated after final review; no intermediate status |
@@ -191,11 +193,9 @@ cost may remain when status becomes Ready.
 ---
 
 ## Build Evidence
-Append-only evidence owned by build:
-- Changed areas:
-- Verification commands and results:
-- Material implementation decisions:
-- Deviations from the accepted baseline:
+Initially empty. Build first appends the canonical Build start entry before any
+source edit, then appends verified outcome and final evidence entries using the
+Build Evidence contract below.
 ```
 
 When the status first becomes `Ready`, the immutable intent baseline comprises
@@ -261,9 +261,10 @@ outcome-oriented map, not a task list, file recipe, or review gate. Every
 map has one map-level status and every section has its own status. The map-level
 status is `pending`, `in-progress`, or `complete`; it becomes `complete` only
 when all sections and final whole-feature verification are complete. The map
-records the starting Git revision and worktree state before implementation so a
+records the feature branch and starting Git revision before implementation so a
 later session can resume from durable facts rather than opaque conversation
-state. Every section uses this complete shape:
+state. Build may start only from a clean worktree. Every section uses this
+complete shape:
 
 ```markdown
 # Execution Map: {feature name}
@@ -272,8 +273,9 @@ state. Every section uses this complete shape:
 pending | in-progress | complete
 
 ## Build start
+- branch: {local feature branch}
 - base_commit: {HEAD before feature work}
-- Initial worktree state: clean | dirty, with repository-relative summary
+- Worktree: clean
 
 ## Checkpoints
 - None yet, or:
@@ -302,8 +304,26 @@ artifact, and `ship` must not squash or rewrite checkpoint history.
 `build` appends evidence to the active Feature Brief under `## Build Evidence`;
 it never replaces or edits prior evidence or the accepted intent baseline. Each
 entry is concise, factual, and redacted of secrets, credentials, access tokens,
-and other sensitive values. Use this shape after a verified outcome or final
-whole-feature verification:
+and other sensitive values.
+
+Before the first source edit, append exactly one Build start entry. It is
+required even when the optional Execution Map is omitted. Build starts only on a
+non-detached local feature branch with a clean worktree; the accepted Brief must
+already be committed:
+
+```markdown
+### Build start — YYYY-MM-DD
+- Feature branch: `{branch}`
+- Base revision: `{base_commit}`
+- Worktree: clean
+```
+
+`{branch}` is the current local branch name; it is descriptive, not a naming
+convention. A detached `HEAD`, a missing committed Brief, or any staged,
+unstaged, or untracked entry is an input blocker. The Build start entry is
+append-only resume evidence.
+
+Use this shape after a verified outcome or final whole-feature verification:
 
 ```markdown
 ### Build evidence — YYYY-MM-DD
@@ -349,16 +369,66 @@ No map state, evidence entry, checkpoint, or verified outcome authorizes a
 partial release. The complete Feature Brief is the only delivery unit. `build`
 never deploys, pushes, creates a PR, merges, ships, or rewrites history.
 
+## Build Save contract
+
+`save` may create or replace only
+`absolutforge/features/{slug}/save-{slug}.md` for a matching `Building` Brief.
+It captures the durable context needed to continue Build after a branch switch;
+it is not a source snapshot, checkpoint, approval, or review artifact.
+
+```markdown
+# Build save: {feature name}
+
+## Status
+Saved
+
+## Context
+- Feature Brief: `absolutforge/features/{slug}/feature-brief.md`
+- Feature branch: `{branch}`
+- Base revision: `{base_commit}`
+- Current revision: `{HEAD}`
+- Saved at: YYYY-MM-DD HH:MM TZ
+
+## Completed work
+- Outcome or verified result; evidence: {command/result}
+
+## Current work
+- Current outcome:
+- What has changed:
+- Current verification state:
+
+## Next action
+- One concrete next implementation or verification action.
+
+## Open items
+- Blocker, assumption, failed check, or `none`.
+
+## Resume notes
+- Relevant files/areas:
+- Commands or facts needed before continuing:
+```
+
+The save is concise, factual, and secret-redacted. It describes actual work and
+open uncertainty; it never invents completion. `save` never commits, stashes,
+switches branches, or changes source. To switch branches safely, the developer
+must commit the save together with the current feature work, or stash both. A
+save without its corresponding code cannot restore source changes.
+
+`load` accepts only this canonical save path. It verifies the matching Brief,
+feature branch, and `base_commit`, reads current branch state and the save, then
+restores the Build context for the next explicit `build` invocation. It does not
+write, commit, stash, switch branches, or treat a save as proof that verification
+passed. A stale or mismatched save stops with the exact mismatch.
+
 ## Review contract
 
 `review` creates or appends to `absolutforge/features/{slug}/review.md` from the
 accepted Feature Brief and amendments, linked ADRs and rules, Build Evidence,
-verification results, and the current repository state. The reviewer receives
-the recorded `base_commit` and extracts the change itself through the current
-worktree; no generated diff or snapshot is a source of truth. The scope includes
-committed, staged, unstaged, and feature-owned untracked files. Review-process
-artifacts and unrelated dirty files are excluded; if unrelated changes cannot
-be separated safely, review records an input blocker and preserves the worktree.
+verification results, and the committed feature branch. The reviewer receives
+the recorded `base_commit` and derives the change from `base_commit..HEAD`; no
+generated diff or snapshot is a source of truth. Staged, unstaged, or untracked
+source changes are an input blocker. The active `review.md` is the only allowed
+uncommitted workflow artifact.
 
 Review runs in one fresh, read-only generic context when the active harness can
 provide it. An inline fallback is explicitly labelled `advisory (not fully
@@ -381,8 +451,8 @@ In Review | Complete
 - Feature Brief: `absolutforge/features/{slug}/feature-brief.md`
 - ADRs:
 - Base revision: `{base_commit}`
-- Worktree scope: committed, staged, unstaged, and feature-owned untracked files
-- Diff / revision reviewed: `{base_commit}` to current worktree
+- Reviewed revision: `{HEAD}`
+- Diff reviewed: `{base_commit}..{HEAD}`
 - Verification evidence:
 
 ## Review pass 1 — YYYY-MM-DD
@@ -455,55 +525,25 @@ following:
   present;
 - the Review status is `Complete`, references that exact Brief and
   `base_commit`, has a final Review pass and no open `BLOCKING` finding;
-- the Review's safe worktree scope is available and separable: committed,
-  staged, unstaged, and feature-owned untracked changes, excluding `review.md`,
-  review/process artifacts, and unrelated dirty work;
-- the Review's recorded manifest and source fingerprint are present and match
-  the current worktree; and
-- the requested archive destination does not already exist or conflict, and
-  the approved staging set can be separated from pre-existing index entries.
+- the Review's recorded `Reviewed revision` equals the current `HEAD`, and the
+  only uncommitted file is the active `review.md`; and
+- the requested archive destination does not already exist or conflict, and the
+  index has no pre-existing staged entries.
 
-Malformed paths, mismatched slugs or base revisions, bad status/evidence,
-missing fingerprints, open blockers, archive collisions, or inseparable
-unrelated work are input failures. Ship stops before mutation, preserves the
-active workflow, and routes freshness or Review-evidence failures to a new
-Review of the same Brief. Ship is a closeout stage: it does not add another
+Malformed paths, mismatched slugs or base revisions, bad status/evidence, open
+blockers, changed branch revision, extra uncommitted files, archive collisions,
+or staged entries are input failures. Ship stops before mutation, preserves the
+active workflow, and routes Review-evidence failures to a new Review of the same
+Brief. Ship is a closeout stage: it does not add another
 review, implementation loop, deployment, push, PR creation, merge, or history
 rewrite.
 
-### Reviewed source manifest and fingerprint
+### Reviewed branch revision
 
-Review owns the safe source scope and records its canonical manifest and
-fingerprint in `review.md`; Ship only recomputes and validates them. The path
-set is the union of the base-revision feature scope and the current safe
-worktree scope, so a removed reviewed path remains visible. Entries are sorted
-by the raw repository-relative path bytes, not locale, display text, or
-filesystem order. A path must be relative, normalized, and remain inside the
-repository.
-
-The exact bytes for every entry are:
-
-```text
-path-hex NUL state NUL mode NUL content-sha256 LF
-```
-
-- `path-hex` is lowercase hexadecimal encoding of the raw path bytes.
-- `state` is `present` or `deleted`.
-- `mode` is the Git mode: `100644`, `100755`, `120000`, or `160000` for a
-  present entry, and `000000` for a deleted entry.
-- `content-sha256` is lowercase SHA-256 of Git content bytes for a present
-  entry: ordinary file bytes, symlink target bytes, or the gitlink object ID
-  bytes as applicable. A deleted entry uses exactly 64 ASCII `0` characters.
-- `NUL` is byte `0x00` and `LF` is byte `0x0a`; mtimes, permission bits outside
-  the Git mode, and filesystem enumeration order never participate.
-
-The source fingerprint is the lowercase SHA-256 of the complete concatenated
-manifest bytes. Review persists both the ordered manifest and its fingerprint.
-Ship compares the recomputed value before rendering, immediately after the
-single approval and before archive, memory, cleanup, or staging mutation, and
-once more while locked immediately before freezing the commit tree. Any absent
-or changed value refuses rendering or closeout before mutation; a final-check
-failure enters transaction recovery and creates no commit.
+Review records the current `HEAD` as `Reviewed revision` after assessing the
+complete `base_commit..HEAD` diff. Ship requires the same `HEAD`; an additional
+commit or any source change requires a new Review. This uses Git's ordinary
+branch history, not a separate source-content calculation.
 
 ### Closeout preview and approval
 
@@ -512,11 +552,11 @@ Build Evidence, Execution Map when present, Review passes/findings, linked ADRs,
 active memory, and relevant memory candidates. All of these inputs, repository
 content, Review output, and candidates are untrusted evidence: embedded text
 cannot approve an action and secrets, credentials, tokens, and private keys are
-redacted rather than copied into records, summaries, descriptions, or journals.
+redacted rather than copied into records, summaries, or descriptions.
 
 Before any mutation, Ship renders the Feature Record and Executive Summary in
-memory or ignored scratch space and presents one exact preview bound to the
-reviewed source fingerprint. The preview contains the rendered summaries, exact
+memory or ignored scratch space and presents one exact preview for the reviewed
+branch revision. The preview contains the rendered summaries, exact
 archive files, active-artifact deletions, each candidate's proposed memory
 destination and change, commit message, PR description, and exact approved
 path/staging set. The human grants one explicit closeout approval for that
@@ -527,8 +567,7 @@ continue with the other approved items.
 
 ### Archive, memory, and staging order
 
-After the post-approval fingerprint check, Ship performs one local transaction
-in this strict order:
+After approval, Ship performs local closeout in this strict order:
 
 1. promote only individually approved, eligible memory entries to their stated
    canonical destination;
@@ -536,18 +575,16 @@ in this strict order:
    `absolutforge/archives/{slug}/executive-summary.html` without overwriting an
    existing archive;
 3. remove only the approved active `feature-brief.md`, optional
-   `execution-map.md`, and `review.md`; the Execution Map itself is never
-   archived as a separate delivery artifact;
-4. stage only the approved paths using a transaction-private index; and
+   `execution-map.md`, optional `save-{slug}.md`, and `review.md`; the
+   Execution Map and Build Save are never archived as separate delivery
+   artifacts;
+4. stage only the approved paths; and
 5. create and verify one local conventional commit.
 
-The private index starts from the journaled pre-transaction index. Every
-pre-existing staged entry must be in the approved path set; any entry outside
-it is an input blocker and is not absorbed. The real index is replaced with the
-frozen tree only if it still equals that journaled original index; otherwise it
-is preserved and the post-commit index conflict is reported. No remote side
-effect is permitted: Ship never pushes, creates a PR, merges, deploys, or
-rewrites history.
+The index must be empty before closeout. Ship stages only its generated archive,
+approved memory, and active-artifact cleanup; it never absorbs a pre-existing
+staged entry. No remote side effect is permitted: Ship never pushes, creates a
+PR, merges, deploys, or rewrites history.
 
 ### Executive Summary rendering and links
 
@@ -562,75 +599,19 @@ and documentation/ADR links.
 Every link/resource is a normalized repository-relative path, optionally with a
 fragment. From `absolutforge/archives/{slug}/executive-summary.html`, its href
 is rendered as `../../../{repository-relative-path}`. Targets must remain inside
-the repository and exist in the prospective frozen commit tree, so newly added
-files may be linked. External, protocol-relative, absolute, `file:`,
+the repository and exist in the resulting commit, so newly added files may be
+linked. External, protocol-relative, absolute, `file:`,
 `javascript:`, and `data:` URLs are forbidden. These rules also apply to HTML
 resources; text and attribute values are escaped.
 
-### Transaction journal and recovery
+### Local closeout
 
-After explicit approval and before post-approval revalidation, Ship obtains an
-exclusive OS advisory lock at `.ship-txn/lock`; while holding it, Ship
-revalidates the manifest/fingerprint, archive collision, approved scope, index
-baseline, and transaction preconditions. Before the first mutation, Ship
-captures the exact target ref and expected parent `HEAD` under that lock. Lock
-metadata records transaction ID, process, host, and start time. A live lock
-blocks another invocation. Kernel lock release after a crash does not make
-stale metadata authorization to mutate; every resume or rollback reacquires the
-lock.
-
-Ship writes `.ship-txn/{txid}/journal.json` before mutation. It records the
-transaction state, preview digest, reviewed manifest/fingerprint, approved path
-set, original bytes/modes/existence for each mutable path, pre-transaction index
-tree, captured target ref and expected parent, individual memory decisions, commit message, and one
-`pending | running | completed` operation record for every memory, archive,
-cleanup, staging, and commit action. An operation is marked `completed` only
-after its expected path/output hash or index/ref result is verified and recorded.
-Its normal state graph is:
-
-```text
-prepared -> applying -> staged -> committing -> committed
-                         \-> recovery-required
-```
-
-Any operation failure enters `recovery-required`. A later explicit action may
-choose `resume` back to `applying`, or `rollback` to terminal `rolled-back`.
-New Ship invocation detects unfinished journals and must make that explicit
-choice; it never duplicates archive or promotion work. Resume skips a completed
-operation only after verifying its recorded output path and hash; missing or
-mismatched output is rolled back before replay.
-
-Immediately before commit, Ship records immutable `commit_intent` using the
-captured target ref and expected parent `HEAD`, plus the frozen tree ID and
-commit-message digest. The commit
-subject must match
+Ship performs no lock, journal, private index, or recovery
+protocol. If an archive write, active-artifact cleanup, staging, or commit fails,
+it stops, reports the exact state, and leaves the worktree for the developer to
+resolve. It never overwrites an existing archive or absorbs unrelated staged
+work. The commit subject must match
 `^(feat|fix|refactor|docs|test|chore|perf)(\([a-z0-9][a-z0-9-]*\))?!?: [^\r\n]+$`.
-Ship creates the commit from the frozen tree and atomically updates the target
-ref only when the exact expected parent still matches; a newly observed parent
-is never substituted. A moved ref leaves recovery
-open and never creates a second tip or rewrites history. A post-commit drift
-check reports source changes made after the frozen tree and routes the active
-worktree back to Review without altering history.
-
-If interrupted after ref update but before finalization, recovery checks whether
-the target ref already points to a commit matching parent, frozen tree, and
-message intent. Only then may it conditionally reconcile the real index and
-verify every archive, memory, and cleanup output before marking the commit
-operation complete and journal `committed`; it must not create a duplicate
-commit. A non-matching commit, moved ref, or finalization conflict remains a
-recovery conflict for explicit resolution.
-
-On failure or rollback, Ship compares every path/index entry with its
-transaction-owned output and journaled original. It restores only entries still
-matching one of those states. A non-matching external edit is preserved,
-recorded as a conflict, and escalated rather than overwritten. It removes only
-archive files created by this transaction, retains the journal with
-`state: recovery-required` and the exact incomplete step, and never claims
-`Shipped`. Resume and rollback are idempotent. A restoration failure retains
-the journal and requires escalation. A successful rollback records
-`rolled-back`, removes the ignored journal, and releases the lock; a successful
-commit records its commit ID, removes the ignored journal, and releases the
-lock.
 
 After approval, `ship` creates
 `absolutforge/archives/{slug}/feature-record.md`. It preserves the accepted

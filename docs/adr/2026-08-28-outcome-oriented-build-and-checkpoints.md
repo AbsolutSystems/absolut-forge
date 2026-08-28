@@ -22,11 +22,11 @@ when there are dependent outcomes, meaningful uncertainty, or a likely need for
 durable resume. The map tracks map-level and section-level status, but sections
 are internal implementation boundaries rather than approval or delivery gates.
 
-Every build records `base_commit` and the initial worktree state. Small cohesive
-work keeps changes for `ship`; larger mapped work may create a local checkpoint
-commit after each coherent, verified outcome. Checkpoint IDs are recorded in the
-map and Build Evidence, and review uses `base_commit..HEAD`. `build` never
-pushes, merges, rewrites history, or deploys.
+Every build starts from a clean local feature branch, records its branch and
+`base_commit`, and commits feature state before review. Larger mapped work may
+create a local checkpoint commit after each coherent, verified outcome.
+Checkpoint IDs are recorded in the map and Build Evidence, and review uses
+`base_commit..HEAD`. `build` never pushes, merges, rewrites history, or deploys.
 
 The default Codex route uses `gpt-5.6-luna` with `xhigh` reasoning. If Luna is
 genuinely stuck, it may ask a bounded, read-only `gpt-5.6-sol` advisor for
@@ -77,8 +77,7 @@ scope expansion is a stop condition, not an accidental outcome.
 ### Costs and constraints
 
 - The model must maintain accurate map status and append-only Build Evidence.
-- Checkpoint commits require clean scope separation from pre-existing dirty
-  worktree changes.
+- Build requires a clean worktree before establishing the feature base.
 - Harness integrations must detect native compaction and generic advisor
   dispatch rather than assuming either primitive exists.
 

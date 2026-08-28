@@ -23,6 +23,11 @@ delivery evidence.
 
 First determine which explicit input the user supplied:
 
+- A new feature starts on a non-detached local feature branch with a clean
+  worktree. If existing work is uncommitted, stop and ask the developer to
+  commit or set it aside before creating the Brief. `discuss` does not create,
+  rename, switch, push, or merge branches.
+
 - For a new idea, establish a concise feature name and a repository-relative
   slug, then use `absolutforge/features/{slug}/feature-brief.md` as the only
   candidate artifact path.
@@ -185,7 +190,8 @@ durable architectural decision separately: record it in an ADR using the
 repository's conventions, link it from the Brief's Decisions, and do not
 duplicate the ADR's full text in the Brief.
 
-After the Brief is Ready (including any accepted amendments), emit exactly one
+After the Brief is Ready (including any accepted amendments), the developer
+commits the accepted Brief on that feature branch. Only then emit exactly one
 complete native `build` handoff with the actual repository-relative Brief path.
 Use the forms owned by the [native handoff contract](../../references/harness-command-contract.md),
 for example:

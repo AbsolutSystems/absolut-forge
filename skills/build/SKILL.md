@@ -24,14 +24,22 @@ traversal, missing files, malformed heading-only Markdown, and Briefs missing
 the canonical required headings or `## Status`; stop before mutation and name
 the invalid input or required status.
 
-Read the complete Brief before touching code. A `Ready` Brief is valid to start:
-validate its accepted baseline and amendments, record the starting `base_commit`
-and initial worktree state, then change only its status to `Building`. A
-`Building` Brief is a resume only: load its existing Execution Map when present
-and append-only `## Build Evidence`, verify their facts against the current
-worktree, and continue only from incomplete verified boundaries. Never treat an
-in-progress or incomplete outcome as complete. `Draft` and `In Review` are not
-valid starting states for normal implementation; stop without mutation.
+Read the complete Brief before touching code. A `Ready` Brief is valid to start
+only on a non-detached local feature branch with a clean worktree and the Brief
+already committed. Record the branch name and current `HEAD` as `base_commit`.
+Before the first source edit, append the canonical `### Build start` entry under
+`## Build Evidence`, even when no Execution Map is needed, then change only the
+Brief status to `Building`. A dirty worktree, detached `HEAD`, or uncommitted
+Brief is an input blocker: stop and ask the developer to commit or set aside the
+existing work before establishing the base revision.
+
+A `Building` Brief is a resume only: require and load its append-only Build start
+entry, existing Execution Map when present, and later `## Build Evidence`;
+verify their facts against the current worktree and continue only from incomplete
+verified boundaries. A missing or malformed Build start entry blocks resume.
+Never treat an in-progress or incomplete outcome as complete. `Draft` and `In
+Review` are not valid starting states for normal implementation; stop without
+mutation.
 
 The accepted Brief baseline is immutable. Build may change status and append
 Build Evidence, but never rewrites accepted intent to match implementation.
@@ -95,10 +103,9 @@ secrets, credentials, access tokens, private keys, and similar sensitive values
 at the source boundary. Never copy them into an Execution Map, Build Evidence,
 advisor context, review handoff, logs, or user-facing output.
 
-Inspect the initial worktree before feature edits. Preserve dirty,
-non-overlapping changes. Proceed only when feature work can be safely separated;
-if dirty changes overlap the accepted change surface and cannot be separated,
-stop and explain the conflict rather than overwriting or absorbing them.
+Before feature edits, require an empty index and no staged, unstaged, or
+untracked files. Build works only in the selected local feature branch; it does
+not create, rename, switch, push, or merge branches.
 
 ## Choose durable outcome boundaries
 
@@ -109,8 +116,8 @@ are dependent outcomes, material uncertainty, or a durable resume need.
 
 When a map is useful, use the canonical [Execution Map
 contract](../../references/artifact-contracts.md#execution-map-contract): persist
-its map and section statuses, `base_commit`, initial worktree state, outcome
-goal and boundaries, dependencies, focused verification, result, material
+its map and section statuses, feature branch, `base_commit`, outcome goal and
+boundaries, dependencies, focused verification, result, material
 deviations, and optional local checkpoint IDs. A section is an outcome boundary,
 not a task list, file/symbol recipe, approval gate, or independently shippable
 unit. Move a section from `pending` to `in-progress` before its work, and to
@@ -120,8 +127,8 @@ Evidence so a later session can resume from evidence rather than conversation
 memory.
 
 For larger mapped work, a coherent verified outcome may receive a local
-checkpoint commit when dirty work can remain safely separate. Record its commit
-ID and verification. Checkpoints are optional, local-only recovery anchors;
+checkpoint commit. Record its commit ID and verification. Checkpoints are
+optional, local-only recovery anchors;
 they never authorize a push, merge, release, or partial review. The final review
 always receives the complete `base_commit..HEAD` feature diff, not one map
 section or checkpoint.
@@ -199,14 +206,18 @@ not review-ready.
 
 Append concise, factual, secret-redacted Build Evidence using the canonical
 [Build Evidence contract](../../references/artifact-contracts.md#build-evidence-contract).
-Include the `base_commit..HEAD` review range, changed repository-relative areas,
-verification commands and results, checkpoints, material decisions, deviations
-and amendment references, scout disposition, documentation maintenance,
-compaction handoff, and any durable memory candidate. Evidence is append-only.
+Preserve the required Build start entry and include the `base_commit..HEAD`
+review range, changed repository-relative areas, verification commands and
+results, checkpoints, material decisions, deviations and amendment references,
+scout disposition, documentation maintenance, compaction handoff, and any
+durable memory candidate. Evidence is append-only.
 
 Only after this evidence and final verification succeed, change the Brief status
-to `In Review` and emit one complete native review handoff for the whole
-feature. For example:
+to `In Review` and create the local feature commit(s) required to leave all
+feature source, Brief, and optional Map changes committed. Review never reviews
+an uncommitted source change. If the local commit cannot be created, stop and do
+not emit a Review handoff. Then emit one complete native review handoff for the
+whole feature. For example:
 
 ```text
 /absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md

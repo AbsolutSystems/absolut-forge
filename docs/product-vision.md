@@ -4,10 +4,9 @@
 
 Accepted product design — 2026-08-27.
 
-Implementation status: `discuss`, optional `consult`, `build`, `review`, and
-explicit-only `ship` are implemented for the Claude Code and Codex pilot.
-`debug` and `tech-debt` remain separate Phase 6 workflows; this status does not
-change the accepted product contracts below.
+Implementation status: all nine MVP skills—`discuss`, optional `consult`,
+`build`, `save`, `load`, `review`, `ship`, guardian `debug`, and explicit-only
+`tech-debt`—are implemented for the Claude Code and Codex pilot.
 
 This document is the durable source of truth for the product behavior agreed
 before implementation. Phase plans may refine implementation details, but they
@@ -53,9 +52,9 @@ tech-debt
 consult (optional)
 ```
 
-`consult` is the seventh MVP skill: an optional, explicit-only second opinion
-on an existing `Draft` or `Ready` Feature Brief. It complements the normal
-core workflow and is not a replacement for any core stage.
+`consult`, `save`, and `load` are optional explicit helpers: consultation
+pressure-tests a Brief, while save/load pause and restore Build context. None
+replaces a core delivery stage.
 
 ### MVP harnesses
 
@@ -201,10 +200,9 @@ for the exact append-only record and acceptance rules.
 `build` completes its required verification. It accepts the complete Feature
 Brief and matching `review.md`, then loads accepted intent, amendments,
 decisions, Build Evidence, and the recorded `base_commit`. One fresh generic
-read-only reviewer assesses the committed, staged, unstaged, and feature-owned
-untracked change from that revision through the current worktree. Review
-process artifacts and unrelated dirty changes stay out of scope; inseparable
-unrelated changes are an input blocker and the worktree is preserved.
+read-only reviewer assesses exactly the committed `base_commit..HEAD` range.
+Staged, unstaged, or untracked source changes are an input blocker; the active
+`review.md` is the only permitted uncommitted workflow artifact.
 
 The reviewer uses only `BLOCKING` and `FOLLOW-UP` findings. Findings retain
 stable identities and append-only resolution history across targeted re-review.
@@ -265,11 +263,14 @@ no separate planning skill.
 
 Build is outcome-oriented and autonomous: it chooses a conditional Execution
 Map only when dependent outcomes, material uncertainty, or durable resumption
-make one useful. It records map status, `base_commit`, and optional local
-checkpoints, verifies each outcome locally, then runs final whole-feature checks
-before the single independent review. Map sections and checkpoints are resume
-facts, never partial releases; the complete Feature Brief is the only delivery
-unit. Build never deploys, pushes, creates a PR, merges, or rewrites history.
+make one useful. It starts on a clean local feature branch, persists its branch
+and `base_commit` in Build Evidence, and requires the accepted Brief to be
+committed first. It records map status and optional local checkpoints, verifies
+each outcome locally, then runs final whole-feature checks and commits the
+feature state before the single independent review. Map sections and checkpoints
+are resume facts, never partial releases; the complete Feature Brief is the only
+delivery unit. Build never deploys, pushes, creates a PR, merges, or rewrites
+history.
 
 Build consumes the optional recommendation as advisory context. It uses a valid
 profile only when the active harness can provide the suggested model; configured
@@ -278,6 +279,21 @@ unavailable, or overridden recommendations use the configured fallback choice
 and record the actual selection and concise reason in append-only Build Evidence.
 Build never switches models or providers automatically, rewrites accepted intent,
 or treats the recommendation as permission to deploy or deliver a partial result.
+
+## `save` and `load` contracts
+
+While a Brief is `Building`, `save` creates one concise
+`save-{slug}.md` artifact beside it. The save records actual completed work,
+current work, one next action, open items, branch/base context, and only the
+minimum resume notes. It neither snapshots source nor commits, stashes, or
+switches branches. To move to another branch safely, the developer commits the
+save together with WIP source or stashes both.
+
+`load` accepts that canonical save path only. It validates the matching Brief,
+branch, and base revision, compares saved facts to the current repository, then
+hands the feature back to `build`. It never restores source or treats a save as
+proof of completed verification. Exact schemas are in the [Build Save
+contract](../references/artifact-contracts.md#build-save-contract).
 The handoff details live in the [Harness Command Contract](../references/harness-command-contract.md).
 
 ### Context
@@ -421,9 +437,9 @@ multi-agent audit may be invoked manually for unusually high-risk work.
 findings and all review fixes have been re-verified. Invoke it explicitly with
 matching paths using `/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Claude Code or `$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md` in Codex.
 
-Ship validates `In Review`/`Complete` status, final Review evidence, and the
-Review-owned post-review source manifest/fingerprint before rendering. It
-generates the final Feature Record and path-only, self-contained Executive
+Ship validates `In Review`/`Complete` status, final Review evidence, and that
+the branch still points to the revision reviewed from `base_commit..HEAD` before
+rendering. It generates the final Feature Record and path-only, self-contained Executive
 Summary HTML from that final state. The record preserves accepted intent
 separately from the as-built result and carries deviations, verification,
 Review findings, linked ADRs, durable knowledge, follow-ups, and consolidated
@@ -432,13 +448,10 @@ excerpts, and no external assets.
 
 Before mutation Ship presents one exact preview containing archive files,
 active-file deletions, each memory destination/change, commit message, PR
-description, and staging set. One explicit closeout approval binds the preview
-to the fingerprint; each memory candidate is accepted or rejected separately.
-Approved memory promotion, archive creation, active-artifact cleanup, staging,
-and local commit run as one journaled transaction in `.ship-txn/{txid}/journal.json`
-under an advisory lock. Recovery supports output-hash verification, resume,
-rollback, commit intent, index/ref safety, and post-commit drift routing.
-Archives stay durable; only `.ship-txn/` is transient and ignored.
+description, and staging set. Each memory candidate is accepted or rejected
+separately. Approved memory promotion, archive creation, active-artifact
+cleanup, staging, and local commit then run locally in that order. A source edit
+is committed and handled by invoking Review again before Ship.
 
 Ship never pushes, creates a PR, merges, deploys, or rewrites history. A PR
 description is informational and does not authorize a remote action. The exact
@@ -501,7 +514,7 @@ Only after approval does it:
 
 1. promote approved durable memory,
 2. create the final archive,
-3. remove active Brief, map, and review artifacts,
+3. remove active Brief, map, optional save, and review artifacts,
 4. stage the agreed files,
 5. create the local commit.
 
