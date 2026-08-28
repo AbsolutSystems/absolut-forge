@@ -97,6 +97,9 @@ are redacted and never copied into durable artifacts or conversation.
   delivery unit. See [ADR-004](docs/adr/2026-08-28-outcome-oriented-build-and-checkpoints.md),
   [ADR-005](docs/adr/2026-08-28-single-delivery-unit-no-partial-deployment.md),
   and the [artifact contract](references/artifact-contracts.md).
+- The map records `base_commit` so review can trace the complete feature diff.
+  Keep the overlapping AbsolutPowers workflow disabled while using AbsolutForge;
+  the two workflows must not be active together.
 - No global SessionStart hook injects the workflow into unrelated sessions.
 
 ## Initial scope

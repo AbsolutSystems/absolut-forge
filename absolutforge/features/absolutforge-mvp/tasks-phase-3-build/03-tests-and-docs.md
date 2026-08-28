@@ -126,3 +126,4 @@ Run:
 
 ## Implementation Decisions / Remarks
 - Phase verification passed: `python3 -m unittest discover -s tests -t . -p 'test_*.py'` (46 tests) and `git diff --check`.
+- Review follow-up tightened AC-6/AC-10/AC-11 assertions and made product-doc boundary checks file-specific; corrected the three-skill documentation wording.

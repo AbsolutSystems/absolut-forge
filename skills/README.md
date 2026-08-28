@@ -14,7 +14,7 @@ implemented; the remaining delivery stages are planned in the phase roadmap:
 - `debug` — investigate concrete failures and, when requested, fix them.
 - `tech-debt` — audit technical debt and produce a remediation backlog.
 
-Both implemented skills are explicit-only and live under this shared tree; they
+All three implemented skills are explicit-only and live under this shared tree; they
 link the canonical artifact and handoff contracts instead of copying schemas.
 `consult` is optional, produces no durable consultation artifact, and never gates
 the normal `discuss -> build -> review -> ship` flow.

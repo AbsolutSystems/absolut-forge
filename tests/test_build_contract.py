@@ -92,12 +92,18 @@ class BuildSkillContractTests(unittest.TestCase):
         """[AC-5] [AC-6] [AC-10] [AC-13] Failure boundaries prevent speculative scope growth."""
         for phrase in ("failure", "same observable check or runtime symptom", "violated invariant", "Failure Boundary Check"):
             self.assertIn(phrase, self.body)
+        self.assertRegex(self.body, r"(?i)accepted amendment becomes review baseline context")
+        self.assertRegex(self.body, r"(?i)rejected amendment leaves the original baseline and change surface unchanged")
         self.assertRegex(self.body, r"(?i)Before a second repair attempt")
         self.assertRegex(self.body, r"(?is)causally maps.*expected invariant.*change surface")
         self.assertRegex(self.body, r"(?i)escalate before a second speculative repair")
         self.assertRegex(self.body, r"(?i)material scope expansion.*stop condition")
         self.assertRegex(self.body, r"(?i)explicit amendment or scope approval")
         self.assertRegex(self.body, r"(?i)ordinary.*do not require.*approval")
+        self.assertRegex(self.body, r"(?i)inspect the initial worktree before feature edits")
+        self.assertRegex(self.body, r"(?i)preserve dirty, non-overlapping changes")
+        self.assertRegex(self.body, r"(?i)dirty changes overlap.*stop and explain the conflict")
+        self.assertRegex(self.body, r"(?i)rather than overwriting or absorbing them")
 
     def test_scout_rule_AC11_AC12(self) -> None:
         """[AC-11] [AC-12] Scout fixes are trivial, reported, and bounded."""
@@ -105,6 +111,9 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertRegex(self.body, r"(?i)strictly trivial adjacent defect")
         self.assertRegex(self.body, r"(?i)non-trivial adjacent work remains a follow-up")
         self.assertRegex(self.body, r"(?i)reported as a scout fix")
+        self.assertRegex(self.body, r"(?i)fails in apparently untouched code")
+        self.assertRegex(self.body, r"(?i)investigate and record the observable evidence")
+        self.assertRegex(self.body, r"(?i)do not silently label it pre-existing or a feature regression")
         self.assertIn("Scout disposition", self.artifacts)
 
     def test_documentation_rule_AC7(self) -> None:
@@ -155,17 +164,37 @@ class BuildSkillContractTests(unittest.TestCase):
 
     def test_product_docs_contract_AC1_AC3_AC4_AC5_AC6_AC7_AC8_AC13_AC14_AC15(self) -> None:
         """[AC-1] [AC-3] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-13] [AC-14] [AC-15] Product docs expose Build boundaries."""
-        documents = "\n".join(path.read_text(encoding="utf-8") for path in DOCS)
-        self.assertIn("discuss -> build -> review -> ship", documents)
-        self.assertRegex(documents, r"(?i)build.*implemented|implemented.*build")
-        self.assertRegex(documents, r"(?i)Execution Map")
-        self.assertRegex(documents, r"(?i)base_commit")
-        self.assertRegex(documents, r"(?i)focused.*final.*verification|final.*focused")
-        self.assertRegex(documents, r"(?i)Failure Boundary Check|boundary-first")
-        self.assertRegex(documents, r"(?i)read-only.*Sol|Sol.*read-only")
-        self.assertRegex(documents, r"(?i)concise.*truthful|truthful.*concise")
-        self.assertRegex(documents, r"(?i)never deploy|does not deploy|no partial")
-        self.assertRegex(documents, r"(?i)AbsolutPowers.*(?:disabled|not active)|not active.*AbsolutPowers")
+        documents = {
+            path.relative_to(ROOT).as_posix(): re.sub(
+                r"\s+", " ", path.read_text(encoding="utf-8")
+            )
+            for path in DOCS
+        }
+        readme = documents["README.md"]
+        claude = documents["CLAUDE.md"]
+        vision = documents["docs/product-vision.md"]
+        skills = documents["skills/README.md"]
+
+        self.assertIn("discuss -> build -> review -> ship", readme)
+        self.assertRegex(readme, r"(?i)build.*implemented")
+        self.assertRegex(readme, r"(?i)Execution Map")
+        self.assertRegex(readme, r"(?i)base_commit")
+        self.assertRegex(readme, r"(?i)never deploy|no partial")
+        self.assertRegex(readme, r"(?i)AbsolutPowers.*(?:disabled|not active)")
+
+        self.assertIn("discuss -> build -> review -> ship", vision)
+        self.assertRegex(vision, r"(?i)build.*implemented")
+        for phrase in ("Execution Map", "base_commit", "Failure Boundary Check", "read-only", "Sol", "concise", "truthful", "never deploy"):
+            self.assertIn(phrase.lower(), vision.lower(), phrase)
+        self.assertRegex(vision, r"(?i)focused.*final.*verification")
+
+        self.assertRegex(claude, r"(?i)build.*contracts exist")
+        for phrase in ("Failure Boundary Check", "read-only Sol", "concise and truthful", "never deploy", "partial outcome"):
+            self.assertIn(phrase.lower(), claude.lower(), phrase)
+
+        self.assertRegex(skills, r"(?i)build.*implemented")
+        for phrase in ("Failure Boundary Check", "read-only Sol", "concise and truthful", "never deploy", "independently shippable"):
+            self.assertIn(phrase.lower(), skills.lower(), phrase)
 
 
 if __name__ == "__main__":
