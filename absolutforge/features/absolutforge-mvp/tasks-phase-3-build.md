@@ -70,7 +70,7 @@ orchestrated
 **Risk:** high
 
 ### Phase 2: Autonomous Build Skill
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-3-build/02-build-skill.md`
 **Depends on:** Phase 1
 **Write scope:** `skills/build/SKILL.md`, `skills/build/agents/openai.yaml`
