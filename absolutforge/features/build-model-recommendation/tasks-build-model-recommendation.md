@@ -57,7 +57,7 @@ deterministic Python `unittest` contract scanners; no runtime application code.
 **Risk:** high
 
 ### Phase 2: Discuss and Build Integration
-**Status:** in-progress
+**Status:** completed
 **File:** `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation/02-skills.md`
 **Depends on:** Phase 1
 **Write scope:** `skills/discuss/SKILL.md`, `skills/build/SKILL.md`
