@@ -34,6 +34,7 @@ Read before starting:
 - `references/artifact-contracts.md`
 - `references/harness-command-contract.md`
 - `references/codex-tools.md`
+- `absolutforge/features/absolutforge-mvp/planning-main.md` (orchestrator-only epic lifecycle status)
 
 ## Objective
 Extend the canonical contracts so a later build skill can implement the accepted
@@ -127,6 +128,10 @@ fresh-context review mapping without creating a mandatory subagent ceremony.
 Run:
 - `python3 -m unittest discover -s tests -t . -p 'test_*.py'`
 - `git diff --check`
+
+## Verification History
+- `python3 -m unittest discover -s tests -t . -p 'test_*.py'` — PASS (35 tests).
+- `git diff --check` — PASS.
 
 ## Completion Criteria
 - All phase tasks are completed.

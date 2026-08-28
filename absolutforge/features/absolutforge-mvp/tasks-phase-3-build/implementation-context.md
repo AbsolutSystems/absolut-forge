@@ -4,7 +4,7 @@
 Short handoff for phase workers. Add only durable facts needed by later phases.
 
 ## Completed Phases
-- None yet.
+- Phase 1 — Canonical Build Contracts and Harness References (commit `6158228`; phase verification passed).
 
 ## Created / Changed API
 - `references/artifact-contracts.md` now owns the Execution Map and append-only Build Evidence contracts, including `base_commit`, checkpoints, failure boundaries, scout/documentation, compaction, and no-deployment rules.
