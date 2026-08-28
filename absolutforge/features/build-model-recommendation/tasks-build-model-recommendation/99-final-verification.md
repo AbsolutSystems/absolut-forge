@@ -1,7 +1,7 @@
 # Final Verification: Build model recommendation
 
 ## Status
-in-progress
+completed
 
 ## Parent
 `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation.md`
@@ -37,7 +37,7 @@ Read before starting:
 Run integrated deterministic verification and record exact results before branch review.
 
 ## Task 1: Run integrated verification
-**Status:** in-progress
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11
 **Test-first:** no (final verification only)
 **Produces:** Recorded verification evidence in this file
@@ -65,6 +65,16 @@ Run:
 - Exact outputs and skipped checks are recorded below.
 
 ## Implementation Decisions / Remarks
-- Commands executed: to be completed after verification.
-- Results: to be completed after verification.
-- Skipped checks: to be completed after verification.
+- Commands executed:
+  - `python3 -m unittest discover -s tests -t . -p 'test_*.py'`
+  - `git ls-files --cached --others --exclude-standard` + `python3 -m json.tool` for each JSON descriptor
+  - `git diff --check`
+  - `claude plugin validate --strict .`
+  - literal `[AC-1]` through `[AC-11]` scan across `tests/`
+- Results:
+  - Full static suite: exit 0, 50 tests, `OK`.
+  - JSON descriptors: exit 0; all 4 tracked/non-ignored descriptors parsed successfully.
+  - Diff hygiene: exit 0; no whitespace errors.
+  - Claude plugin validation: exit 0, marketplace manifest validation passed.
+  - AC token scan: exit 0; every literal `[AC-1]` through `[AC-11]` is present in test sources.
+- Skipped checks: none.
