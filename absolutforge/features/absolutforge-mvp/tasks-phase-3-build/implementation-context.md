@@ -6,6 +6,7 @@ Short handoff for phase workers. Add only durable facts needed by later phases.
 ## Completed Phases
 - Phase 1 — Canonical Build Contracts and Harness References (commit `6158228`; phase verification passed).
 - Phase 2 — Autonomous Build Skill (commit `9b19c92`; focused verification passed).
+- Phase 3 — Build contract tests and product documentation (working tree; full verification passed).
 
 ## Created / Changed API
 - `references/artifact-contracts.md` now owns the Execution Map and append-only Build Evidence contracts, including `base_commit`, checkpoints, failure boundaries, scout/documentation, compaction, and no-deployment rules.
@@ -28,3 +29,9 @@ Short handoff for phase workers. Add only durable facts needed by later phases.
 
 ## Verification History
 - Planning validation: 35 existing tests passed; plan QA enrichment and review-plan both PASS.
+- Phase 3: `python3 -m unittest discover -s tests -t . -p 'test_*.py'` — 46 tests passed; `git diff --check` — passed.
+
+## Phase 3 Handoff
+- Contract entry point: `tests/test_build_contract.py` (static checks for AC-1 through AC-15).
+- Foundation integration: `tests/test_foundation.py` includes the explicit-only `build` skill.
+- Product references: `README.md`, `CLAUDE.md`, `docs/product-vision.md`, and `skills/README.md` describe the implemented Build workflow and link canonical contracts/ADRs.

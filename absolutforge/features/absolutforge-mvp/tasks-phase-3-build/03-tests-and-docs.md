@@ -1,7 +1,7 @@
 # Phase 3: Contract Tests and Product Documentation
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-3-build.md`
@@ -34,6 +34,7 @@ Read before starting:
 
 ## Write Scope
 - `tests/test_build_contract.py`
+- `tests/test_foundation.py`
 - `README.md`
 - `CLAUDE.md`
 - `docs/product-vision.md`
@@ -49,7 +50,7 @@ process.
 ## Tasks
 
 ### Task 1: Add deterministic Build contract tests
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (the deterministic contract suite is the task deliverable)
 **Produces:** `tests/test_build_contract.py` with static `unittest` coverage for every Build AC and explicit-only metadata
@@ -75,10 +76,11 @@ code.
 - The task's own test methods are the verification: `test_ready_lifecycle` display `[AC-1]`; `test_map_threshold_and_resume` displays `[AC-2]` and `[AC-4]`; `test_autonomous_verification` displays `[AC-3]` and `[AC-8]`; `test_failure_boundary` displays `[AC-5]`, `[AC-6]`, `[AC-10]`, and `[AC-13]`; `test_scout_rule` displays `[AC-11]` and `[AC-12]`; `test_documentation_rule` displays `[AC-7]`; `test_invalid_input` displays `[AC-9]`; `test_advisor_escalation` displays `[AC-14]`; `test_untrusted_and_redaction` displays `[AC-15]`.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Added a static, whitespace-normalized `unittest` scanner with literal `[AC-1]` through `[AC-15]` tokens; it checks the Build skill, manifests, canonical contracts, and product-doc boundary without model calls.
+- Extended the foundation active-skill allowlist to include `build`, keeping the full deterministic suite aligned with the new explicit-only skill.
 
 ### Task 2: Update product and contributor documentation for Build
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-13, AC-14, AC-15
 **Test-first:** no (documentation update)
 **Produces:** consistent Build lifecycle descriptions in `README.md`, `CLAUDE.md`, `docs/product-vision.md`, and `skills/README.md`
@@ -108,7 +110,7 @@ and AbsolutPowers isolation.
 - Contract tests: `test_product_docs_contract` with display names `[AC-1]`, `[AC-3]`, `[AC-4]`, `[AC-5]`, `[AC-6]`, `[AC-7]`, `[AC-8]`, `[AC-13]`, `[AC-14]`, `[AC-15]`; scout and invalid-input requirements remain asserted by the complete contract suite with display names `[AC-9]`, `[AC-10]`, `[AC-11]`, `[AC-12]`.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Marked Build implemented in contributor/product indexes and documented conditional maps, durable resume, Failure Boundary Check, scout/documentation rules, optional redacted Sol advice, no partial deployment, and AbsolutPowers isolation.
 
 ## Phase Verification
 Run:
@@ -123,4 +125,4 @@ Run:
 - All `Context Contract -> Provides` items are fulfilled.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Phase verification passed: `python3 -m unittest discover -s tests -t . -p 'test_*.py'` (46 tests) and `git diff --check`.

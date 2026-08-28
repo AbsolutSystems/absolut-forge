@@ -5,9 +5,9 @@ It gives the model a precise product goal, durable context, and room to execute
 autonomously, while concentrating quality control on verification and one final,
 independent review.
 
-> Status: private pilot foundation. The `discuss` and optional `consult` skills
-> are implemented; the remaining delivery stages are planned and validation is
-> non-mutating.
+> Status: private pilot foundation. The `discuss`, optional `consult`, and
+> `build` skills are implemented; review and closeout stages remain in phased
+> delivery and validation is non-mutating.
 
 AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
 repository is the plugin root and uses one shared `skills/` tree for Claude Code
@@ -40,7 +40,8 @@ discuss -> build -> review -> ship
 - **consult** is an optional, explicit second-model opinion on an existing Draft
   or Ready Brief; accepted changes merge into a Draft or become Ready amendments.
 - **build** implements autonomously, creates an Execution Map only when useful,
-  and runs focused plus final verification.
+  resumes from durable map/evidence status when needed, and runs focused plus
+  final verification.
 - **review** performs one independent review with `BLOCKING` and `FOLLOW-UP`
   findings.
 - **ship** creates the final Feature Record, a human-facing Executive Summary
@@ -87,6 +88,15 @@ are redacted and never copied into durable artifacts or conversation.
   a concrete failure.
 - `consult` is optional and explicit-only; it never silently runs, gates `build`,
   or rewrites a Ready intent baseline.
+- `build` applies a Failure Boundary Check before a second speculative repair,
+  keeps non-trivial adjacent work as a follow-up, and maintains concise,
+  truthful documentation for public APIs and critical internals.
+- Build checkpoints and map sections are recovery/resume facts only. Build
+  never deploys, pushes, creates a PR, merges, rewrites history, or presents a
+  partial outcome as independently shippable; the whole Feature Brief is one
+  delivery unit. See [ADR-004](docs/adr/2026-08-28-outcome-oriented-build-and-checkpoints.md),
+  [ADR-005](docs/adr/2026-08-28-single-delivery-unit-no-partial-deployment.md),
+  and the [artifact contract](references/artifact-contracts.md).
 - No global SessionStart hook injects the workflow into unrelated sessions.
 
 ## Initial scope

@@ -4,6 +4,11 @@
 
 Accepted product design — 2026-08-27.
 
+Implementation status: `discuss`, optional `consult`, and `build` are currently
+implemented for the Claude Code and Codex pilot. The remaining core and
+standalone skills are delivered in later phases; this status does not change the
+accepted product contracts below.
+
 This document is the durable source of truth for the product behavior agreed
 before implementation. Phase plans may refine implementation details, but they
 must not silently change these contracts. A material change to product behavior
@@ -214,6 +219,14 @@ redacted and never copied into a Brief, finding, ADR, log, or conversation.
 `build` owns implementation from accepted Brief to review-ready change. There is
 no separate planning skill.
 
+Build is outcome-oriented and autonomous: it chooses a conditional Execution
+Map only when dependent outcomes, material uncertainty, or durable resumption
+make one useful. It records map status, `base_commit`, and optional local
+checkpoints, verifies each outcome locally, then runs final whole-feature checks
+before the single independent review. Map sections and checkpoints are resume
+facts, never partial releases; the complete Feature Brief is the only delivery
+unit. Build never deploys, pushes, creates a PR, merges, or rewrites history.
+
 ### Context
 
 Before changing code, `build` reads:
@@ -279,6 +292,16 @@ amendment. It does not silently edit intent.
 Subagents are optional for genuinely independent research or disjoint work. They
 are never mandatory workers or quality gates. The primary implementing context
 retains ownership of the whole result.
+
+Before a second speculative repair of the same failure, Build performs the
+Failure Boundary Check: the observable symptom and violated invariant must map
+causally to the current outcome and the edit must remain within its declared
+surface. Otherwise it escalates for an explicit amendment or scope decision.
+An optional Sol advisor receives only a bounded, secret-redacted, read-only
+diagnostic package and cannot edit or authorize changes. The scout rule permits
+only strictly trivial adjacent fixes; non-trivial work remains a follow-up.
+Public APIs and critical internal behavior are documented concisely and
+truthfully, with stale documentation corrected or removed in the same change.
 
 ## `review` contract
 

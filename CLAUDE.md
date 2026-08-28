@@ -29,8 +29,8 @@ repository documents take precedence.
 ## Current state
 
 The repository is in phased MVP work. Local Claude/Codex manifests, canonical
-references, foundation ADRs, and the explicit-only `discuss` and `consult`
-contracts exist; `build`, `review`, `ship`, `debug`, and `tech-debt` remain
+references, foundation ADRs, and the explicit-only `discuss`, `consult`, and
+`build` contracts exist; `review`, `ship`, `debug`, and `tech-debt` remain
 planned until their phases are implemented.
 
 ## Binding product constraints
@@ -58,6 +58,18 @@ planned until their phases are implemented.
 - Feature intent becomes immutable at `Ready`; material change requires an
   explicit amendment.
 - `build` owns optional outcome planning and verification.
+- `build` resumes from a conditional Execution Map and durable evidence, records
+  `base_commit` and optional local checkpoints, and performs focused checks
+  after each outcome plus final whole-feature verification.
+- A non-passing verification result blocking an accepted outcome is a failure;
+  the same failure is identified by its observable symptom and violated
+  invariant. A Failure Boundary Check is required before a second speculative
+  repair. Missing causal mapping, unclear invariants, or unapproved material
+  scope require escalation/amendment. Public and critical internal docs remain
+  concise and truthful; stale docs are corrected or removed.
+- Build may request a bounded, redacted, read-only Sol diagnosis, but Sol cannot
+  edit or authorize changes. Build never deploys, pushes, creates PRs, merges,
+  rewrites history, or treats a partial outcome as independently shippable.
 - `review` is one independent fresh-context review using `BLOCKING` and
   `FOLLOW-UP`.
 - `ship` runs after review fixes and creates a Feature Record plus human-facing
