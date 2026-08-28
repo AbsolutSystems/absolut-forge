@@ -139,10 +139,22 @@ outcomes and final verification succeed, `build` changes the Brief to `In
 Review` and hands the complete feature to `review` with the matching
 repository-relative review artifact path.
 
-`review` receives the complete feature diff from `base_commit..HEAD`, the full
-accepted Brief and amendments, and Build Evidence. It never receives only an
-internal section, checkpoint, or partial result. Render the native forms above
-exactly for the active harness; for example:
+`review` accepts only the repository-relative Feature Brief path and matching
+repository-relative review artifact path. It reads `base_commit` from Build
+Evidence, then derives the complete feature change from that revision through
+the current worktree itself. Its scope includes committed, staged, unstaged, and
+feature-owned untracked files. It excludes generated review/process artifacts
+and unrelated dirty changes; when unrelated changes cannot be safely separated,
+review records an input blocker and preserves the worktree. It never receives
+only an internal section, checkpoint, partial result, or pre-generated diff.
+
+The normal lifecycle is `build -> review -> ship`: after Build verification,
+review evaluates the accepted Brief and amendments, linked ADRs/rules, Build
+Evidence, and current worktree. Review may hand off to `ship` only when there
+are no open `BLOCKING` findings. Concrete accepted `FOLLOW-UP` items remain
+visible for ship and do not create a task handoff.
+
+Render the native forms above exactly for the active harness; for example:
 
 Claude Code:
 
@@ -154,6 +166,12 @@ Claude Code:
 /absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
 
+If Review reports a blocker, the bounded return is to Build for the same Brief:
+
+```text
+/absolutforge:build absolutforge/features/{slug}/feature-brief.md
+```
+
 Codex:
 
 ```text
@@ -163,6 +181,17 @@ $absolutforge build absolutforge/features/{slug}/feature-brief.md
 ```text
 $absolutforge review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
+
+If Review reports a blocker, the bounded return is to Build for the same Brief:
+
+```text
+$absolutforge build absolutforge/features/{slug}/feature-brief.md
+```
+
+Review uses the active configured model; it does not inherit or automatically
+select a model from the Brief's `## Build Recommendation`. A blocker handoff is
+for a focused Build correction and targeted re-review only. It does not
+authorize deployment, push, PR creation, merge, or history rewrite.
 
 Rendering or presenting a handoff never installs, enables, disables, deploys,
 pushes, creates a PR, merges, or rewrites history.

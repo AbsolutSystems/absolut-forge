@@ -1,0 +1,7 @@
+interface:
+  display_name: "Review"
+  short_description: "Independently review a completed AbsolutForge feature"
+  default_prompt: "Use $review to independently assess this completed feature."
+
+policy:
+  allow_implicit_invocation: false
