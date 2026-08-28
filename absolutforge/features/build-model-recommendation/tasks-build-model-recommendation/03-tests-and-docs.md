@@ -1,7 +1,7 @@
 # Phase 3: Contract Tests and Product Documentation
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation.md`
@@ -55,7 +55,7 @@ product entry points without duplicating canonical schemas.
 ## Tasks
 
 ### Task 1: Add deterministic contract coverage
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11
 **Test-first:** no (static contract-suite extension)
 **Produces:** AC-tokenized tests in `tests/test_discuss_contract.py` and `tests/test_build_contract.py`
@@ -83,10 +83,11 @@ intent, untrusted content, secret redaction, and no partial delivery.
 - `test_build_recommendation` display names `[AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11]`
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Added static AC-tokenized coverage for schema placement, profile mapping, evidence-based classification, fallback/override handling, immutable intent, untrusted content, redaction, and no partial delivery.
+- Tests remain non-mutating and model/provider independent; existing contract checks continue to pass.
 
 ### Task 2: Update product and contributor documentation
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-11
 **Test-first:** no (documentation update)
 **Produces:** Consistent model recommendation guidance in `README.md`, `CLAUDE.md`, `docs/product-vision.md`, and `skills/README.md`
@@ -113,7 +114,8 @@ switching, deployment, or additional ceremony is introduced.
 - `test_model_recommendation_docs` display names `[AC-1] [AC-2] [AC-3] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11]`
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Updated README, CLAUDE, Product Vision, and skills index with advisory simple/single and complex/phased model guidance, fallback/override evidence, and non-gating boundaries.
+- Documentation links to canonical contracts instead of duplicating the Brief schema.
 
 ## Phase Verification
 Run:
@@ -127,4 +129,6 @@ Run:
 - Phase verification passes.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Recommendation guidance is described consistently across product and contributor entry points while keeping exact fields owned by canonical references.
+- Deterministic tests assert the advisory boundary and all AC-1 through AC-11 without invoking models or assuming provider availability.
+- Verification passed: `python3 -m unittest discover -s tests -t . -p 'test_*.py'` (50 tests) and `git diff --check`.

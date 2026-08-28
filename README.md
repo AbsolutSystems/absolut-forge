@@ -61,6 +61,18 @@ one complete Brief and uses one acceptance gate before changing `Draft` to
 `Ready`; it then emits the native `build` handoff. The durable Brief and
 canonical contracts own the exact schema; this README does not reproduce them.
 
+When the evidence is settled, `discuss` may append an advisory Build
+Recommendation to the Brief. One cohesive, low-risk result uses the
+`simple/single` profile: Claude Sonnet or Codex `gpt-5.6-luna`. Dependent,
+uncertain, or boundary-sensitive work uses `complex/phased`: Claude Opus or
+Codex `gpt-5.6-terra`. This is guidance, not a hard model gate: build checks
+availability and explicit user choice, then records the selected model or any
+missing/malformed/unavailable fallback or override reason in Build Evidence.
+The recommendation is outside immutable intent, does not switch providers or
+models automatically, and never authorizes deployment or partial delivery.
+The exact fields and placement are owned by the [Feature Brief contract](references/artifact-contracts.md#feature-brief-contract);
+the cross-harness handoff rules are in the [Harness Command Contract](references/harness-command-contract.md).
+
 After `discuss`, a developer may explicitly invoke `consult` from Claude Code or
 Codex to pressure-test the same Brief. It reports one bounded batch of
 evidence-backed findings and changes nothing until the human accepts selected

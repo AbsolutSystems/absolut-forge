@@ -58,7 +58,7 @@ class BuildSkillContractTests(unittest.TestCase):
         # Contract assertions should not depend on Markdown line wrapping.
         self.body = re.sub(r"\s+", " ", self.body)
         self.artifacts = ARTIFACTS.read_text(encoding="utf-8")
-        self.handoff = HANDOFF.read_text(encoding="utf-8")
+        self.handoff = re.sub(r"\s+", " ", HANDOFF.read_text(encoding="utf-8"))
 
     def test_ready_lifecycle_AC1(self) -> None:
         """[AC-1] Build validates Ready input and records the Building lifecycle."""
@@ -141,6 +141,35 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertRegex(self.body, r"(?i)must not edit files.*commit.*push.*deploy")
         self.assertRegex(self.body, r"(?i)conflicts.*accepted Brief.*explicit amendment")
 
+    def test_build_recommendation_AC4_AC5_AC6_AC7_AC8_AC11(self) -> None:
+        """[AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11] Build consumes advisory profiles with explicit evidence and no partial delivery."""
+        self.assertIn("Consume the advisory Build Recommendation", self.body)
+        self.assertIn("simple`/`single", self.body)
+        self.assertIn("gpt-5.6-luna", self.body)
+        self.assertIn("complex`/`phased", self.body)
+        self.assertIn("gpt-5.6-terra", self.body)
+        self.assertRegex(self.body, r"(?i)advisory execution hint")
+        self.assertRegex(self.body, r"(?i)active harness.*explicit user choice")
+        self.assertRegex(self.body, r"(?i)recommendation received.*actually used.*selection source")
+        for reason in ("absent", "malformed", "mismatched", "unavailable", "not selected"):
+            self.assertIn(reason, self.body)
+        self.assertRegex(self.body, r"(?i)precise fallback reason")
+        self.assertRegex(self.body, r"(?i)actor-supplied.*reason.*override")
+        self.assertRegex(self.body, r"(?i)override is execution evidence, not a product")
+        self.assertRegex(self.body, r"(?i)keep the Brief and its recommendation unchanged")
+        self.assertRegex(self.body, r"(?i)explicit amendment")
+        self.assertRegex(self.body, r"(?i)cannot authorize unrelated edits")
+        self.assertRegex(self.body, r"(?i)deployment.*partial delivery")
+
+    def test_recommendation_handoff_AC1_AC4_AC5_AC6_AC7_AC8_AC11(self) -> None:
+        """[AC-1] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11] Handoff preserves advisory metadata and immutable intent."""
+        self.assertIn("optional `## Build Recommendation` travels", self.handoff)
+        self.assertRegex(self.handoff, r"(?i)outside the immutable.*baseline")
+        self.assertRegex(self.handoff, r"(?i)missing, malformed, unavailable, or overridden")
+        self.assertRegex(self.handoff, r"(?i)fallback or override reason")
+        self.assertRegex(self.handoff, r"(?i)never.*automatic model switching")
+        self.assertRegex(self.handoff, r"(?i)never authorizes partial delivery")
+
     def test_untrusted_and_redaction_AC15(self) -> None:
         """[AC-15] Build is explicit-only, rejects untrusted instructions, and redacts secrets."""
         self.assertEqual(_frontmatter_value(self.frontmatter, "disable-model-invocation"), "true")
@@ -162,8 +191,8 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertIn("Execution Map contract", self.artifacts)
         self.assertIn("Build Evidence contract", self.artifacts)
 
-    def test_product_docs_contract_AC1_AC3_AC4_AC5_AC6_AC7_AC8_AC13_AC14_AC15(self) -> None:
-        """[AC-1] [AC-3] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-13] [AC-14] [AC-15] Product docs expose Build boundaries."""
+    def test_model_recommendation_docs_AC1_AC2_AC3_AC4_AC5_AC6_AC7_AC8_AC11(self) -> None:
+        """[AC-1] [AC-2] [AC-3] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11] Product docs expose advisory model guidance and boundaries."""
         documents = {
             path.relative_to(ROOT).as_posix(): re.sub(
                 r"\s+", " ", path.read_text(encoding="utf-8")
@@ -195,6 +224,18 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertRegex(skills, r"(?i)build.*implemented")
         for phrase in ("Failure Boundary Check", "read-only Sol", "concise and truthful", "never deploy", "independently shippable"):
             self.assertIn(phrase.lower(), skills.lower(), phrase)
+
+        for name, document in documents.items():
+            self.assertIn("simple/single", document, name)
+            self.assertIn("gpt-5.6-luna", document, name)
+            self.assertIn("complex", document, name)
+            self.assertIn("gpt-5.6-terra", document, name)
+            self.assertRegex(document, r"(?i)advisory", name)
+            self.assertRegex(document, r"(?i)(?:missing|malformed|unavailable).*fallback|fallback.*(?:missing|malformed|unavailable)", name)
+            self.assertRegex(document, r"(?i)overr(?:ide|idden).*reason|reason.*overr(?:ide|idden)", name)
+            self.assertRegex(document, r"(?i)outside immutable intent|outside the immutable intent", name)
+            self.assertRegex(document, r"(?i)automatic(?:ally)? switch|automatically.*switch|automatic switching|switch.*automatically", name)
+            self.assertRegex(document, r"(?i)partial delivery|partial result|partial outcome", name)
 
 
 if __name__ == "__main__":

@@ -26,3 +26,4 @@ Short handoff for the phase workers; canonical schemas remain in `references/`.
 ## Verification History
 - Phase 1: `git diff --check` passed.
 - Phase 2: `git diff --check` passed.
+- Phase 3: full static suite passed (50 tests); `git diff --check` passed.

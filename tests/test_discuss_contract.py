@@ -137,6 +137,55 @@ class DiscussSkillContractTests(unittest.TestCase):
         self.assertIn("## Status", body)
         self.assertNotRegex(body, r"(?i)(?:YAML\s+)?frontmatter")
 
+    def test_recommendation_schema_AC1_AC2_AC3_AC5_AC6_AC7_AC8_AC11(self) -> None:
+        """[AC-1] [AC-2] [AC-3] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11] Canonical recommendation schema is optional, bounded, and advisory."""
+        contract = (ROOT / "references" / "artifact-contracts.md").read_text(encoding="utf-8")
+        contract = re.sub(r"\s+", " ", contract)
+        expected = contract.index("## Expected outcomes")
+        recommendation = contract.index("## Build Recommendation (optional execution metadata)")
+        open_questions = contract.index("## Open questions", recommendation)
+        self.assertLess(expected, recommendation)
+        self.assertLess(recommendation, open_questions)
+        for field in (
+            "Complexity: simple | complex",
+            "Execution shape: single | phased",
+            "Claude model: sonnet | opus",
+            "Codex model: gpt-5.6-luna | gpt-5.6-terra",
+            "Rationale: concise, evidence-based reason",
+            "Confidence: high | medium | low",
+            "Override: none",
+        ):
+            self.assertIn(field, contract)
+        self.assertIn("simple/single", contract)
+        self.assertIn("complex/phased", contract)
+        self.assertIn("Do not classify from line count, file count, or diff size alone", contract)
+        self.assertRegex(contract, r"(?i)older Briefs may omit|older.*Brief.*remain valid")
+        self.assertRegex(contract, r"(?i)advisory.*(?:execution|guidance)")
+        self.assertRegex(contract, r"(?i)malformed.*unavailable.*configured model")
+        self.assertRegex(contract, r"(?i)explicit.*override.*reason")
+        self.assertRegex(contract, r"(?i)not.*(?:deployment|partial).*delivery")
+
+    def test_discuss_recommendation_AC1_AC2_AC3_AC9_AC10_AC11(self) -> None:
+        """[AC-1] [AC-2] [AC-3] [AC-9] [AC-10] [AC-11] Discuss emits one evidence-based, non-authorizing recommendation."""
+        _, body = _frontmatter_and_body(SKILL)
+        self.assertRegex(body, r"(?i)exactly one optional[\s\S]*Build Recommendation")
+        self.assertIn("after `## Expected outcomes`", body)
+        self.assertRegex(body, r"(?s)before\s+`## Open questions`")
+        for field in ("Complexity", "Execution shape", "Claude model", "Codex model", "Rationale", "Confidence", "Override"):
+            self.assertIn(field, body)
+        self.assertIn("simple/single", body)
+        self.assertIn("gpt-5.6-luna", body)
+        self.assertIn("complex/phased", body)
+        self.assertIn("gpt-5.6-terra", body)
+        self.assertRegex(body, r"(?i)outcome coupling|uncertainty|boundary risk")
+        self.assertRegex(body, r"(?i)Never classify solely from line count, file count, or diff size")
+        self.assertRegex(body, r"(?i)Override: none")
+        self.assertRegex(body, r"(?i)one (?:explicit )?acceptance")
+        self.assertRegex(body, r"(?i)untrusted.*(?:evidence|content)")
+        self.assertRegex(body, r"(?i)secret|credential")
+        self.assertRegex(body, r"(?i)redact|never copy")
+        self.assertRegex(body, r"(?i)cannot activate Build|cannot.*authorize deployment|partial delivery")
+
     def test_no_classic_pipeline_stages(self) -> None:
         """Discuss must not embed the classic task and review pipeline."""
         _, body = _frontmatter_and_body(SKILL)

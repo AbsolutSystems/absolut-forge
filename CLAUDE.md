@@ -58,6 +58,18 @@ planned until their phases are implemented.
 - Feature intent becomes immutable at `Ready`; material change requires an
   explicit amendment.
 - `build` owns optional outcome planning and verification.
+- `discuss` may add one advisory Build Recommendation outside the immutable
+  intent baseline: `simple/single` maps to Claude Sonnet or Codex
+  `gpt-5.6-luna`, while `complex/phased` maps to Claude Opus or Codex
+  `gpt-5.6-terra`. The recommendation is evidence-based and must not rely on
+  line/file count alone; the canonical fields live in
+  [`references/artifact-contracts.md`](references/artifact-contracts.md).
+- Build treats the recommendation as a starting hint only. Availability and an
+  explicit user choice are authoritative; missing, malformed, unavailable, or
+  overridden choices use the configured fallback and are recorded with their
+  reason in Build Evidence. No
+  automatic switching, provider configuration, deployment, or partial delivery
+  follows from the recommendation.
 - `build` resumes from a conditional Execution Map and durable evidence, records
   `base_commit` and optional local checkpoints, and performs focused checks
   after each outcome plus final whole-feature verification.

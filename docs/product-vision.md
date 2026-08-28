@@ -144,6 +144,15 @@ and why before recommending how.
 6. Present one complete Feature Brief for explicit acceptance.
 7. On acceptance, mark it `Ready` and hand it directly to `build`.
 
+When the settled evidence supports a tier suggestion, `discuss` appends one
+optional Build Recommendation after `Expected outcomes`. It is execution
+metadata outside the immutable intent baseline: `simple/single` recommends
+Claude Sonnet or Codex `gpt-5.6-luna`, while `complex/phased` recommends Claude
+Opus or Codex `gpt-5.6-terra`. The profile is based on outcome coupling,
+uncertainty, and boundary risk, never line/file count alone. The exact fields
+and placement are defined by the [Feature Brief contract](../references/artifact-contracts.md#feature-brief-contract).
+This recommendation adds no second acceptance gate.
+
 The discussion uses a session-only decision tree and an adaptive readiness
 frontier. It inspects repository evidence before asking discoverable questions,
 then asks a small frontier of normally two to four independent, high-impact
@@ -226,6 +235,15 @@ checkpoints, verifies each outcome locally, then runs final whole-feature checks
 before the single independent review. Map sections and checkpoints are resume
 facts, never partial releases; the complete Feature Brief is the only delivery
 unit. Build never deploys, pushes, creates a PR, merges, or rewrites history.
+
+Build consumes the optional recommendation as advisory context. It uses a valid
+profile only when the active harness can provide the suggested model; configured
+availability and an explicit user choice remain authoritative. Missing, malformed,
+unavailable, or overridden recommendations use the configured fallback choice
+and record the actual selection and concise reason in append-only Build Evidence.
+Build never switches models or providers automatically, rewrites accepted intent,
+or treats the recommendation as permission to deploy or deliver a partial result.
+The handoff details live in the [Harness Command Contract](../references/harness-command-contract.md).
 
 ### Context
 
