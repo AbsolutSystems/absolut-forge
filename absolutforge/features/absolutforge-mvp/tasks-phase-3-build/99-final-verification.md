@@ -56,9 +56,7 @@ rewrite history.
 - `test_build_contract.py` token scan: `AC-1`, `AC-2`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-10`, `AC-11`, `AC-12`, `AC-13`, `AC-14`, `AC-15` all present.
 
 **Implementation decisions / remarks:**
-- Commands executed: to be completed after verification.
-- Results: to be completed after verification.
-- Skipped checks: to be completed after verification.
+- Commands executed and results are recorded below; no required check was skipped.
 
 ## Phase Verification
 Run:

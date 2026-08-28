@@ -4,9 +4,9 @@
 Short handoff for phase workers. Add only durable facts needed by later phases.
 
 ## Completed Phases
-- Phase 1 — Canonical Build Contracts and Harness References (commit `6158228`; phase verification passed).
-- Phase 2 — Autonomous Build Skill (commit `9b19c92`; focused verification passed).
-- Phase 3 — Build contract tests and product documentation (working tree; full verification passed).
+- Phase 1 — Canonical Build Contracts and Harness References (commits `6158228..ddd084f`; review clean, phase verification passed).
+- Phase 2 — Autonomous Build Skill (commits `df9260f..9b19c92`; review clean, focused verification passed).
+- Phase 3 — Build contract tests and product documentation (commits `7325efd..f48ff85`; review clean, full verification passed).
 
 ## Created / Changed API
 - `references/artifact-contracts.md` now owns the Execution Map and append-only Build Evidence contracts, including `base_commit`, checkpoints, failure boundaries, scout/documentation, compaction, and no-deployment rules.
@@ -25,7 +25,7 @@ Short handoff for phase workers. Add only durable facts needed by later phases.
 ## Constraints For Next Phases
 - Preserve canonical schemas in `references/`; do not duplicate them in skill prose.
 - Keep build explicit-only and compatible with both Claude Code and Codex.
-- Phase 3 must update the deterministic active-skill allowlist for the new `build` skill before full-suite integration verification.
+- Phase 3 updated the deterministic active-skill allowlist for the new `build` skill; the full-suite integration verification passed.
 
 ## Verification History
 - Planning validation: 35 existing tests passed; plan QA enrichment and review-plan both PASS.
