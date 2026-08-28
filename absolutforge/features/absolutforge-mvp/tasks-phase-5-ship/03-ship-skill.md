@@ -1,7 +1,7 @@
 # Phase 3: Ship Skill and Codex Metadata
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-5-ship.md`
@@ -47,7 +47,7 @@ approved, journaled local transaction without introducing another quality gate.
 ## Tasks
 
 ### Task 1: Implement explicit-only Ship closeout orchestration
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (host-agnostic Markdown skill contract)
 **Produces:** `skills/ship/SKILL.md` explicit-only Ship workflow with validation, rendering, approval, transaction recovery, and local commit handoff
@@ -79,10 +79,12 @@ executable without a second review or task ceremony.
 - `test_ship_skill_no_remote_AC8_AC15` checks that no remote side effect is authorized and native handoffs remain explicit-only.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Links the canonical Ship contract and makes the validation, three fingerprint
+  checks, exact preview, journaled local transaction, recovery, and no-remote
+  boundaries executable in one host-agnostic prompt.
 
 ### Task 2: Add explicit Codex Ship metadata
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-7, AC-8, AC-9, AC-15
 **Test-first:** no (Codex metadata configuration)
 **Produces:** `skills/ship/agents/openai.yaml` explicit-only `$ship` metadata
@@ -105,7 +107,8 @@ shape and do not add a hook, named agent registry, or remote permission.
 - `test_ship_codex_metadata_AC1_AC7_AC8_AC9_AC15` checks the `$ship` prompt, explicit-only policy, and valid metadata keys.
 
 **Implementation decisions / remarks:**
-- [to be completed after task completion]
+- Uses the established metadata shape with a `$ship` default prompt and
+  `allow_implicit_invocation: false`.
 
 ## Phase Verification
 Run:
@@ -120,4 +123,5 @@ Run:
 - `implementation-context.md` records the new skill and metadata paths.
 
 ## Implementation Decisions / Remarks
-- [to be completed after phase completion]
+- Ship stays a local closeout stage: no second review gate, no automatic remote
+  integration, and no archive mutation before explicit fingerprint-bound approval.

@@ -11,6 +11,8 @@ Short handoff for phase workers. Keep this file concise. Add only facts that fut
   source manifest/fingerprint validation, archive outputs, and recovery contract.
 - `skills/review/SKILL.md` records the final reviewed-path manifest and canonical SHA-256 fingerprint for Ship freshness validation.
 - Claude and Codex harness references provide explicit-only, local Review-to-Ship handoffs with matching Brief and Review paths.
+- `skills/ship/SKILL.md` implements the explicit-only local Ship closeout and
+  `skills/ship/agents/openai.yaml` exposes it to Codex without implicit activation.
 
 ## Decisions Made
 - ADR `2026-08-28-ship-post-review-closeout.md` binds post-review rendering to
@@ -29,3 +31,4 @@ Short handoff for phase workers. Keep this file concise. Add only facts that fut
 ## Verification History
 - Phase 1 implementation completed after planning and task-review gates passed.
 - `python3 -m unittest tests.test_review_contract` and `git diff --check` passed for Phase 1; source changes are committed as `ee9cf67`.
+- Phase 3: `python3 -m unittest tests.test_review_contract` and `git diff --check` passed.
