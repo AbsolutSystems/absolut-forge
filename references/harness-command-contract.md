@@ -119,6 +119,16 @@ rewritten contract. `consult` is an optional, explicit-only handoff for an
 existing `Draft` or `Ready` Brief; it is never required before `build` and
 produces no durable consultation artifact.
 
+When present, the optional `## Build Recommendation` travels with the complete
+Brief into `build`. It is advisory execution metadata outside the immutable
+intent baseline: `simple/single` recommends Claude `sonnet` or Codex
+`gpt-5.6-luna`, while `complex/phased` recommends Claude `opus` or Codex
+`gpt-5.6-terra`. Actual model availability and an explicit user choice remain
+authoritative. A missing, malformed, unavailable, or overridden recommendation
+must not invalidate the Brief; `build` records the fallback or override reason
+in append-only `## Build Evidence`. Handoff never performs automatic model
+switching or provider configuration and never authorizes partial delivery.
+
 ## Build and review handoff semantics
 
 `build` accepts the complete repository-relative Feature Brief path. It may

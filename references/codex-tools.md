@@ -34,10 +34,17 @@ for a concrete failure.
 
 ## Build routing, escalation, and compaction
 
-Run the primary `build` context on `gpt-5.6-luna` with `xhigh` reasoning. Luna
-owns the complete accepted Feature Brief, local implementation choices, edits,
-verification, durable Execution Map and Build Evidence updates, and the final
-native review handoff.
+Run `build` on the model recommended by the optional `## Build Recommendation`
+when that model is available: `simple/single` maps to `gpt-5.6-luna`, while
+`complex/phased` maps to `gpt-5.6-terra`. The recommendation is advisory, so a
+user-selected model and actual Codex availability are authoritative. When the
+section is absent or malformed, the recommendation is unavailable, or the
+selected model differs, use the configured build model (the default remains
+`gpt-5.6-luna` with `xhigh` reasoning) and record the fallback or override
+reason in append-only `## Build Evidence`. Do not automatically switch models
+or configure a provider. Whichever model is selected owns the complete accepted
+Feature Brief, local implementation choices, edits, verification, durable
+Execution Map and Build Evidence updates, and the final native review handoff.
 
 Before a second repair attempt for the same non-passing verification result,
 Luna performs the canonical Failure Boundary Check. It may request a bounded,

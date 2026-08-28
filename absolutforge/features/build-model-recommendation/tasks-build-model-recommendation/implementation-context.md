@@ -7,11 +7,11 @@ Short handoff for the phase workers; canonical schemas remain in `references/`.
 - None yet.
 
 ## Created / Changed API
-- Planned: optional `## Build Recommendation` after `## Expected outcomes`, outside immutable intent baseline.
-- Planned mapping: `simple/single` → Sonnet + `gpt-5.6-luna`; `complex/phased` → Opus + `gpt-5.6-terra`.
+- Implemented: optional `## Build Recommendation` after `## Expected outcomes`, outside immutable intent baseline.
+- Implemented mapping: `simple/single` → Sonnet + `gpt-5.6-luna`; `complex/phased` → Opus + `gpt-5.6-terra`.
 
 ## Decisions Made
-- Recommendation is advisory, overridable, and recorded with fallback/override reason; no automatic model switching.
+- Recommendation is advisory, overridable, and recorded with fallback/override reason in Build Evidence; no automatic model switching.
 - Older Briefs without the section remain valid and use configured Build defaults.
 
 ## Test Utilities / Fixtures
@@ -22,4 +22,4 @@ Short handoff for the phase workers; canonical schemas remain in `references/`.
 - Keep model recommendation outside product intent and avoid line/file-count-only classification.
 
 ## Verification History
-- None yet.
+- Phase 1: `git diff --check` passed.

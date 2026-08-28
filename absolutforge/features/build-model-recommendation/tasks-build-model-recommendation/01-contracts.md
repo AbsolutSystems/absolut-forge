@@ -1,7 +1,7 @@
 # Phase 1: Canonical Recommendation Contract and Harness Mapping
 
 ## Status
-pending
+complete
 
 ## Parent
 `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation.md`
@@ -44,7 +44,7 @@ recommendation without turning execution metadata into immutable product intent.
 ## Tasks
 
 ### Task 1: Add the canonical Build Recommendation schema
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-5, AC-6, AC-7, AC-8, AC-11
 **Test-first:** no (canonical Markdown contract)
 **Produces:** `references/artifact-contracts.md` `## Build Recommendation contract` with placement, fields, allowed values, mapping, fallback, and override semantics
@@ -70,10 +70,11 @@ older Briefs may omit it.
 - Phase 3 `test_build_recommendation_schema` with display tokens `[AC-1] [AC-2] [AC-3] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11]` scans the canonical headings, values, baseline boundary, fallback, and override wording.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Added the optional section after `Expected outcomes`; its values are execution metadata outside the immutable baseline.
+- Kept exactly two aligned profiles and documented evidence-based classification, advisory fallback, and explicit override reasons.
 
 ### Task 2: Extend native handoff and Codex routing
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-4, AC-5, AC-6, AC-7, AC-8, AC-11
 **Test-first:** no (harness documentation)
 **Produces:** Recommendation-preserving Claude/Codex handoff and Codex model-tier/fallback mapping in canonical references
@@ -97,7 +98,8 @@ unavailable. Keep actual model availability and user choice authoritative.
 - Phase 3 `test_model_recommendation_handoff` with display tokens `[AC-1] [AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11]` checks both references and native command examples.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Native handoff and Codex routing preserve the recommendation while leaving availability and explicit user choice authoritative.
+- Missing, malformed, unavailable, and overridden recommendations are recorded in append-only Build Evidence; no switching or partial delivery is authorized.
 
 ## Phase Verification
 Run:
@@ -110,4 +112,5 @@ Run:
 - Phase verification passes.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Native handoff and Codex routing preserve the recommendation while leaving availability and explicit user choice authoritative.
+- Missing, malformed, unavailable, and overridden recommendations are recorded in append-only Build Evidence; no switching or partial delivery is authorized.
