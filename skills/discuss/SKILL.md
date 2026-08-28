@@ -132,6 +132,43 @@ The proposal visibly covers these Brief sections: **Problem and goal**,
 **Constraints and invariants**, **Solution direction**, **Assumptions**,
 **Decisions**, **Risks and edge cases**, and **Expected outcomes**.
 
+When the settled evidence is sufficient, append exactly one optional
+`## Build Recommendation` after `## Expected outcomes` and before
+`## Open questions`, using the fields and profile mapping in the [canonical
+artifact contract](../../references/artifact-contracts.md). This is execution
+metadata, not product intent: it is outside the immutable intent baseline and
+must never rewrite any section above it. An older or externally created Brief
+may omit this section.
+
+Use the canonical fields exactly once: `Complexity`, `Execution shape`,
+`Claude model`, `Codex model`, `Rationale`, `Confidence`, and `Override`.
+The only valid mappings are `simple/single` → Sonnet/Luna and
+`complex/phased` → Opus/Terra (using the canonical model names).
+
+Derive the profile from outcome coupling, uncertainty, and boundary risk in
+the settled discussion—not from implementation size:
+
+- Recommend `simple` / `single`, with Claude `sonnet` and Codex
+  `gpt-5.6-luna`, only when the work is one cohesive, low-risk outcome that
+  follows an established pattern and has no material unresolved boundary,
+  dependency, or durable-resume need.
+- Recommend `complex` / `phased`, with Claude `opus` and Codex
+  `gpt-5.6-terra`, when outcomes are dependent, uncertainty is material, or
+  the change crosses a public contract, security or data boundary, migration,
+  shared architecture, multiple subsystems, or needs durable phased
+  execution.
+- Never classify solely from line count, file count, or diff size. The
+  rationale must cite concise, observable Brief or repository evidence, state
+  confidence, and contain no secrets. Set `Override: none` in the proposal;
+  an explicit later override is allowed only with a recorded actor and reason
+  in Build Evidence.
+
+Do not create a second acceptance gate for the recommendation. Present it as
+part of the one complete Brief proposal, preserve explicit-only activation,
+and emit the native `build` handoff only after the complete proposal is
+accepted. The recommendation cannot activate Build, select or switch a model
+automatically, authorize deployment, or authorize partial delivery.
+
 Use one explicit acceptance gate for the complete proposal: one acceptance,
 once, for the complete Brief. Ask the user to
 explicitly accept it, request changes, or stop; do not use section-by-section

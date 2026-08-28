@@ -45,7 +45,7 @@ explicit activation, autonomous Build ownership, and the existing lifecycle.
 ## Tasks
 
 ### Task 1: Produce the recommendation from Discuss
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-9, AC-10, AC-11
 **Test-first:** no (host-agnostic Markdown skill contract)
 **Produces:** `skills/discuss/SKILL.md` final Brief proposal instructions for `## Build Recommendation`
@@ -70,10 +70,11 @@ from outcome coupling, uncertainty, and risk evidence in the settled frontier.
 - Phase 3 `test_build_recommendation_output` with display tokens `[AC-1] [AC-2] [AC-3] [AC-9] [AC-10] [AC-11]` checks recommendation fields, profile rules, evidence basis, and safety boundaries.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Added one optional recommendation to the final Discuss proposal, positioned after Expected outcomes and outside the immutable intent baseline.
+- Profile selection is evidence-driven: only cohesive low-risk work can be simple/single; dependency, uncertainty, boundary, shared-architecture, subsystem, or durable-phase signals select complex/phased. Size-only classification is prohibited.
 
 ### Task 2: Consume the recommendation in Build
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-4, AC-5, AC-6, AC-7, AC-8, AC-11
 **Test-first:** no (host-agnostic Markdown skill contract)
 **Produces:** `skills/build/SKILL.md` advisory recommendation consumption, fallback, override, and Build Evidence rules
@@ -99,7 +100,8 @@ unchanged.
 - Phase 3 `test_build_recommendation_consumption` with display tokens `[AC-4] [AC-5] [AC-6] [AC-7] [AC-8] [AC-11]` checks advisory use, fallback, override, intent preservation, and delivery boundaries.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Build now validates the canonical profile, treats it as advisory, and records actual selection, fallback, or explicit override reasons in append-only Build Evidence.
+- Missing, malformed, unavailable, cross-harness, or non-selected recommendations use configured defaults without rewriting accepted intent or silently changing model configuration.
 
 ## Phase Verification
 Run:
@@ -112,4 +114,5 @@ Run:
 - Phase verification passes.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Discuss and Build share the Phase 1 profile mapping and preserve a single acceptance gate plus explicit-only activation.
+- Recommendation metadata cannot authorize deployment or partial delivery; later risk changes follow Failure Boundary and amendment rules.

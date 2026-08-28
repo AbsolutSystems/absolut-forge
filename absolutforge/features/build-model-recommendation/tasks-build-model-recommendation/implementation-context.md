@@ -9,6 +9,8 @@ Short handoff for the phase workers; canonical schemas remain in `references/`.
 ## Created / Changed API
 - Implemented: optional `## Build Recommendation` after `## Expected outcomes`, outside immutable intent baseline.
 - Implemented mapping: `simple/single` → Sonnet + `gpt-5.6-luna`; `complex/phased` → Opus + `gpt-5.6-terra`.
+- Discuss emits one evidence-backed profile only when settled risk/outcome evidence supports it; size-only classification is prohibited.
+- Build validates the profile as advisory context and records actual selection, fallback, or explicit override reasons in append-only Build Evidence.
 
 ## Decisions Made
 - Recommendation is advisory, overridable, and recorded with fallback/override reason in Build Evidence; no automatic model switching.
@@ -23,3 +25,4 @@ Short handoff for the phase workers; canonical schemas remain in `references/`.
 
 ## Verification History
 - Phase 1: `git diff --check` passed.
+- Phase 2: `git diff --check` passed.
