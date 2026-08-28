@@ -4,7 +4,7 @@
 Short handoff for the phase workers; canonical schemas remain in `references/`.
 
 ## Completed Phases
-- None yet.
+- Phase 1: canonical recommendation contract and harness mapping completed.
 
 ## Created / Changed API
 - Implemented: optional `## Build Recommendation` after `## Expected outcomes`, outside immutable intent baseline.
