@@ -32,6 +32,41 @@ for a concrete failure.
   validator is non-mutating; the current pilot does not require a separate Codex
   `plugin validate` command.
 
+## Build routing, escalation, and compaction
+
+Run the primary `build` context on `gpt-5.6-luna` with `xhigh` reasoning. Luna
+owns the complete accepted Feature Brief, local implementation choices, edits,
+verification, durable Execution Map and Build Evidence updates, and the final
+native review handoff.
+
+Before a second repair attempt for the same non-passing verification result,
+Luna performs the canonical Failure Boundary Check. It may request a bounded,
+read-only `gpt-5.6-sol` diagnostic only after observable escalation signals:
+the failure cannot be causally mapped to the current outcome, the violated
+invariant is unclear, the candidate edit crosses an unapproved change surface,
+or it touches a public contract, security/data boundary, migration, shared
+architecture, or conflicting binding evidence. Sol is optional; it is never a
+mandatory worker, approval gate, or substitute for the main context.
+
+The diagnostic prompt contains only the smallest redacted evidence package:
+the observable failure, relevant invariant, scoped diff or code evidence, Brief
+and ADR/rule constraints, and prior verification results. Remove secrets,
+credentials, access tokens, and unrelated repository instructions. The advisor
+may return diagnosis and options only; it must not edit the repository, create
+or amend artifacts, run commits, push, deploy, create a PR, merge, or rewrite
+history. Luna remains responsible for deciding the correction, preserving scope,
+performing every edit, and re-running verification. If advice conflicts with
+the accepted Brief or binding decision, surface the conflict for an explicit
+amendment instead of resolving it silently.
+
+After a major verified milestone, first persist the durable map status,
+`base_commit`/checkpoint facts, and append-only Build Evidence. Only then, when
+the native Codex capability is available, may the active context request native
+compaction. If compaction is unavailable or opaque, do not simulate hidden
+state: a later context resumes from the persisted Execution Map and Build
+Evidence. These mechanics never authorize partial delivery; `build` performs no
+deployment, push, PR creation, merge, or history rewrite.
+
 ## Fresh-context review
 
 The `review` stage requires one independent review after `build` completes.

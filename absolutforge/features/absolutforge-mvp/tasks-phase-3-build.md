@@ -63,7 +63,7 @@ orchestrated
 ## Phase Overview
 
 ### Phase 1: Canonical Build Contracts and Harness References
-**Status:** pending
+**Status:** in-progress
 **File:** `absolutforge/features/absolutforge-mvp/tasks-phase-3-build/01-contracts.md`
 **Depends on:** Phase 2 Feature Brief contract
 **Write scope:** `references/artifact-contracts.md`, `references/harness-command-contract.md`, `references/codex-tools.md`
@@ -92,4 +92,3 @@ orchestrated
 - Orchestrator updates phase statuses; workers update only their phase file and `implementation-context.md`.
 - ADR-004 and ADR-005 already exist from accepted planning and must be linked/referenced, not duplicated or rewritten unless implementation discovers a genuine deviation.
 - No deployment, plugin activation, push, PR, merge, or history rewrite is part of these tasks.
-

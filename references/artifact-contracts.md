@@ -69,14 +69,18 @@ Ready baseline -> Proposed amendment -> Accepted amendment -> build continues
                                   \-> Rejected amendment -> original baseline remains
 ```
 
-An accepted amendment is part of the intent baseline for review and ship. A
-transient execution map section may progress `pending -> in-progress ->
-complete` only after that section's verification succeeds. `review` changes its
-artifact from `In Review` to `Complete` after the final review result is
-recorded; a `BLOCKING` result returns work to `build` for fixes and targeted
-re-review. `ship` creates the archive only after review is complete and no open
-`BLOCKING` findings remain. It reports deviations explicitly rather than
-rewriting accepted intent.
+An accepted amendment is part of the intent baseline for review and ship. After
+validating the accepted context, `build` moves the Brief from `Ready` to
+`Building` without rewriting its immutable baseline. It moves the Brief to `In
+Review` only after every accepted outcome and required final verification has
+succeeded. A transient execution map and each of its sections may progress
+`pending -> in-progress -> complete`; `complete` means verified and ready for
+the whole-feature review, never deployed, shipped, or independently releasable.
+`review` changes its artifact from `In Review` to `Complete` after the final
+review result is recorded; a `BLOCKING` result returns work to `build` for fixes
+and targeted re-review. `ship` creates the archive only after review is complete
+and no open `BLOCKING` findings remain. It reports deviations explicitly rather
+than rewriting accepted intent.
 
 ## Feature Brief contract
 
@@ -212,10 +216,26 @@ Brief, or becomes mandatory between `discuss` and `build`.
 `build` creates `execution-map.md` only when the work has multiple dependent
 outcomes, meaningful uncertainty, or needs durable resumption. It is an
 outcome-oriented map, not a task list, file recipe, or review gate. Every
-section uses this complete shape:
+map has one map-level status and every section has its own status. The map-level
+status is `pending`, `in-progress`, or `complete`; it becomes `complete` only
+when all sections and final whole-feature verification are complete. The map
+records the starting Git revision and worktree state before implementation so a
+later session can resume from durable facts rather than opaque conversation
+state. Every section uses this complete shape:
 
 ```markdown
 # Execution Map: {feature name}
+
+## Status
+pending | in-progress | complete
+
+## Build start
+- base_commit: {HEAD before feature work}
+- Initial worktree state: clean | dirty, with repository-relative summary
+
+## Checkpoints
+- None yet, or:
+- {checkpoint commit}: {verified coherent outcome}; verification: {result}
 
 ## Section {N}: {outcome name}
 - Status: pending | in-progress | complete
@@ -227,9 +247,65 @@ section uses this complete shape:
 - Material deviations: {none, or an explicit deviation and amendment reference}
 ```
 
-The map is transient and is deleted at closeout; it must not be copied into the
-archive as a separate artifact. The Feature Record retains its useful outcomes,
-verification, and deviations.
+Checkpoint commits are optional, local-only records for coherent, verified
+mapped outcomes; they are not required for small cohesive work. A review uses
+the complete feature diff `base_commit..HEAD`, not an internal section or
+checkpoint diff. The map is transient and `ship` removes it at closeout after
+consolidating its useful outcomes, verification, checkpoints, and deviations
+into the Feature Record. It must not be copied into the archive as a separate
+artifact, and `ship` must not squash or rewrite checkpoint history.
+
+## Build Evidence contract
+
+`build` appends evidence to the active Feature Brief under `## Build Evidence`;
+it never replaces or edits prior evidence or the accepted intent baseline. Each
+entry is concise, factual, and redacted of secrets, credentials, access tokens,
+and other sensitive values. Use this shape after a verified outcome or final
+whole-feature verification:
+
+```markdown
+### Build evidence — YYYY-MM-DD
+- Base revision / review diff: `{base_commit}..HEAD`
+- Changed areas: repository-relative areas only
+- Verification commands and results: command -> pass | fail, with concise evidence
+- Checkpoints: none | local `{commit}` after verified {outcome}
+- Material implementation decisions: none | concise decision and rationale
+- Deviations from the accepted baseline: none | accepted amendment reference
+- Scout disposition: none | trivial fix `{path}` reported | non-trivial follow-up awaiting approval
+- Documentation maintenance: none | concise public/critical-internal docs updated or stale docs corrected/removed
+- Compaction handoff: not requested | durable map/evidence persisted before optional native compaction
+- Durable memory lesson: none | candidate path
+```
+
+Focus verification runs after each outcome; relevant broader and expensive
+integration checks run once after all outcomes are complete. A failed check is
+recorded with its observable evidence rather than silently classified as
+pre-existing. A non-passing verification result that blocks an accepted outcome
+is a **failure**. The same failure is the same observable check or runtime
+symptom and violated invariant, even if a proposed cause changes.
+
+Before a second repair attempt for the same failure, `build` performs a
+**Failure Boundary Check**. It may continue only when evidence causally maps the
+failure to the current outcome, the expected invariant is clear, and the edit
+stays within that outcome's declared change surface. It escalates before another
+speculative edit when any of those conditions is absent, or when the candidate
+edit touches a public contract, security/data boundary, migration, shared
+architecture, an unapproved module/scope boundary, or conflicting Brief, ADR,
+rule, test, and code evidence. An unapproved material scope expansion is a stop
+condition: request an explicit amendment or scope approval; do not implement it
+as a scout fix.
+
+`build` may fix and report a strictly trivial adjacent defect in the touched
+change surface. Any non-trivial adjacent work remains a follow-up until explicit
+scope approval. It keeps public APIs and critical internal behavior documented
+concisely and truthfully; stale or misleading documentation is corrected or
+removed in the same change. After a durable verified milestone, it may request
+native context compaction when the harness supports it; otherwise the Execution
+Map and append-only Build Evidence are the complete resume handoff.
+
+No map state, evidence entry, checkpoint, or verified outcome authorizes a
+partial release. The complete Feature Brief is the only delivery unit. `build`
+never deploys, pushes, creates a PR, merges, ships, or rewrites history.
 
 ## Review contract
 

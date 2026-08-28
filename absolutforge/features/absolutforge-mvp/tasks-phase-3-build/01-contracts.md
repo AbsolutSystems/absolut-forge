@@ -1,7 +1,7 @@
 # Phase 1: Canonical Build Contracts and Harness References
 
 ## Status
-pending
+completed
 
 ## Parent
 `absolutforge/features/absolutforge-mvp/tasks-phase-3-build.md`
@@ -44,7 +44,7 @@ make model escalation and compaction harness mechanics explicit in Codex mapping
 ## Tasks
 
 ### Task 1: Extend the canonical Build artifact and lifecycle contract
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (canonical Markdown schema and lifecycle documentation)
 **Produces:** `references/artifact-contracts.md` headings `## Execution Map contract` and `## Build Evidence contract` with map/section statuses, base revision, checkpoint, scout, compaction, documentation, failure-boundary, and no-deployment rules
@@ -69,10 +69,10 @@ map removal and Feature Record consolidation explicit.
 - Contract scanner planned in Phase 3: `test_artifact_schema` with display names `[AC-1]` through `[AC-15]`, one literal token per assertion.
 
 **Implementation decisions / remarks:**
-- To be completed after phase execution.
+- Extended the canonical map and added append-only Build Evidence without changing the immutable Brief baseline or Review/Record schemas.
 
 ### Task 2: Extend native build/review handoff contract
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-1, AC-4, AC-6, AC-8, AC-12, AC-13, AC-14, AC-15
 **Test-first:** no (native command and path documentation)
 **Produces:** `references/harness-command-contract.md` native `$absolutforge build` and `$absolutforge review` forms with complete paths
@@ -95,10 +95,10 @@ the canonical lifecycle; do not add activation or deployment behavior.
 - Contract scanner: `test_native_build_handoff` with display names `[AC-1]`, `[AC-4]`, `[AC-6]`, `[AC-8]`, `[AC-12]`, `[AC-13]`, `[AC-14]`, `[AC-15]`.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Added generic, complete native build/review paths and made resume, whole-diff review, and non-mutating handoff boundaries explicit.
 
 ### Task 3: Document Codex routing and capability-detected escalation
-**Status:** pending
+**Status:** completed
 **Traces to:** AC-5, AC-7, AC-10, AC-13, AC-14, AC-15
 **Test-first:** no (harness integration reference)
 **Produces:** `references/codex-tools.md` Luna/Sol routing, bounded advisor dispatch, optional compaction, and no-deployment mechanics
@@ -121,7 +121,7 @@ fresh-context review mapping without creating a mandatory subagent ceremony.
 - Contract scanner: `test_codex_escalation_and_compaction` with display names `[AC-5]`, `[AC-7]`, `[AC-10]`, `[AC-13]`, `[AC-14]`, `[AC-15]`.
 
 **Implementation decisions / remarks:**
-- To be completed after task completion.
+- Kept Sol optional and diagnostic-only; durable artifacts remain the resume authority when native compaction is unavailable.
 
 ## Phase Verification
 Run:
@@ -136,4 +136,4 @@ Run:
 - All `Context Contract -> Provides` items are present and internally consistent.
 
 ## Implementation Decisions / Remarks
-- To be completed after phase completion.
+- Canonical contracts now separate verified internal progress from whole-feature review readiness and preserve no-deployment boundaries.

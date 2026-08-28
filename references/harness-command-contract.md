@@ -119,6 +119,44 @@ rewritten contract. `consult` is an optional, explicit-only handoff for an
 existing `Draft` or `Ready` Brief; it is never required before `build` and
 produces no durable consultation artifact.
 
+## Build and review handoff semantics
+
+`build` accepts the complete repository-relative Feature Brief path. It may
+resume a `Building` feature from its durable `execution-map.md` (when present)
+and append-only `## Build Evidence`; neither an internal map section nor a
+local checkpoint is a separate handoff or delivery unit. After all accepted
+outcomes and final verification succeed, `build` changes the Brief to `In
+Review` and hands the complete feature to `review` with the matching
+repository-relative review artifact path.
+
+`review` receives the complete feature diff from `base_commit..HEAD`, the full
+accepted Brief and amendments, and Build Evidence. It never receives only an
+internal section, checkpoint, or partial result. Render the native forms above
+exactly for the active harness; for example:
+
+Claude Code:
+
+```text
+/absolutforge:build absolutforge/features/{slug}/feature-brief.md
+```
+
+```text
+/absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
+
+Codex:
+
+```text
+$absolutforge build absolutforge/features/{slug}/feature-brief.md
+```
+
+```text
+$absolutforge review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+```
+
+Rendering or presenting a handoff never installs, enables, disables, deploys,
+pushes, creates a PR, merges, or rewrites history.
+
 ## Activation and isolation
 
 Command rendering does not install, enable, disable, or otherwise mutate plugin

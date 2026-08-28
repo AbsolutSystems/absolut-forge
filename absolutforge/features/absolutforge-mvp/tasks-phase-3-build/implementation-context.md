@@ -7,7 +7,9 @@ Short handoff for phase workers. Add only durable facts needed by later phases.
 - None yet.
 
 ## Created / Changed API
-- None yet.
+- `references/artifact-contracts.md` now owns the Execution Map and append-only Build Evidence contracts, including `base_commit`, checkpoints, failure boundaries, scout/documentation, compaction, and no-deployment rules.
+- `references/harness-command-contract.md` defines complete native build/review paths, durable resume, and whole-feature `base_commit..HEAD` review handoff.
+- `references/codex-tools.md` maps Build to Luna `xhigh`, bounded redacted read-only Sol diagnostics, and capability-detected compaction after durable persistence.
 
 ## Decisions Made
 - ADR-004 defines outcome-oriented execution, checkpoints, and boundary-first escalation.
@@ -22,4 +24,3 @@ Short handoff for phase workers. Add only durable facts needed by later phases.
 
 ## Verification History
 - Planning validation: 35 existing tests passed; plan QA enrichment and review-plan both PASS.
-
