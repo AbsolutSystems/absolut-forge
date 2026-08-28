@@ -19,7 +19,8 @@ promotion deliberate, and avoid remote side effects.
 ## Decision
 
 `ship` renders the Feature Record and self-contained Executive Summary only from
-the final post-review state. Review's safe-scope rule is authoritative: it
+the final post-review state. Review's safe source scope and canonical
+fingerprint are Ship's only freshness baseline. Review's safe-scope rule is authoritative: it
 includes committed, staged, unstaged, and feature-owned untracked files;
 excludes `review.md`, Review/process artifacts, and unrelated dirty files; and
 records an input blocker when unrelated changes cannot be separated. Review
@@ -30,7 +31,7 @@ hexadecimal of raw repository-relative path bytes; `state` is `present` or
 `deleted`; mode is `100644`, `100755`, `120000`, or `160000` (`000000` for a
 deletion); the content hash is SHA-256 of Git content bytes (including symlink
 target bytes or a gitlink object ID); deleted entries use 64 zeroes. Raw bytes,
-LF/NUL delimiters, and lexical path ordering are part of the algorithm; mtimes
+LF/NUL delimiters, and raw-path-byte ordering are part of the algorithm; mtimes
 and filesystem enumeration order are not. The path set is the union of the
 base revision and current worktree, with review/process and unrelated paths
 excluded. Ship verifies that manifest and fingerprint before rendering and
@@ -39,7 +40,9 @@ changed fingerprint stops closeout and routes the feature back to Review
 without mutating active artifacts. The link target is rendered relative to the
 archive location (`../../../{repo-relative-path}`), after normalization and
 existence checking in the prospective frozen commit tree; deleted paths are
-rendered as text.
+rendered as text. Links and resources are path-only: external,
+protocol-relative, absolute, `file:`, `javascript:`, and `data:` URLs are
+rejected, and rendered text/attributes are escaped.
 
 Ship presents one complete preview gate covering generated artifacts, cleanup,
 memory destinations, commit message, and PR description. Memory items are
@@ -53,7 +56,9 @@ mutation. The journal stores the fingerprint/manifest, preview digest,
 approved path set, original bytes/modes/existence, pre-transaction index tree,
 promotion decisions, commit message, and per-operation
 `pending|running|completed` records. The normal state machine is `prepared ->
-applying -> staged -> committing -> committed`; any failure branches to
+applying -> staged -> committing -> committed`; each operation is marked
+`completed` only after its output path/hash or index/ref result is verified and
+recorded; any failure branches to
 `recovery-required`. Recovery takes an explicit `resume` branch back to
 `applying` or an explicit `rollback` branch to terminal `rolled-back`. An
 unfinished journal requires that explicit, idempotent choice and never

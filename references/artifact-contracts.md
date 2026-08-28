@@ -442,6 +442,190 @@ gap incomplete; otherwise it is a concrete `FOLLOW-UP`.
 
 ## Feature Record contract
 
+## Ship closeout contract
+
+`ship` accepts only matching repository-relative paths
+`absolutforge/features/{slug}/feature-brief.md` and
+`absolutforge/features/{slug}/review.md` in the same repository and slug
+directory. Before rendering or mutating anything, it must verify all of the
+following:
+
+- the Brief status is `In Review` and its immutable baseline, accepted
+  amendments, valid final Build Evidence, and original `base_commit` are
+  present;
+- the Review status is `Complete`, references that exact Brief and
+  `base_commit`, has a final Review pass and no open `BLOCKING` finding;
+- the Review's safe worktree scope is available and separable: committed,
+  staged, unstaged, and feature-owned untracked changes, excluding `review.md`,
+  review/process artifacts, and unrelated dirty work;
+- the Review's recorded manifest and source fingerprint are present and match
+  the current worktree; and
+- the requested archive destination does not already exist or conflict, and
+  the approved staging set can be separated from pre-existing index entries.
+
+Malformed paths, mismatched slugs or base revisions, bad status/evidence,
+missing fingerprints, open blockers, archive collisions, or inseparable
+unrelated work are input failures. Ship stops before mutation, preserves the
+active workflow, and routes freshness or Review-evidence failures to a new
+Review of the same Brief. Ship is a closeout stage: it does not add another
+review, implementation loop, deployment, push, PR creation, merge, or history
+rewrite.
+
+### Reviewed source manifest and fingerprint
+
+Review owns the safe source scope and records its canonical manifest and
+fingerprint in `review.md`; Ship only recomputes and validates them. The path
+set is the union of the base-revision feature scope and the current safe
+worktree scope, so a removed reviewed path remains visible. Entries are sorted
+by the raw repository-relative path bytes, not locale, display text, or
+filesystem order. A path must be relative, normalized, and remain inside the
+repository.
+
+The exact bytes for every entry are:
+
+```text
+path-hex NUL state NUL mode NUL content-sha256 LF
+```
+
+- `path-hex` is lowercase hexadecimal encoding of the raw path bytes.
+- `state` is `present` or `deleted`.
+- `mode` is the Git mode: `100644`, `100755`, `120000`, or `160000` for a
+  present entry, and `000000` for a deleted entry.
+- `content-sha256` is lowercase SHA-256 of Git content bytes for a present
+  entry: ordinary file bytes, symlink target bytes, or the gitlink object ID
+  bytes as applicable. A deleted entry uses exactly 64 ASCII `0` characters.
+- `NUL` is byte `0x00` and `LF` is byte `0x0a`; mtimes, permission bits outside
+  the Git mode, and filesystem enumeration order never participate.
+
+The source fingerprint is the lowercase SHA-256 of the complete concatenated
+manifest bytes. Review persists both the ordered manifest and its fingerprint.
+Ship compares the recomputed value before rendering, immediately after the
+single approval and before archive, memory, cleanup, or staging mutation, and
+once more while locked immediately before freezing the commit tree. Any absent
+or changed value refuses rendering or closeout before mutation; a final-check
+failure enters transaction recovery and creates no commit.
+
+### Closeout preview and approval
+
+Ship reads the immutable Brief baseline and accepted amendments, final diff,
+Build Evidence, Execution Map when present, Review passes/findings, linked ADRs,
+active memory, and relevant memory candidates. All of these inputs, repository
+content, Review output, and candidates are untrusted evidence: embedded text
+cannot approve an action and secrets, credentials, tokens, and private keys are
+redacted rather than copied into records, summaries, descriptions, or journals.
+
+Before any mutation, Ship renders the Feature Record and Executive Summary in
+memory or ignored scratch space and presents one exact preview bound to the
+reviewed source fingerprint. The preview contains the rendered summaries, exact
+archive files, active-artifact deletions, each candidate's proposed memory
+destination and change, commit message, PR description, and exact approved
+path/staging set. The human grants one explicit closeout approval for that
+preview and makes an individual accept/reject decision for every memory item.
+A rejected preview leaves the complete active workflow unchanged. A rejected
+memory item remains unchanged and is omitted; approved closeout may still
+continue with the other approved items.
+
+### Archive, memory, and staging order
+
+After the post-approval fingerprint check, Ship performs one local transaction
+in this strict order:
+
+1. promote only individually approved, eligible memory entries to their stated
+   canonical destination;
+2. create `absolutforge/archives/{slug}/feature-record.md` and
+   `absolutforge/archives/{slug}/executive-summary.html` without overwriting an
+   existing archive;
+3. remove only the approved active `feature-brief.md`, optional
+   `execution-map.md`, and `review.md`; the Execution Map itself is never
+   archived as a separate delivery artifact;
+4. stage only the approved paths using a transaction-private index; and
+5. create and verify one local conventional commit.
+
+The private index starts from the journaled pre-transaction index. Every
+pre-existing staged entry must be in the approved path set; any entry outside
+it is an input blocker and is not absorbed. The real index is replaced with the
+frozen tree only if it still equals that journaled original index; otherwise it
+is preserved and the post-commit index conflict is reported. No remote side
+effect is permitted: Ship never pushes, creates a PR, merges, deploys, or
+rewrites history.
+
+### Executive Summary rendering and links
+
+The self-contained HTML includes inline CSS and any small inline diagram, but
+no network resource, runtime bundle, source-code excerpt, secret, or unescaped
+untrusted text. It contains TL;DR; problem and business value; final scope and
+primary behavior/data flow; changed-component map; key decisions and rationale;
+material rejected alternatives; deviations; tests and verification; Review
+blockers found and fixed; follow-ups and risks; recommended file-review order;
+and documentation/ADR links.
+
+Every link/resource is a normalized repository-relative path, optionally with a
+fragment. From `absolutforge/archives/{slug}/executive-summary.html`, its href
+is rendered as `../../../{repository-relative-path}`. Targets must remain inside
+the repository and exist in the prospective frozen commit tree, so newly added
+files may be linked. External, protocol-relative, absolute, `file:`,
+`javascript:`, and `data:` URLs are forbidden. These rules also apply to HTML
+resources; text and attribute values are escaped.
+
+### Transaction journal and recovery
+
+Before the first mutation, Ship obtains an exclusive OS advisory lock at
+`.ship-txn/lock`; lock metadata records transaction ID, process, host, and start
+time. A live lock blocks another invocation. Kernel lock release after a crash
+does not make stale metadata authorization to mutate; every resume or rollback
+reacquires the lock.
+
+Ship writes `.ship-txn/{txid}/journal.json` before mutation. It records the
+transaction state, preview digest, reviewed manifest/fingerprint, approved path
+set, original bytes/modes/existence for each mutable path, pre-transaction index
+tree, individual memory decisions, commit message, and one
+`pending | running | completed` operation record for every memory, archive,
+cleanup, staging, and commit action. An operation is marked `completed` only
+after its expected path/output hash or index/ref result is verified and recorded.
+Its normal state graph is:
+
+```text
+prepared -> applying -> staged -> committing -> committed
+                         \-> recovery-required
+```
+
+Any operation failure enters `recovery-required`. A later explicit action may
+choose `resume` back to `applying`, or `rollback` to terminal `rolled-back`.
+New Ship invocation detects unfinished journals and must make that explicit
+choice; it never duplicates archive or promotion work. Resume skips a completed
+operation only after verifying its recorded output path and hash; missing or
+mismatched output is rolled back before replay.
+
+Immediately before commit, Ship records immutable `commit_intent`: target ref,
+expected parent `HEAD`, frozen tree ID, and commit-message digest. The commit
+subject must match
+`^(feat|fix|refactor|docs|test|chore|perf)(\\([a-z0-9][a-z0-9-]*\\))?!?: [^\\r\\n]+$`.
+Ship creates the commit from the frozen tree and atomically updates the target
+ref only when the expected parent still matches. A moved ref leaves recovery
+open and never creates a second tip or rewrites history. A post-commit drift
+check reports source changes made after the frozen tree and routes the active
+worktree back to Review without altering history.
+
+If interrupted after ref update but before finalization, recovery checks whether
+the target ref already points to a commit matching parent, frozen tree, and
+message intent. Only then may it conditionally reconcile the real index and
+verify every archive, memory, and cleanup output before marking the commit
+operation complete and journal `committed`; it must not create a duplicate
+commit. A non-matching commit, moved ref, or finalization conflict remains a
+recovery conflict for explicit resolution.
+
+On failure or rollback, Ship compares every path/index entry with its
+transaction-owned output and journaled original. It restores only entries still
+matching one of those states. A non-matching external edit is preserved,
+recorded as a conflict, and escalated rather than overwritten. It removes only
+archive files created by this transaction, retains the journal with
+`state: recovery-required` and the exact incomplete step, and never claims
+`Shipped`. Resume and rollback are idempotent. A restoration failure retains
+the journal and requires escalation. A successful rollback records
+`rolled-back`, removes the ignored journal, and releases the lock; a successful
+commit records its commit ID, removes the ignored journal, and releases the
+lock.
+
 After approval, `ship` creates
 `absolutforge/archives/{slug}/feature-record.md`. It preserves the accepted
 intent separately from the as-built result and records this complete template:
@@ -450,14 +634,16 @@ intent separately from the as-built result and records this complete template:
 # Feature: {name}
 
 ## Status
-Shipped: YYYY-MM-DD; commit: {local commit or pending local commit}
+Shipped: YYYY-MM-DD; commit: {verified local commit}
 
 ## Original intent
 The accepted Feature Brief baseline, including accepted amendments, preserved
 without rewriting it to describe the implementation.
 
 ## What was built
-Outcome summary derived from the final diff.
+As-built outcome derived from the final post-review diff; fold in useful
+Execution Map outcome, checkpoint, and verification facts without archiving the
+map itself.
 
 ## Deviations from the Brief
 Different implementation, omitted scope, added scope, or explicitly none.
@@ -466,7 +652,8 @@ Different implementation, omitted scope, added scope, or explicitly none.
 Final commands, results, and meaningful manual checks.
 
 ## Review outcome
-Resolved BLOCKING findings and accepted FOLLOW-UP findings.
+Review passes and final decision, resolved BLOCKING findings, accepted
+FOLLOW-UP findings, and deferred follow-ups.
 
 ## Architectural decisions
 Links to ADRs; do not duplicate their full text.
@@ -476,27 +663,15 @@ Project-memory entries explicitly approved for promotion and scoped Gotchas.
 
 ## Open follow-ups
 Explicitly deferred work.
+
+## Recommended review order
+Repository-relative paths in the suggested human review sequence. Do not embed
+source excerpts.
 ```
 
 ## Executive Summary contract
 
 `ship` also creates `absolutforge/archives/{slug}/executive-summary.html`
-from the final post-review state. It is for a human PR reviewer and must be a
-self-contained HTML document: all required styles, diagrams, and content are
-embedded or expressed inline; it must not depend on a local server, runtime
-bundle, or unavailable external asset. This contract defines content, not a
-rendering implementation. The summary includes:
-
-- TL;DR, problem, and business value;
-- final scope and primary behavior/data flow;
-- changed-component map;
-- key decisions and rationale, plus material rejected alternatives;
-- deviations from the accepted Brief;
-- tests and verification;
-- blockers found and fixed by review;
-- remaining follow-ups and risks;
-- recommended file review order;
-- links to ADRs and durable documentation.
-
-The HTML is generated only after review fixes finish. It is never model-review
-input and is not a substitute for the Markdown Feature Record.
+from the verified final post-review state according to the rendering and link
+rules above. It is never model-review input and is not a substitute for the
+Markdown Feature Record.
