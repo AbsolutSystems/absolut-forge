@@ -86,7 +86,7 @@ scope expansion is a stop condition, not an accidental outcome.
 
 - [AbsolutForge Product Vision](../product-vision.md), especially Build and
   cross-harness resume.
-- [Phase 3 planning](../../absolutforge/features/absolutforge-mvp/planning-phase-3-build.md).
+- [Product Vision](../product-vision.md#build-contract).
 - [Delivery Artifact Contracts](../../references/artifact-contracts.md).
 - [Codex primitive mapping](../../references/codex-tools.md).
 - [ADR-001: One Host-Agnostic Skill Tree](2026-08-27-host-agnostic-skill-tree.md).

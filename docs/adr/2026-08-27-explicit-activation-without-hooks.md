@@ -65,7 +65,7 @@ configuration or infer a user's enable/disable choice.
 
 - [AbsolutForge Product Vision](../product-vision.md), especially Activation
   and isolation, MVP skills, and security acceptance criteria.
-- [Phase 1 planning](../../absolutforge/features/absolutforge-mvp/planning-phase-1-foundation.md),
+- [Product Vision](../product-vision.md),
   explicit-only activation and absence of hooks.
 - [Native handoff contract](../../references/harness-command-contract.md).
 - [Codex primitive mapping](../../references/codex-tools.md).

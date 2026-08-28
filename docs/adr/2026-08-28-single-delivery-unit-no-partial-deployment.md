@@ -60,7 +60,6 @@ checkpoint history.
 
 - [AbsolutForge Product Vision](../product-vision.md), especially Build and
   the one-feature delivery contract.
-- [Phase 3 planning](../../absolutforge/features/absolutforge-mvp/planning-phase-3-build.md).
+- [Product Vision](../product-vision.md#build-contract).
 - [Delivery Artifact Contracts](../../references/artifact-contracts.md).
 - [ADR-004: Outcome-Oriented Build With Durable Checkpoints](2026-08-28-outcome-oriented-build-and-checkpoints.md).
-

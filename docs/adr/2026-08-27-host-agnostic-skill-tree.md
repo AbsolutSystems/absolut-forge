@@ -73,7 +73,7 @@ When a future harness is approved:
 
 - [AbsolutForge Product Vision](../product-vision.md), especially Product
   boundary, MVP harnesses, and validation strategy.
-- [Phase 1 planning](../../absolutforge/features/absolutforge-mvp/planning-phase-1-foundation.md),
+- [Product Vision](../product-vision.md),
   selected single-tree solution and alternatives.
 - [Artifact contracts](../../references/artifact-contracts.md).
 - [Codex primitive mapping](../../references/codex-tools.md).

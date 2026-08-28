@@ -1,218 +1,258 @@
 # AbsolutForge
 
-AbsolutForge is an intent-driven development workflow for strong coding models.
-It gives the model a precise product goal, durable context, and room to execute
-autonomously, while concentrating quality control on verification and one final,
-independent review.
+AbsolutForge is an intent-driven delivery workflow for Claude Code and Codex.
+It gives a coding model a precise, accepted product intent, durable decisions,
+and clear outcome boundaries, then lets it implement and verify the complete
+change before one independent review.
 
-> Status: private pilot MVP. The `discuss`, optional `consult`, `build`,
-> `review`, and explicit-only `ship` skills are implemented; `debug` and
-> `tech-debt` remain separate Phase 6 workflows.
-
-AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
-repository is the plugin root and uses one shared `skills/` tree for Claude Code
-and Codex, with thin per-harness manifests. Pi and Grok support is deferred.
-There is no SessionStart hook, MCP server, app, or globally injected workflow.
-
-## Product thesis
-
-Detailed task decomposition and repeated review gates often consume substantial
-context without eliminating defects. Modern frontier models can usually plan
-their local implementation work themselves when they receive:
-
-- a clear, accepted intent,
-- explicit behavioral boundaries and invariants,
-- durable architectural decisions,
-- an outcome-oriented execution map when work spans multiple sections,
-- a mandatory test-and-fix loop,
-- one independent review of the final result.
-
-AbsolutForge controls the result instead of prescribing every implementation
-step.
-
-## Core workflow
+**Release candidate.** The RC includes the complete core workflow:
 
 ```text
 discuss -> build -> review -> ship
 ```
 
-- **discuss** creates an accepted Feature Brief and any durable ADRs.
-- **consult** is an optional, explicit second-model opinion on an existing Draft
-  or Ready Brief; accepted changes merge into a Draft or become Ready amendments.
-- **build** implements autonomously, creates an Execution Map only when useful,
-  resumes from durable map/evidence status when needed, and runs focused plus
-  final verification.
-- **review** performs one independent, evidence-based review with one fresh,
-  read-only reviewer and only `BLOCKING` or `FOLLOW-UP` findings. It derives
-  the complete change from `base_commit` through the current worktree,
-  including feature-owned untracked files, while excluding review-process and
-  unrelated dirty files. Stable finding IDs and append-only pass history keep
-  evidence across targeted re-review; accepted follow-ups remain visible but
-  do not block `ship`. An open blocker returns the same Brief to `build` for a
-  focused correction, with escalation after two unsuccessful attempts or
-  material scope expansion.
-- **ship** is the final, explicit-only local closeout after a complete Review. It
-  validates the post-review fingerprint, presents one approval preview, creates
-  the Feature Record and self-contained Executive Summary HTML, routes each
-  memory candidate independently, cleans up active artifacts, and creates one
-  local conventional commit plus a PR description. It never pushes, creates a
-  PR, merges, deploys, or rewrites history.
+It also includes the optional `consult` workflow for a bounded second opinion on
+an existing Feature Brief. `debug` and `tech-debt` are not part of this release
+candidate.
 
-Invoke Ship with the native command for the active harness:
+## What the workflow does
 
-```text
-/absolutforge:ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
-$absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
+AbsolutForge controls the delivered result instead of prescribing every coding
+step. The human owns product decisions; the model owns local implementation
+choices within the accepted boundary.
+
+- `discuss` clarifies the goal, inspects the repository, and creates one
+  accepted Feature Brief.
+- `consult` pressure-tests a `Draft` or `Ready` Feature Brief. It is optional,
+  explicit, bounded to one finding batch, and changes nothing without human
+  approval.
+- `build` implements the accepted Brief, maintains optional durable outcome
+  state, and runs focused and final verification.
+- `review` performs one fresh, read-only, evidence-based review of the complete
+  change and records only `BLOCKING` and `FOLLOW-UP` findings.
+- `ship` closes a review-complete feature into durable documentation and one
+  local commit after a single approval preview.
+
+Core skills are explicit-only. There is no SessionStart hook, global workflow
+prompt, MCP server, or automatic activation.
+
+## Requirements
+
+- Claude Code or Codex.
+- A repository with the AbsolutForge plugin installed through the host's normal
+  local plugin mechanism.
+- A cleanly separable worktree. Existing unrelated changes may remain, but
+  they must not overlap the feature being delivered.
+
+The repository is the plugin root. It contains one shared `skills/` tree and
+thin metadata for each supported harness. The skill bodies are host-agnostic;
+native command syntax is the only harness-specific difference.
+
+## Installation and validation
+
+Install the repository as a local plugin using the standard local-plugin flow
+provided by your host. Do not copy the skill directories into separate
+harness-specific locations.
+
+Validation is non-mutating and does not install or activate the plugin. From the
+repository root, validate every JSON descriptor:
+
+```bash
+for f in $(git ls-files '*.json' --others --exclude-standard); do
+  python3 -m json.tool "$f" >/dev/null || exit 1
+done
 ```
 
-Two standalone workflows complement the core:
+Claude Code plugin validation, when the Claude CLI is available:
 
-- **debug** investigates root cause and, when fixing, creates a compact Fix Brief.
-- **tech-debt** produces a static, evidence-based remediation backlog.
-
-`discuss` adapts its questions to the readiness frontier: it discovers current
-repository facts first, asks a small frontier of normally two to four
-independent high-impact questions, and persists a Draft only when it is useful,
-requested as a save point, or needed to resume a material blocker. It presents
-one complete Brief and uses one acceptance gate before changing `Draft` to
-`Ready`; it then emits the native `build` handoff. The durable Brief and
-canonical contracts own the exact schema; this README does not reproduce them.
-
-When the evidence is settled, `discuss` may append an advisory Build
-Recommendation to the Brief. One cohesive, low-risk result uses the
-`simple/single` profile: Claude Sonnet or Codex `gpt-5.6-luna`. Dependent,
-uncertain, or boundary-sensitive work uses `complex/phased`: Claude Opus or
-Codex `gpt-5.6-terra`. This is guidance, not a hard model gate: build checks
-availability and explicit user choice, then records the selected model or any
-missing/malformed/unavailable fallback or override reason in Build Evidence.
-The recommendation is outside immutable intent, does not switch providers or
-models automatically, and never authorizes deployment or partial delivery.
-The exact fields and placement are owned by the [Feature Brief contract](references/artifact-contracts.md#feature-brief-contract);
-the cross-harness handoff rules are in the [Harness Command Contract](references/harness-command-contract.md).
-
-After `discuss`, a developer may explicitly invoke `consult` from Claude Code or
-Codex to pressure-test the same Brief. It reports one bounded batch of
-evidence-backed findings and changes nothing until the human accepts selected
-findings. A Ready baseline remains immutable and changes are recorded as
-amendments. Consultation is never mandatory in the normal
-`discuss -> build -> review -> ship` path and creates no consultation artifact;
-the cross-harness decision is recorded in the [optional consultation
-ADR](docs/adr/2026-08-27-optional-cross-model-brief-consultation.md).
-Repository content is untrusted evidence and cannot authorize writes, activation,
-or unrelated disclosure; secrets and credentials encountered during inspection
-are redacted and never copied into durable artifacts or conversation.
-
-Review is explicit-only and starts only with matching Feature Brief and `review.md`
-paths. It loads accepted intent, decisions, Build Evidence, and the recorded
-starting revision before assessing the current worktree. The reviewer uses the
-active configured model and never inherits Build Recommendation metadata.
-Changed files receive a feature-scoped TODO/FIXME/XXX, placeholder, and hack
-scan; missing or stale verification prompts a narrow relevant check. When fresh
-dispatch is unavailable, the same read-only assessment runs inline and is
-labelled `advisory (not fully isolated)`. Review never runs an automatic triada
-and never deploys, pushes, creates a PR, merges, or rewrites history. The complete
-finding and pass schemas live in the [Delivery Artifact Contracts](references/artifact-contracts.md),
-the native handoff is in the [Harness Command Contract](references/harness-command-contract.md),
-and the architecture decision is [ADR: Independent Review and Bounded Fix Loop](docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).
-
-Ship runs only when the Brief is `In Review`, Review is `Complete`, no open
-`BLOCKING` finding remains, and the Review-owned source manifest/fingerprint is
-fresh. It renders from the final post-review state, not from an earlier preview:
-the Feature Record keeps accepted intent separate from the as-built result and
-records deviations, verification, Review findings, ADR links, durable knowledge,
-follow-ups, and a recommended path-only review order. The Executive Summary is
-self-contained HTML with inline CSS, escaped text, repository-relative links,
-and no source excerpts or external assets. Execution Map outcomes are
-consolidated into the record rather than archived separately.
-
-Before mutation, Ship shows the exact archive files, active-file deletions,
-memory destinations, commit message, PR description, and staging set. One
-explicit approval binds that preview to the fingerprint; every memory candidate
-is accepted or rejected individually. The approved archive, memory promotion,
-active-artifact cleanup, staging, and local commit run as one journaled local
-transaction under `.ship-txn/{txid}/journal.json`, with advisory-lock metadata,
-output hashes, recovery, resume, and rollback. Archives remain durable and the
-transaction directory is transient/ignored. A post-approval or pre-freeze drift
-returns the same paths to Review without mutation or history rewriting.
-
-## Principles
-
-- Intent is durable; implementation details remain local to the implementing
-  model.
-- Planning is outcome-oriented and created only when it helps execution or
-  resumption.
-- Verification is part of implementation, not a separate ceremony.
-- Review is independent, evidence-based, and performed once on the completed
-  change.
-- ADRs preserve architectural decisions; project memory preserves reusable traps
-  and lessons.
-- Core workflow skills are explicitly invoked. Only `debug` may auto-trigger for
-  a concrete failure.
-- `consult` is optional and explicit-only; it never silently runs, gates `build`,
-  or rewrites a Ready intent baseline.
-- `build` applies a Failure Boundary Check before a second speculative repair,
-  keeps non-trivial adjacent work as a follow-up, and maintains concise,
-  truthful documentation for public APIs and critical internals.
-- Build checkpoints and map sections are recovery/resume facts only. Build
-  never deploys, pushes, creates a PR, merges, rewrites history, or presents a
-  partial outcome as independently shippable; the whole Feature Brief is one
-  delivery unit. See [ADR-004](docs/adr/2026-08-28-outcome-oriented-build-and-checkpoints.md),
-  [ADR-005](docs/adr/2026-08-28-single-delivery-unit-no-partial-deployment.md),
-  and the [artifact contract](references/artifact-contracts.md).
-- The map records `base_commit` so review can trace the complete feature diff.
-  Keep the overlapping AbsolutPowers workflow disabled while using AbsolutForge;
-  the two workflows must not be active together.
-- No global SessionStart hook injects the workflow into unrelated sessions.
-
-## Initial scope
-
-The MVP targets Claude Code and Codex through one host-agnostic skill tree with
-thin per-harness manifests. Pi and Grok are intentionally deferred until the
-workflow is validated on real changes.
-
-## Canonical documentation
-
-Start with the [Product Vision](docs/product-vision.md), then the [MVP
-roadmap](absolutforge/features/absolutforge-mvp/planning-main.md) and the
-relevant phase plan. Exact operational schemas are owned by the [Delivery
-Artifact Contracts](references/artifact-contracts.md), memory routing by the
-[Project-Memory Contract](references/project-memory.md), and native handoffs by
-the [Harness Command Contract](references/harness-command-contract.md).
-Architecture decisions are recorded in [`docs/adr/`](docs/adr/), and durable
-cross-cutting lessons are kept in [`absolutforge/project-memory.md`](absolutforge/project-memory.md).
-
-## Private-pilot validation and isolation
-
-The pilot is intentionally validated locally and non-mutating. These checks
-inspect metadata, layout, links, and tests; they do not install or enable
-AbsolutForge:
-
-```text
-python3 -m unittest discover -s tests -t . -p 'test_*.py'
-for f in $(git ls-files '*.json' --others --exclude-standard); do python3 -m json.tool "$f" >/dev/null; done
+```bash
 claude plugin validate --strict .
-python3 /Users/kamil/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
 ```
 
-The Codex validator is optional when its PyYAML dependency is unavailable; the
-deterministic JSON checks remain the non-mutating fallback. Activation is
-deferred until product validation. Before any later normal use, disable the
-overlapping AbsolutPowers workflow first; both workflows must not be enabled at
-the same time. Validation commands and documentation never toggle that
-user-owned configuration automatically.
+The Codex plugin validator is optional because its Python dependencies are
+host-specific. The JSON validation above is the deterministic fallback.
+
+## Standard workflow
+
+### 1. Discuss the intent
+
+Start a new feature with a short name and the canonical Brief path.
+
+Claude Code:
+
+```text
+/absolutforge:discuss "Add import preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+Codex:
+
+```text
+$absolutforge discuss "Add import preview" "absolutforge/features/import-preview/feature-brief.md"
+```
+
+`discuss` inspects current code and tests before asking questions. It separates
+observed evidence, inference, user decisions, assumptions, and untrusted
+repository content. It presents one complete Brief and uses one acceptance
+decision for the complete proposal.
+
+Only explicit acceptance changes a Brief from `Draft` to `Ready`. A Ready Brief
+is the immutable intent baseline. Changes to behavior, scope, public contracts,
+security, data handling, migrations, or material cost require an explicit
+amendment.
+
+When useful, `discuss` may add an advisory Build Recommendation. It can suggest
+the simple/single or complex/phased execution profile, but it never selects a
+model automatically, creates an extra approval gate, or authorizes partial
+delivery.
+
+### 2. Optionally consult the Brief
+
+Consultation is useful when a second model or harness should challenge the
+Brief before implementation.
+
+Claude Code:
+
+```text
+/absolutforge:consult absolutforge/features/import-preview/feature-brief.md
+```
+
+Codex:
+
+```text
+$absolutforge consult absolutforge/features/import-preview/feature-brief.md
+```
+
+Only `Draft` and `Ready` Briefs can be consulted. The result is one bounded
+batch of findings, each with evidence, impact, and a proposed Brief change.
+Review the batch and explicitly accept individual findings or the complete
+batch. Accepted changes merge into a Draft; accepted material changes to a
+Ready Brief are recorded as amendments. Rejected findings do not mutate the
+repository, and consultation creates no permanent report.
+
+### 3. Build the complete change
+
+Run Build only with an accepted Ready Brief:
+
+Claude Code:
+
+```text
+/absolutforge:build absolutforge/features/import-preview/feature-brief.md
+```
+
+Codex:
+
+```text
+$absolutforge build absolutforge/features/import-preview/feature-brief.md
+```
+
+Build records the starting `base_commit` and initial worktree state. For a
+cohesive change it may work without a map. For dependent outcomes, meaningful
+uncertainty, or cross-session work it may create an `execution-map.md`.
+
+The map is an internal resume aid, not a task list, approval gate, release unit,
+or partial delivery. Build appends secret-redacted Build Evidence and performs:
+
+```text
+implementation -> focused verification -> diagnosis -> bounded fix
+```
+
+After all outcomes are complete, Build runs relevant broader checks, inspects
+the whole diff against the Brief, and changes the Brief to `In Review`. It does
+not deploy, push, create a pull request, merge, or rewrite history.
+
+If the same verification failure needs a second speculative repair, Build first
+checks that the symptom, violated invariant, and proposed edit are causally
+connected and remain inside the accepted scope. Material scope changes stop for
+an amendment instead of being hidden in an incidental fix.
+
+### 4. Review the complete feature
+
+Run Review with both matching paths after Build has handed the feature over:
+
+Claude Code:
+
+```text
+/absolutforge:review absolutforge/features/import-preview/feature-brief.md absolutforge/features/import-preview/review.md
+```
+
+Codex:
+
+```text
+$absolutforge review absolutforge/features/import-preview/feature-brief.md absolutforge/features/import-preview/review.md
+```
+
+Review reads the accepted intent, amendments, ADRs, Build Evidence, and the
+current worktree. Its scope starts at `base_commit` and includes committed,
+staged, unstaged, and feature-owned untracked files. It excludes review-process
+artifacts and unrelated dirty files.
+
+One fresh generic read-only reviewer checks intent fidelity, correctness,
+concrete edge cases, security and data integrity, test value, compatibility,
+unintended scope, and diff garbage. If fresh dispatch is unavailable, the
+inline result must be labelled `advisory (not fully isolated)`.
+
+Review findings use stable IDs and only two classes:
+
+- `BLOCKING` — must be fixed before shipping.
+- `FOLLOW-UP` — concrete, non-blocking work preserved for the Feature Record.
+
+An open blocker returns the same Brief to Build for a focused correction and
+targeted re-review. The same blocker may be attempted twice before escalation.
+When no blockers remain, Review records a canonical source manifest and SHA-256
+fingerprint, marks `review.md` `Complete`, and makes the feature eligible for
+Ship.
+
+### 5. Ship locally
+
+Run Ship only after Review is `Complete`, has no open `BLOCKING` findings, and
+its source fingerprint still matches the current worktree:
+
+Claude Code:
+
+```text
+/absolutforge:ship absolutforge/features/import-preview/feature-brief.md absolutforge/features/import-preview/review.md
+```
+
+Codex:
+
+```text
+$absolutforge ship absolutforge/features/import-preview/feature-brief.md absolutforge/features/import-preview/review.md
+```
+
+Ship renders a complete preview before mutation. The preview includes the
+archive files, active-artifact cleanup, memory decisions, commit message, PR
+description, and exact staging set. One explicit approval binds the preview to
+the reviewed source fingerprint.
+
+After approval, Ship runs one journaled local transaction. It creates the
+Feature Record and Executive Summary, promotes only individually approved
+memory entries, removes the active Brief/map/Review artifacts, stages only the
+approved paths, and creates one local conventional commit.
+
+The transaction is recoverable through `.ship-txn/{txid}/journal.json`. Ship
+never pushes, creates a remote pull request, merges, deploys, or rewrites
+history. A source change after review routes the feature back to Review instead
+of silently shipping stale documentation.
 
 ## Artifact lifecycle
 
-During delivery:
+Active feature artifacts live under one canonical directory:
 
 ```text
 absolutforge/features/{slug}/
-├── feature-brief.md
-├── execution-map.md   # optional
-└── review.md
+├── feature-brief.md       # intent and lifecycle state
+├── execution-map.md       # optional Build resume state
+└── review.md              # Review passes and findings
 ```
 
-After shipping:
+The lifecycle is:
+
+```text
+Draft -> Ready -> Building -> In Review -> Complete -> Shipped
+```
+
+The Brief remains `In Review` while Ship performs closeout. After a successful
+transaction, active artifacts are removed and the durable archive is:
 
 ```text
 absolutforge/archives/{slug}/
@@ -221,19 +261,67 @@ absolutforge/archives/{slug}/
 ```
 
 The Feature Record preserves the original intent separately from the as-built
-result and explicitly records deviations. The HTML summary is generated from the
-final post-review state for human PR review.
+result and records deviations, verification, Review findings, linked ADRs,
+durable knowledge, open follow-ups, and a recommended review order.
 
-Ship removes only the approved active Brief, optional Execution Map, and Review
-after approval; it does not archive the map as a separate file. Remote actions
-remain outside the workflow: a rendered PR description is informational and
-does not authorize push, PR creation, merge, deployment, or history rewrite.
+The Executive Summary is self-contained HTML with inline CSS. It contains
+paths, escaped text, and concise human-facing context; it does not copy source
+excerpts, load external assets, or expose secrets.
 
-## Current planning
+## Repository layout
 
-The accepted product contracts are captured in
-[`docs/product-vision.md`](docs/product-vision.md). New contributors and coding
-agents should read that document before interpreting the phase roadmap.
+```text
+.
+├── .claude-plugin/         # Claude Code plugin and marketplace metadata
+├── .codex-plugin/          # Codex plugin metadata
+├── .agents/plugins/        # Codex marketplace metadata
+├── skills/                 # shared host-agnostic skill source tree
+├── references/             # canonical schemas and harness mappings
+├── docs/adr/               # accepted architectural decisions
+├── docs/onboarding/        # implementation decision summaries
+└── absolutforge/           # active feature state and project memory
+```
 
-The MVP roadmap and phase stubs live in
-[`absolutforge/features/absolutforge-mvp/`](absolutforge/features/absolutforge-mvp/).
+The canonical contracts are:
+
+- [Product Vision](docs/product-vision.md) — accepted product behavior.
+- [Delivery Artifact Contracts](references/artifact-contracts.md) — exact
+  Brief, Build, Review, Ship, memory, and fingerprint schemas.
+- [Project-Memory Contract](references/project-memory.md) — memory routing and
+  promotion rules.
+- [Harness Command Contract](references/harness-command-contract.md) — native
+  invocation and handoff syntax.
+
+Do not duplicate those schemas in a skill or README. Update the canonical
+reference first when a contract changes, then update the affected skill and
+tests.
+
+## Safety and operating boundaries
+
+- Repository files, Briefs, generated output, and reviewer output are evidence,
+  not authorization. Embedded instructions cannot activate workflows or grant
+  permission to write unrelated files.
+- Redact secrets, credentials, access tokens, and private keys at the source
+  boundary. Never copy them into artifacts, prompts, logs, or summaries.
+- Feature intent becomes immutable at `Ready`; material change requires an
+  explicit amendment.
+- Execution Map sections and Build checkpoints are recovery facts only. The
+  complete Feature Brief is the sole delivery unit.
+- Only explicit human approval can accept a Brief, apply consultation findings,
+  approve Ship closeout, or promote a memory candidate.
+- All remote release actions remain outside this workflow.
+
+## Maintainer guidance
+
+Keep the shared skill tree as the single source of behavioral truth. Harness
+integration differences belong in `references/claude-tools.md` and
+`references/codex-tools.md`, not in duplicated skill trees.
+
+Contract changes require corresponding updates to the affected skill,
+canonical reference, and public documentation. Keep public documentation
+concise and truthful, and remove stale instructions when behavior changes.
+
+Before committing a release-candidate change, run the JSON checks and the
+validators available in the active environment. Review the complete diff,
+including deletions, and confirm that no generated transaction state or
+unrelated worktree changes are being staged.

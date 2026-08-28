@@ -67,7 +67,7 @@ is never a gate between `discuss` and `build`.
 
 - [AbsolutForge Product Vision](../product-vision.md), especially the `discuss`
   contract, immutable intent, and core workflow.
-- [Phase 2 planning](../../absolutforge/features/absolutforge-mvp/planning-phase-2-discuss.md).
+- [Product Vision](../product-vision.md#consult-contract).
 - [Delivery Artifact Contracts](../../references/artifact-contracts.md),
   especially the Feature Brief and Amendment contracts.
 - [Native Harness Command and Handoff Contract](../../references/harness-command-contract.md).

@@ -55,5 +55,5 @@ dispatch is unavailable, the inline result is explicitly advisory/non-isolated.
 
 ## Related
 
-- Planning: `absolutforge/features/absolutforge-mvp/planning-phase-4-review.md`
+- Product behavior: `docs/product-vision.md#review-contract`
 - Product vision: `docs/product-vision.md` (`Review contract`)

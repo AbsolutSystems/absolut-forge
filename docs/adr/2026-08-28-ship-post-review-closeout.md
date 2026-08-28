@@ -122,6 +122,6 @@ history. Link/path-only summaries are used instead of copying source excerpts.
 
 ## Related
 
-- Planning: `absolutforge/features/absolutforge-mvp/planning-phase-5-ship.md`
+- Product behavior: `docs/product-vision.md#ship-contract`
 - Product behavior: `docs/product-vision.md#ship-contract`
 - Artifact schemas: `references/artifact-contracts.md`
