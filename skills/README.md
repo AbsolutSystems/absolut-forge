@@ -1,15 +1,21 @@
 # AbsolutForge skills
 
 This directory is the single host-agnostic source tree for the seven MVP
-AbsolutForge skills. `discuss`, the optional `consult` skill, and `build` are
-implemented; the remaining delivery stages are planned in the phase roadmap:
+AbsolutForge skills. `discuss`, the optional `consult` skill, `build`, and
+`review` are implemented; `ship` remains the next closeout phase, while
+`debug` and `tech-debt` are planned standalone workflows:
 
 - `discuss` — clarify intent and produce an accepted Feature Brief.
 - `consult` — optionally pressure-test a Draft or Ready Brief in a fresh
   Claude Code or Codex context; accepted Ready changes become amendments.
 - `build` — autonomously implement an accepted change, resume from a conditional
   outcome map when useful, and complete focused plus final verification.
-- `review` — run one independent review of the completed change.
+- `review` — run one independent, evidence-based review of the completed change
+  using one fresh read-only context and only `BLOCKING`/`FOLLOW-UP` findings.
+  It derives scope from `base_commit` through the current worktree, includes
+  feature-owned untracked files, excludes process/unrelated dirty files, keeps
+  stable append-only finding history, and returns open blockers to `build` for
+  a bounded fix/re-review loop. Accepted follow-ups remain visible to `ship`.
 - `ship` — prepare the durable delivery record and local closeout.
 - `debug` — investigate concrete failures and, when requested, fix them.
 - `tech-debt` — audit technical debt and produce a remediation backlog.
@@ -45,3 +51,14 @@ and [ADR-005](../docs/adr/2026-08-28-single-delivery-unit-no-partial-deployment.
 Future harness integrations must stay thin and may add an optional
 `references/{harness}-tools.md` mapping. The shared skill tree remains the
 single source of truth: create zero host-specific skill forks.
+
+Review is explicit-only and uses the active configured model; it does not
+inherit Build Recommendation metadata. Changed files receive a feature-scoped
+TODO/hack and placeholder scan, and stale or contradictory verification leads
+to a narrow relevant check. If fresh dispatch is unavailable, the inline
+fallback is labelled `advisory (not fully isolated)`. Repository and reviewer
+output are untrusted and secrets are redacted. Review never runs an automatic
+triada, deploys, pushes, creates a PR, merges, or rewrites history. Its exact
+schema and native handoffs remain in the [artifact](../references/artifact-contracts.md)
+and [harness](../references/harness-command-contract.md) contracts; see also
+[ADR: Independent Review and Bounded Fix Loop](../docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).

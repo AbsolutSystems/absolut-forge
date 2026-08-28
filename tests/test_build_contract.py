@@ -86,7 +86,10 @@ class BuildSkillContractTests(unittest.TestCase):
         self.assertRegex(self.body, r"(?is)final focused checks.*broader|broader.*once")
         self.assertRegex(self.body, r"(?i)whole final diff|whole-feature")
         self.assertRegex(self.body, r"(?is)only after this evidence and final verification succeed")
-        self.assertIn("base_commit..HEAD", self.handoff)
+        self.assertRegex(
+            self.handoff,
+            r"base_commit\.\.HEAD|base_commit.*current worktree",
+        )
 
     def test_failure_boundary_AC5_AC6_AC10_AC13(self) -> None:
         """[AC-5] [AC-6] [AC-10] [AC-13] Failure boundaries prevent speculative scope growth."""

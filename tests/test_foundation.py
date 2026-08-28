@@ -243,11 +243,12 @@ class FoundationContractTests(unittest.TestCase):
                 "skills/build/SKILL.md",
                 "skills/consult/SKILL.md",
                 "skills/discuss/SKILL.md",
+                "skills/review/SKILL.md",
             ],
         )
         self.assertEqual(
             sorted(path.name for path in skills.iterdir()),
-            ["README.md", "build", "consult", "discuss"],
+            ["README.md", "build", "consult", "discuss", "review"],
         )
         self.assertEqual(
             [path.name for path in (ROOT / "agents").iterdir()],
@@ -260,7 +261,7 @@ class FoundationContractTests(unittest.TestCase):
         }
         self.assertEqual(unsupported_integration_paths, set())
 
-        for skill_name in ("build", "discuss", "consult"):
+        for skill_name in ("build", "discuss", "consult", "review"):
             skill_dir = skills / skill_name
             skill = skill_dir / "SKILL.md"
             frontmatter, body = _frontmatter_and_body(skill)

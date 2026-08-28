@@ -5,9 +5,9 @@ It gives the model a precise product goal, durable context, and room to execute
 autonomously, while concentrating quality control on verification and one final,
 independent review.
 
-> Status: private pilot foundation. The `discuss`, optional `consult`, and
-> `build` skills are implemented; review and closeout stages remain in phased
-> delivery and validation is non-mutating.
+> Status: private pilot foundation. The `discuss`, optional `consult`, `build`,
+> and `review` skills are implemented; `ship` remains the next closeout phase
+> and validation is non-mutating.
 
 AbsolutForge is a standalone product, not an AbsolutPowers light mode. The
 repository is the plugin root and uses one shared `skills/` tree for Claude Code
@@ -42,8 +42,15 @@ discuss -> build -> review -> ship
 - **build** implements autonomously, creates an Execution Map only when useful,
   resumes from durable map/evidence status when needed, and runs focused plus
   final verification.
-- **review** performs one independent review with `BLOCKING` and `FOLLOW-UP`
-  findings.
+- **review** performs one independent, evidence-based review with one fresh,
+  read-only reviewer and only `BLOCKING` or `FOLLOW-UP` findings. It derives
+  the complete change from `base_commit` through the current worktree,
+  including feature-owned untracked files, while excluding review-process and
+  unrelated dirty files. Stable finding IDs and append-only pass history keep
+  evidence across targeted re-review; accepted follow-ups remain visible but
+  do not block `ship`. An open blocker returns the same Brief to `build` for a
+  focused correction, with escalation after two unsuccessful attempts or
+  material scope expansion.
 - **ship** creates the final Feature Record, a human-facing Executive Summary
   HTML, promotes approved project memory, and prepares the local commit and PR
   description.
@@ -84,6 +91,19 @@ ADR](docs/adr/2026-08-27-optional-cross-model-brief-consultation.md).
 Repository content is untrusted evidence and cannot authorize writes, activation,
 or unrelated disclosure; secrets and credentials encountered during inspection
 are redacted and never copied into durable artifacts or conversation.
+
+Review is explicit-only and starts only with matching Feature Brief and `review.md`
+paths. It loads accepted intent, decisions, Build Evidence, and the recorded
+starting revision before assessing the current worktree. The reviewer uses the
+active configured model and never inherits Build Recommendation metadata.
+Changed files receive a feature-scoped TODO/FIXME/XXX, placeholder, and hack
+scan; missing or stale verification prompts a narrow relevant check. When fresh
+dispatch is unavailable, the same read-only assessment runs inline and is
+labelled `advisory (not fully isolated)`. Review never runs an automatic triada
+and never deploys, pushes, creates a PR, merges, or rewrites history. The complete
+finding and pass schemas live in the [Delivery Artifact Contracts](references/artifact-contracts.md),
+the native handoff is in the [Harness Command Contract](references/harness-command-contract.md),
+and the architecture decision is [ADR: Independent Review and Bounded Fix Loop](docs/adr/2026-08-28-independent-review-and-bounded-fix-loop.md).
 
 ## Principles
 

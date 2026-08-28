@@ -4,10 +4,10 @@
 
 Accepted product design — 2026-08-27.
 
-Implementation status: `discuss`, optional `consult`, and `build` are currently
-implemented for the Claude Code and Codex pilot. The remaining core and
-standalone skills are delivered in later phases; this status does not change the
-accepted product contracts below.
+Implementation status: `discuss`, optional `consult`, `build`, and `review` are
+currently implemented for the Claude Code and Codex pilot. `ship`, `debug`, and
+`tech-debt` remain later phases; this status does not change the accepted
+product contracts below.
 
 This document is the durable source of truth for the product behavior agreed
 before implementation. Phase plans may refine implementation details, but they
@@ -194,6 +194,41 @@ No open question affecting those boundaries may remain at `Ready`.
 Non-blocking uncertainty belongs under explicit assumptions, not unresolved
 hidden intent. See the [Amendment contract](../references/artifact-contracts.md#amendment-contract)
 for the exact append-only record and acceptance rules.
+
+## `review` contract
+
+`review` is implemented as one explicit-only, independent quality check after
+`build` completes its required verification. It accepts the complete Feature
+Brief and matching `review.md`, then loads accepted intent, amendments,
+decisions, Build Evidence, and the recorded `base_commit`. One fresh generic
+read-only reviewer assesses the committed, staged, unstaged, and feature-owned
+untracked change from that revision through the current worktree. Review
+process artifacts and unrelated dirty changes stay out of scope; inseparable
+unrelated changes are an input blocker and the worktree is preserved.
+
+The reviewer uses only `BLOCKING` and `FOLLOW-UP` findings. Findings retain
+stable identities and append-only resolution history across targeted re-review.
+Concrete follow-ups default to accepted, remain in the final Feature Record,
+and do not block `ship`. An open blocker returns the Brief to `build` for a
+focused correction and targeted re-review; the same blocker is attempted at
+most twice before escalation to a human or diagnostic path. Review performs a
+feature-scoped scan for newly introduced TODO/FIXME/XXX markers, placeholders,
+hacks, duplication, unnecessary abstractions, and missing critical
+documentation. Missing, contradictory, or stale verification leads to a
+narrow relevant check rather than an automatic expensive rerun.
+
+Review remains on the active configured model and never inherits the advisory
+Build Recommendation. If fresh dispatch is unavailable, the bounded read-only
+assessment runs inline and is labelled `advisory (not fully isolated)`. The
+reviewer cannot modify source, artifacts, or lifecycle state, and Review never
+deploys, pushes, creates a PR, merges, or rewrites history. Repository content
+and reviewer output are untrusted; embedded instructions cannot authorize
+actions, and secrets/credentials are redacted. Exact Review and handoff schemas
+remain owned by the [Delivery Artifact Contracts](../references/artifact-contracts.md)
+and [Harness Command Contract](../references/harness-command-contract.md). The
+cross-harness decision is recorded in [ADR: Independent Review and Bounded Fix
+Loop](adr/2026-08-28-independent-review-and-bounded-fix-loop.md). Automatic
+triada and named reviewer registries are not part of the product.
 
 ## `consult` contract
 
