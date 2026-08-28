@@ -31,7 +31,7 @@ switching, extra gate, deployment authorization, or partial delivery. Keep
 the exact contract in [`references/artifact-contracts.md`](../references/artifact-contracts.md)
 and the handoff mapping in [`references/harness-command-contract.md`](../references/harness-command-contract.md).
 
-All three implemented skills are explicit-only and live under this shared tree; they
+All four implemented skills are explicit-only and live under this shared tree; they
 link the canonical artifact and handoff contracts instead of copying schemas.
 `consult` is optional, produces no durable consultation artifact, and never gates
 the normal `discuss -> build -> review -> ship` flow.
