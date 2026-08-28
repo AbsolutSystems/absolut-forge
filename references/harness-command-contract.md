@@ -125,8 +125,8 @@ The exact artifact schemas and lifecycle are canonical in
 an accepted `absolutforge/features/{slug}/feature-brief.md` to `build`; `build`
 may create the optional `execution-map.md` and appends Build Evidence; `review`
 creates `review.md`; and `ship` consumes the final brief, map when present, and
-review to create `absolutforge/archives/{slug}/feature-record.md` and a
-self-contained `executive-summary.html`.
+review to create `absolutforge/archives/{slug}/feature-record.md` and, only on
+explicit request, a self-contained `executive-summary.html`.
 
 Handoffs must preserve the accepted intent. A `Ready` Feature Brief is
 immutable from `Problem and goal` through `Expected outcomes`; a change to
@@ -135,16 +135,6 @@ must be an explicitly accepted amendment. Do not hand off a hidden or silently
 rewritten contract. `consult` is an optional, explicit-only handoff for an
 existing `Draft` or `Ready` Brief; it is never required before `build` and
 produces no durable consultation artifact.
-
-When present, the optional `## Build Recommendation` travels with the complete
-Brief into `build`. It is advisory execution metadata outside the immutable
-intent baseline: `simple/single` recommends Claude `sonnet` or Codex
-`gpt-5.6-luna`, while `complex/phased` recommends Claude `opus` or Codex
-`gpt-5.6-terra`. Actual model availability and an explicit user choice remain
-authoritative. A missing, malformed, unavailable, or overridden recommendation
-must not invalidate the Brief; `build` records the fallback or override reason
-in append-only `## Build Evidence`. Handoff never performs automatic model
-switching or provider configuration and never authorizes partial delivery.
 
 ## Build and review handoff semantics
 
@@ -230,14 +220,12 @@ explicit-only, local-only Ship stage:
 $absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
 
-Review uses the active configured model; it does not inherit or automatically
-select a model from the Brief's `## Build Recommendation`. A blocker handoff is
+Review uses the active configured model. A blocker handoff is
 for a focused Build correction and targeted re-review only. It does not
 authorize deployment, push, PR creation, merge, or history rewrite.
 
-Ship prepares a local commit and PR description as human-facing local outputs
-only. Neither a Ship handoff nor its closeout preview pushes, creates a remote
-PR, merges, deploys, or rewrites history.
+Ship prepares a local commit only. Neither a Ship handoff nor its closeout
+preview pushes, creates a remote PR, merges, deploys, or rewrites history.
 
 Rendering or presenting a handoff never installs, enables, disables, deploys,
 pushes, creates a PR, merges, or rewrites history.

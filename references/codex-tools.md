@@ -34,17 +34,11 @@ for a concrete failure.
 
 ## Build routing, escalation, and compaction
 
-Run `build` on the model recommended by the optional `## Build Recommendation`
-when that model is available: `simple/single` maps to `gpt-5.6-luna`, while
-`complex/phased` maps to `gpt-5.6-terra`. The recommendation is advisory, so a
-user-selected model and actual Codex availability are authoritative. When the
-section is absent or malformed, the recommendation is unavailable, or the
-selected model differs, use the configured build model (the default remains
-`gpt-5.6-luna` with `xhigh` reasoning) and record the fallback or override
-reason in append-only `## Build Evidence`. Do not automatically switch models
-or configure a provider. Whichever model is selected owns the complete accepted
-Feature Brief, local implementation choices, edits, verification, durable
-Execution Map and Build Evidence updates, and the final native review handoff.
+Use the configured Build model. The active harness and an explicit user choice
+remain authoritative; do not automatically switch models or configure a
+provider. The active Build context owns the complete accepted Feature Brief,
+local implementation choices, edits, verification, durable Execution Map and
+Build Evidence updates, and the final native review handoff.
 
 Before a second repair attempt for the same non-passing verification result,
 the active Build context performs the canonical Failure Boundary Check. It may request a bounded,
@@ -93,7 +87,7 @@ Brief lifecycle changes, and every subsequent handoff. The reviewer is
 read-only: it cannot edit source, feature artifacts, or repository state.
 
 Review stays on the active configured Codex model. It never inherits or
-automatically switches model from a Brief's Build Recommendation. Keep the
+automatically switches model from a Brief. Keep the
 primary context responsible for applying any `BLOCKING` fixes, re-running
 verification, and requesting a targeted re-review.
 
@@ -128,7 +122,7 @@ $absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/fe
 ```
 
 If source changes after Review, commit it and invoke Review again before Ship. Ship may prepare
-a local commit and PR description as outputs only; it never pushes, creates a
+a local commit as output only; it never pushes, creates a
 remote PR, merges, deploys, or rewrites history.
 
 ## Local plugin isolation

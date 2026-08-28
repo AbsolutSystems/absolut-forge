@@ -108,11 +108,6 @@ is the immutable intent baseline. Changes to behavior, scope, public contracts,
 security, data handling, migrations, or material cost require an explicit
 amendment.
 
-When useful, `discuss` may add an advisory Build Recommendation. It can suggest
-the simple/single or complex/phased execution profile, but it never selects a
-model automatically, creates an extra approval gate, or authorizes partial
-delivery.
-
 ### 2. Optionally consult the Brief
 
 Consultation is useful when a second model or harness should challenge the
@@ -279,15 +274,16 @@ Codex:
 $absolutforge ship absolutforge/features/import-preview/feature-brief.md absolutforge/features/import-preview/review.md
 ```
 
-Ship renders a complete preview before mutation. The preview includes the
-archive files, active-artifact cleanup, memory decisions, commit message, PR
-description, and exact staging set.
+Ship explicitly asks whether to generate the optional HTML Executive Summary,
+then renders a complete preview before mutation. The preview includes the
+archive files, active-artifact cleanup, memory decisions, commit message, and
+exact staging set.
 
-After approval, Ship creates the Feature Record and Executive Summary, promotes
-only individually approved memory entries, removes the active Brief/map/Review
-artifacts, stages only the approved paths, and creates one local conventional
-commit. It never pushes, creates a remote pull request, merges, deploys, or
-rewrites history.
+After approval, Ship creates the Feature Record and, only when requested, the
+Executive Summary. It promotes only individually approved memory entries,
+removes the active Brief/map/save/Review artifacts, stages only the approved
+paths, and creates one local conventional commit. It never pushes, creates a
+remote pull request, merges, deploys, or rewrites history.
 
 ## Standalone workflows
 
@@ -295,9 +291,9 @@ rewrites history.
 
 `debug` may auto-trigger only for an error, failing test, crash, regression, or
 other unexpected behavior. Auto-triggering authorizes diagnosis, not a fix. An
-explicit diagnosis-and-fix request creates a compact Fix Brief and proceeds to
-Review only when root cause and expected behavior are unambiguous; material
-product or architecture ambiguity returns to `discuss`.
+explicit diagnosis-and-fix request makes one bounded direct correction only when
+root cause and expected behavior are unambiguous; material product or
+architecture ambiguity returns to `discuss`.
 
 Claude Code:
 
@@ -354,14 +350,14 @@ closeout, active artifacts are removed and the durable archive is:
 ```text
 absolutforge/archives/{slug}/
 ├── feature-record.md
-└── executive-summary.html
+└── executive-summary.html  # optional, on explicit request
 ```
 
 The Feature Record preserves the original intent separately from the as-built
 result and records deviations, verification, Review findings, linked ADRs,
 durable knowledge, open follow-ups, and a recommended review order.
 
-The Executive Summary is self-contained HTML with inline CSS. It contains
+When requested, the Executive Summary is self-contained HTML with inline CSS. It contains
 paths, escaped text, and concise human-facing context; it does not copy source
 excerpts, load external assets, or expose secrets.
 

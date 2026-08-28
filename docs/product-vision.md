@@ -69,7 +69,7 @@ Tree](adr/2026-08-27-host-agnostic-skill-tree.md).
 ### Activation and isolation
 
 - There is no SessionStart hook and no global pipeline prompt.
-- `discuss`, `build`, `review`, `ship`, `tech-debt`, and `consult` are
+- `discuss`, `build`, `save`, `load`, `review`, `ship`, `tech-debt`, and `consult` are
   explicit-only.
 - Only `debug` may auto-trigger, and only for a concrete failure such as an error,
   failing test, crash, regression, or other unexpected behavior.
@@ -104,6 +104,7 @@ An active change lives under:
 absolutforge/features/{slug}/
 ├── feature-brief.md
 ├── execution-map.md   # optional; created by build only when useful
+├── save-{slug}.md     # optional; created by save while Building
 └── review.md          # created by review
 ```
 
@@ -142,15 +143,6 @@ and why before recommending how.
 5. Create ADRs only for decisions with durable architectural consequences.
 6. Present one complete Feature Brief for explicit acceptance.
 7. On acceptance, mark it `Ready` and hand it directly to `build`.
-
-When the settled evidence supports a tier suggestion, `discuss` appends one
-optional Build Recommendation after `Expected outcomes`. It is execution
-metadata outside the immutable intent baseline: `simple/single` recommends
-Claude Sonnet or Codex `gpt-5.6-luna`, while `complex/phased` recommends Claude
-Opus or Codex `gpt-5.6-terra`. The profile is based on outcome coupling,
-uncertainty, and boundary risk, never line/file count alone. The exact fields
-and placement are defined by the [Feature Brief contract](../references/artifact-contracts.md#feature-brief-contract).
-This recommendation adds no second acceptance gate.
 
 The discussion uses a session-only decision tree and an adaptive readiness
 frontier. It inspects repository evidence before asking discoverable questions,
@@ -215,8 +207,7 @@ hacks, duplication, unnecessary abstractions, and missing critical
 documentation. Missing, contradictory, or stale verification leads to a
 narrow relevant check rather than an automatic expensive rerun.
 
-Review remains on the active configured model and never inherits the advisory
-Build Recommendation. If fresh dispatch is unavailable, the bounded read-only
+Review remains on the active configured model. If fresh dispatch is unavailable, the bounded read-only
 assessment runs inline and is labelled `advisory (not fully isolated)`. The
 reviewer cannot modify source, artifacts, or lifecycle state, and Review never
 deploys, pushes, creates a PR, merges, or rewrites history. Repository content
@@ -271,14 +262,6 @@ feature state before the single independent review. Map sections and checkpoints
 are resume facts, never partial releases; the complete Feature Brief is the only
 delivery unit. Build never deploys, pushes, creates a PR, merges, or rewrites
 history.
-
-Build consumes the optional recommendation as advisory context. It uses a valid
-profile only when the active harness can provide the suggested model; configured
-availability and an explicit user choice remain authoritative. Missing, malformed,
-unavailable, or overridden recommendations use the configured fallback choice
-and record the actual selection and concise reason in append-only Build Evidence.
-Build never switches models or providers automatically, rewrites accepted intent,
-or treats the recommendation as permission to deploy or deliver a partial result.
 
 ## `save` and `load` contracts
 
@@ -372,7 +355,7 @@ only strictly trivial adjacent fixes; non-trivial work remains a follow-up.
 Public APIs and critical internal behavior are documented concisely and
 truthfully, with stale documentation corrected or removed in the same change.
 
-## `review` contract
+## Review practice
 
 There is one independent review after `build` finishes all verification. It runs
 in a fresh context: a new session or one isolated reviewer.
@@ -475,10 +458,10 @@ architectural decisions, durable knowledge, and open follow-ups. Its exact
 headings and required fields are defined by the [Feature Record
 contract](../references/artifact-contracts.md#feature-record-contract).
 
-### Executive Summary HTML
+### Optional Executive Summary HTML
 
-`executive-summary.html` is generated from the final post-review state for a
-human PR reviewer. It is self-contained and includes:
+Only after Ship explicitly asks and the user accepts, `executive-summary.html`
+is generated from the final post-review state. It is self-contained and includes:
 
 - TL;DR,
 - problem and business value,
@@ -504,10 +487,9 @@ Before mutation, `ship` shows:
 
 - files to stage,
 - proposed Feature Record,
-- Executive Summary preview/path,
+- Executive Summary preview/path when requested,
 - proposed memory promotions and destinations,
 - commit message,
-- PR description,
 - archive and deletion operations.
 
 Only after approval does it:
@@ -569,29 +551,17 @@ reproduce
 -> root-cause hypothesis
 -> minimal hypothesis test
 -> failing regression test where feasible
--> compact Fix Brief
 -> implementation
 -> test-and-fix loop
 -> final verification
--> review handoff
 ```
 
-The Fix Brief uses the normal feature lifecycle and contains:
-
-- symptoms and reproduction,
-- confirmed root cause with evidence,
-- expected behavior,
-- fix scope,
-- solution direction,
-- failing test or other failure proof,
-- verification conditions,
-- Build Evidence.
-
-It does not require a separate `discuss` session when root cause and expected
-behavior make the contract unambiguous. If investigation reveals a product
-decision, public-contract change, major architectural redesign, or comparable
-ambiguity, `debug` creates a draft Fix Brief with its evidence and hands it to
-`discuss` instead of guessing.
+An explicit bounded fix records its failure proof, root cause, changed areas,
+and verification in its response or an already active feature's Build Evidence.
+It creates no Brief or other delivery artifact. If investigation reveals a
+product decision, public-contract change, major architectural redesign, or
+comparable ambiguity, it stops and hands the concern to `discuss` instead of
+guessing.
 
 Large fixes are not routed to detailed task generation. `debug` remains
 autonomous unless a material product/architecture decision requires discussion.
@@ -636,7 +606,7 @@ mandatory part of the workflow.
 - correct native handoff syntax and artifact paths,
 - absence of forbidden classic-pipeline stages,
 - no SessionStart hook,
-- self-contained Executive Summary output,
+- optional self-contained Executive Summary output,
 - `ship` cannot push or create a PR without explicit permission.
 
 ### Behavioral scenarios
@@ -646,8 +616,10 @@ mandatory part of the workflow.
 3. Larger `build` creates and resumes from an outcome-oriented map.
 4. Scope-changing discovery triggers an amendment rather than silent intent edit.
 5. `review` reports concrete `BLOCKING`/`FOLLOW-UP` findings without style noise.
-6. `ship` preserves original intent, records deviations, and creates final HTML.
-7. Fixing `debug` creates a compact Fix Brief; diagnosis-only `debug` does not.
+6. `ship` preserves original intent, records deviations, and creates HTML only
+   when explicitly requested.
+7. A bounded `debug` fix creates no delivery artifact; diagnosis-only `debug`
+   does not change source.
 8. `tech-debt` stays read-only and routes findings correctly.
 
 Behavioral model tests are run deliberately, not on every CI commit.

@@ -18,21 +18,15 @@ MVP AbsolutForge skills:
   source changes, keeps stable append-only finding history, and returns open
   blockers to `build` for a bounded fix/re-review loop. Accepted follow-ups
   remain visible to `ship`.
-- `ship` — explicitly close a final Review into a Feature Record and
-  self-contained Executive Summary HTML, then make one approved local commit.
+- `ship` — explicitly close a final Review into a Feature Record and one
+  approved local commit; HTML summary is optional on explicit request.
 - `debug` — investigate concrete failures and, when requested, fix them.
 - `tech-debt` — audit technical debt and produce a remediation backlog.
 
-After the discussion settles the evidence, `discuss` may include an advisory
-Build Recommendation in the Brief. The `simple/single` profile maps to
-Claude Sonnet or Codex `gpt-5.6-luna`; complex, phased work maps to Claude Opus
-or Codex `gpt-5.6-terra`. Build validates that hint against active availability
-and explicit user choice, recording the actual selection plus any
-missing/malformed/unavailable fallback or override reason in Build Evidence.
-The recommendation is outside immutable intent and introduces no automatic
-switching, extra gate, deployment authorization, or partial delivery. Keep
-the exact contract in [`references/artifact-contracts.md`](../references/artifact-contracts.md)
-and the handoff mapping in [`references/harness-command-contract.md`](../references/harness-command-contract.md).
+Keep the exact contract in
+[`references/artifact-contracts.md`](../references/artifact-contracts.md) and
+the handoff mapping in
+[`references/harness-command-contract.md`](../references/harness-command-contract.md).
 
 All nine skills live under this shared tree and link the canonical artifact and
 handoff contracts instead of copying schemas. Core skills, `consult`, and
@@ -64,8 +58,7 @@ Future harness integrations must stay thin and may add an optional
 `references/{harness}-tools.md` mapping. The shared skill tree remains the
 single source of truth: create zero host-specific skill forks.
 
-Review is explicit-only and uses the active configured model; it does not
-inherit Build Recommendation metadata. Changed files receive a feature-scoped
+Review is explicit-only and uses the active configured model. Changed files receive a feature-scoped
 TODO/hack and placeholder scan, and stale or contradictory verification leads
 to a narrow relevant check. If fresh dispatch is unavailable, the inline
 fallback is labelled `advisory (not fully isolated)`. Repository and reviewer

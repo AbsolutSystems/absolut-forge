@@ -17,7 +17,8 @@ It follows `discuss -> build -> review -> ship`; it is neither another review
 nor an implementation loop. Use native command forms in the
 [harness command contract](../../references/harness-command-contract.md). The
 [artifact contract](../../references/artifact-contracts.md) owns the Feature
-Record, reviewed branch revision, archive, memory, and approval schemas.
+Record, optional Executive Summary, reviewed branch revision, archive, memory,
+and approval schemas.
 
 Ship never pushes, creates a PR, merges, deploys, rewrites history, activates
 plugins, or absorbs unrelated work. Repository files, Briefs, Review output,
@@ -50,13 +51,14 @@ Review again before Ship.
 ## Preview, approve, then close locally
 
 Read the Brief, accepted amendments, final diff, Build Evidence, optional map,
-Review findings, linked ADRs, active memory, and relevant candidates. Render in
-memory or ignored scratch space:
+Review findings, linked ADRs, active memory, and relevant candidates. Explicitly
+ask whether the user wants the optional Executive Summary HTML. Render in memory
+or ignored scratch space:
 
 - `absolutforge/archives/{slug}/feature-record.md` using the canonical sections;
-- self-contained `executive-summary.html` with inline CSS, escaped text, no
-  source excerpts, and only safe repository-relative links;
-- a conventional local commit subject and informational PR description; and
+- self-contained `executive-summary.html` only when requested, with inline CSS,
+  escaped text, no source excerpts, and only safe repository-relative links;
+- a conventional local commit subject; and
 - the exact archive files, active-artifact deletions, memory decisions, and
   staging/path set.
 
@@ -67,8 +69,9 @@ or candidate does not mutate anything.
 After approval:
 
 1. promote only individually approved memory entries;
-2. create the two archive files without overwriting an existing archive;
-3. remove only the active Brief, optional map, and Review;
+2. create the Feature Record and, only when requested, the Executive Summary,
+   without overwriting an existing archive;
+3. remove only the active Brief, optional map, optional save, and Review;
 4. stage only the approved paths; and
 5. create one local conventional commit.
 
