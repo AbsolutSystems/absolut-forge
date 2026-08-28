@@ -1,7 +1,7 @@
 # Final Verification: Build model recommendation
 
 ## Status
-pending
+in-progress
 
 ## Parent
 `absolutforge/features/build-model-recommendation/tasks-build-model-recommendation.md`
@@ -37,7 +37,7 @@ Read before starting:
 Run integrated deterministic verification and record exact results before branch review.
 
 ## Task 1: Run integrated verification
-**Status:** pending
+**Status:** in-progress
 **Traces to:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11
 **Test-first:** no (final verification only)
 **Produces:** Recorded verification evidence in this file
