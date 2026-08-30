@@ -1,4 +1,3 @@
-# AbsolutForge agents
+# Agents
 
-This directory is reserved for optional infrastructure used by future
-isolated roles. Phase 1 contains no agent definition or registered role.
+AbsolutForge does not require named agent registries. Fresh reviewers and planned-build workers use native generic subagent primitives when the active harness exposes them.

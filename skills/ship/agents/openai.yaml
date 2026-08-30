@@ -1,7 +1,7 @@
 interface:
-  display_name: "Ship"
-  short_description: "Close a reviewed AbsolutForge feature into a local archive and commit"
-  default_prompt: "Use $ship with the final Brief and Review paths: absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md"
+  display_name: "AbsolutForge Ship"
+  short_description: "Close a reviewed feature into durable local records"
+  default_prompt: "Use $absolutforge ship with the final Brief and Review paths for this feature."
 
 policy:
   allow_implicit_invocation: false

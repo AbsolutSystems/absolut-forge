@@ -1,7 +1,7 @@
 interface:
-  display_name: "Load Progress"
-  short_description: "Restore saved Build context for a paused feature"
-  default_prompt: "Use $load to restore this saved AbsolutForge Build context."
+  display_name: "AbsolutForge Load"
+  short_description: "Validate saved context and resume the Build strategy"
+  default_prompt: "Use $absolutforge load to restore this saved AbsolutForge Build context."
 
 policy:
   allow_implicit_invocation: false

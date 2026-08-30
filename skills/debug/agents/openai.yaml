@@ -1,7 +1,7 @@
 interface:
-  display_name: "Debug"
-  short_description: "Diagnose and fix a concrete failure"
-  default_prompt: "Use $debug to find the root cause of this concrete failure before proposing a fix."
+  display_name: "AbsolutForge Debug"
+  short_description: "Diagnose and optionally fix one concrete failure"
+  default_prompt: "Use $absolutforge debug to find the root cause of this concrete failure before proposing a fix."
 
 policy:
   allow_implicit_invocation: true

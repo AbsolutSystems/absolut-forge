@@ -1,24 +1,17 @@
 {
   "name": "absolutforge",
-  "version": "0.1.0",
-  "description": "Intent-driven development workflow for strong coding models.",
-  "author": {
-    "name": "Absolut Systems"
-  },
+  "version": "0.2.0",
+  "description": "Intent-driven development workflow with autonomous and planned/delegated build strategies.",
+  "author": {"name": "Absolut Systems"},
   "skills": "./skills/",
   "interface": {
     "displayName": "AbsolutForge",
-    "shortDescription": "Intent-driven delivery for strong coding models",
-    "longDescription": "Discuss intent, build autonomously, run one independent review, and ship with durable human and AI context.",
+    "shortDescription": "Intent-driven delivery with two build strategies",
+    "longDescription": "Discuss intent once, then choose autonomous build or strong-planner/delegated build, followed by one independent review and local ship closeout.",
     "developerName": "Absolut Systems",
     "category": "Coding",
-    "capabilities": [
-      "Interactive",
-      "Write"
-    ],
-    "defaultPrompt": [
-      "Use AbsolutForge to discuss and deliver this change from intent to review."
-    ],
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": ["Use AbsolutForge to discuss this change, then choose the appropriate build strategy."] ,
     "brandColor": "#C2410C"
   }
 }

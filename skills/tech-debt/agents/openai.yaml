@@ -1,7 +1,7 @@
 interface:
-  display_name: "Tech Debt"
-  short_description: "Audit evidence-backed technical debt"
-  default_prompt: "Use $tech-debt to audit this repository scope for costly technical compromises."
+  display_name: "AbsolutForge Tech Debt"
+  short_description: "Run a bounded read-only technical-debt audit"
+  default_prompt: "Use $absolutforge tech-debt to audit this repository scope for costly technical compromises."
 
 policy:
   allow_implicit_invocation: false

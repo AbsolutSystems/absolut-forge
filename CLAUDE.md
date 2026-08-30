@@ -1,15 +1,5 @@
-# AbsolutForge Development Context
+# AbsolutForge maintainer guidance
 
-AbsolutForge is an intent-driven delivery workflow for Claude Code and Codex.
-The complete user-facing documentation, supported commands, artifact lifecycle,
-release-candidate scope, and safety rules are maintained in `README.md`.
+Keep `skills/` as the single host-agnostic behavioral source of truth. Put host-specific mechanics in `references/claude-tools.md`, `references/codex-tools.md` and `references/opencode-tools.md`. Keep artifact schemas in `references/artifact-contracts.md`; skills link to them instead of duplicating canonical templates.
 
-Before planning, implementing, reviewing, or closing work in this repository:
-
-1. Read `README.md` completely.
-2. Follow the workflow, command syntax, artifact rules, and safety boundaries
-   described there.
-
-Keep the shared skill tree host-agnostic. Do not invent parallel workflow
-documents, implicit activation, hidden state, or remote release actions. Keep
-technical source and public documentation in English.
+A Ready Feature Brief has exactly two first-class implementation strategies: `build` (autonomous) and `build-planned` (planned/delegated). Never switch strategy after Build start unless the human explicitly abandons the active build and restarts from a clean committed Ready baseline.

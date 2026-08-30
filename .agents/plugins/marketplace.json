@@ -1,5 +1,8 @@
 {
   "name": "absolutforge",
+  "interface": {
+    "displayName": "AbsolutForge"
+  },
   "plugins": [
     {
       "name": "absolutforge",
