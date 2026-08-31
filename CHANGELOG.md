@@ -122,7 +122,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `<brief OR plan> [extra-context-path ...]` instead of a `|` alternation that
   read like a shell pipe.
 - `ship` removes the consultation report with the other transient artifacts and
-  consolidates only what changed the delivered feature.
+  consolidates only what changed the delivered feature, against a Feature Record
+  contract that now names consultation and verification as recorded fields.
+  Consulted with nothing accepted is still recorded; anything not consolidated
+  is gone with the report.
+- Build start no longer trips over its own second opinion. A Brief-mode
+  consultation on a committed Ready Brief left an uncommitted
+  `consult-{slug}.md`, which the Build start cleanliness rule read as a dirty
+  worktree and refused to start on, with nobody holding authority to commit it.
+  The report is now a permitted uncommitted workflow artifact at Build start,
+  exactly as `review.md` is at Review, and Build's first artifact commit picks it
+  up. Uncommitted source still blocks Build start.
+- A plan revision is consultable exactly once, and `consult` now enforces it on
+  both paths. The previous guard caught only a revision produced by consuming a
+  consultation, so a revision whose findings were all rejected — or that found
+  nothing, leaving no `R-` entry and no bump — could be consulted again and then
+  had nowhere legal to be recorded. `consult` also refuses a revision whose
+  `## Consultation` entry already reads `settled`, unless that settlement is
+  `host cannot prompt`, which records that no question ever reached a human.
+- A `settled` consultation entry is explicitly final for its revision. A report
+  arriving for an already-settled revision is still read and its findings still
+  disposed, but it adds no second entry and does not reword the settlement,
+  which keeps `## Consultation` append-only instead of leaving the unrequested
+  report path with an impossible write.
+- The post-replan consultation path states its order and its status handoff: the
+  consultation bump leaves the plan at `Needs Replan` like every consultation
+  bump, and the replan returns it to `Executing` only after the entry is settled
+  and accepted findings are applied. An `intent` finding stops there instead.
+- `references/artifact-contracts.md` and `review` agree on the report's standing:
+  Review may read it as context on how the implementation arrived, but it never
+  enters the judgment. Neither an accepted nor a rejected finding moves a Review
+  outcome by itself.
+- `skills/README.md` states the shared verification doctrine and the two
+  `consult` subjects instead of listing `consult` as an unqualified optional.
 - Plugin manifests bumped to `0.3.0`.
 
 ## [0.2.0] - 2026-08-30

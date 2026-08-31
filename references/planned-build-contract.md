@@ -16,14 +16,16 @@ The plan is implementation evidence, not product intent and not a partial releas
 
 `Draft -> Ready -> Executing -> Needs Replan -> Executing -> Complete`
 
-A plan may be consulted through `consult` in Plan mode at exactly two statuses: `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. No other status is consultable. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
+A plan may be consulted through `consult` in Plan mode at exactly two statuses: `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. No other status is consultable, and a revision is consultable once: not when `## Consultation` already carries a `settled` entry for it, and not when it was itself produced by consuming a consultation. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
 
 `## Consultation` has exactly two states, and carries at most one entry per revision:
 
 - `awaiting` — a consultation question is open. The plan holds at its current status: no task is selected and no source is edited until it is answered.
 - `settled` — the question is closed, whatever the answer was. Execution may continue.
 
-No entry for a revision means nothing is open, which is the normal case: an entry is written only when a consultation is actually offered or disposed, never as ceremony. The section is append-only and the sole permitted rewrite is advancing that revision's `awaiting` to `settled`.
+No entry for a revision means nothing is open, which is the normal case: an entry is written only when a consultation is actually offered or disposed, never as ceremony. The section is append-only and permits exactly two rewrites of an entry: advancing that revision's `awaiting` to `settled`, and replacing that revision's `settled — host cannot prompt` with `settled — consulted ...` when a consultation did happen afterwards, since that settlement recorded only that no question reached a human.
+
+Otherwise a `settled` entry is final for its revision. A report arriving for a revision that already reads `settled` — a consultation nobody asked for, or a second one run despite the refusal rules in `consult` — is still read and its findings still disposed, but it adds no second entry and does not reword the settlement. The record stays the one settlement that revision had, and only a replan opens a new revision that can be asked again.
 
 A Review blocker on a `Complete` plan reopens it: the orchestrator appends the corrective work as a reopened task or a replan entry and returns the plan to `Executing`. A `Complete` plan is never recreated and its completed task history is never rewritten.
 

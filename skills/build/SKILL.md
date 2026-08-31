@@ -14,7 +14,7 @@ Read `../../references/artifact-contracts.md`, `../../references/verification-do
 
 Accept only `absolutforge/features/{slug}/feature-brief.md`.
 
-For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. Record current HEAD as `base_commit`; append Build start evidence with `Build strategy: autonomous`; change Brief status to `Building` before source edits.
+For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. An uncommitted `consult-{slug}.md` is the only permitted exception, per the Build start rule in `../../references/artifact-contracts.md`. Record current HEAD as `base_commit`; append Build start evidence with `Build strategy: autonomous`; change Brief status to `Building` before source edits.
 
 If an `implementation-plan.md` exists for this feature, stop: planned execution state cannot be converted silently to autonomous Build.
 

@@ -99,7 +99,7 @@ Append exactly once before the first source edit:
 - Execution artifact: none | `absolutforge/features/{slug}/execution-map.md` | `absolutforge/features/{slug}/implementation-plan.md`
 ```
 
-A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start.
+A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start. An uncommitted `consult-{slug}.md` is the one exception: a consultation may run between the committed Ready Brief and Build start, so the report is a permitted uncommitted workflow artifact there, exactly as the active `review.md` is at Review. Build inspects nothing in it, and its first commit of feature artifacts picks it up. Any uncommitted source change still blocks Build start.
 
 ## Build evidence
 
@@ -180,7 +180,7 @@ The exact planned schema, task contract, deviations and replans are owned by [`p
 
 `C-` IDs are numbered from `C-001` and continue across consultation blocks within the report; they are never reused and never written into the Brief, plan, execution map or review. Findings are always written at `Disposition: open`. Only the context that consumes the report sets any other disposition — the Build owner for a plan consultation, or the Brief-mode `consult` session acting on explicit per-ID human acceptance — and it never rewrites a recorded finding, its evidence or its proposed change.
 
-The report is advice, not authority. It changes no status, and it is never an input to `review`: Review reads the Brief as intent and `base_commit..HEAD` as truth.
+The report is advice, not authority. It changes no status, and it never enters Review's judgment: Review reads the Brief as intent and `base_commit..HEAD` as truth. Review may read the report to understand how the implementation arrived, but an accepted finding never excuses a Brief violation and a rejected one is not a finding by itself.
 
 ## Save
 
@@ -250,4 +250,8 @@ Review treats the Brief as intent authority, source/tests and `base_commit..HEAD
 
 ## Feature Record
 
-Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, execution summary, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, deviations/replans and final integration verification. Autonomous Build includes execution-map/checkpoint facts when present.
+Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, deviations/replans and final integration verification. Autonomous Build includes execution-map/checkpoint facts when present.
+
+Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each accepted finding that changed the delivered feature, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
+
+Verification in the record names the tests that cover the delivered behavior, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.

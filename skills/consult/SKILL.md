@@ -31,6 +31,8 @@ Write the batch to `absolutforge/features/{slug}/consult-{slug}.md` using the ca
 
 If nothing material remains, append a consultation block with `Result: no material findings` and no findings. That is the only case where the report gains no `C-` entry.
 
+The report is the only file you write, and you never commit, stage, stash, switch branches or touch source. It stays an uncommitted workflow artifact until the owning Build commits feature artifacts, and it does not block Build start; the Build start rule in `../../references/artifact-contracts.md` exempts it.
+
 Report the same batch in the answer as well, then state that the report path is ready to read back. This is the whole handoff: `consult` never resumes a Build, never advances a status, and never tells the requester to run another skill.
 
 ## Brief mode
@@ -47,7 +49,14 @@ Merge accepted findings into a `Draft` in place, in the canonical sections they 
 
 Accept only plan status `Ready`, or `Needs Replan` whose latest replan entry is already appended and whose revision was incremented. Refuse `Draft` as premature, `Executing` as a moving target, and a `Needs Replan` plan with no matching `R-` entry yet, since the decomposition under critique does not exist yet. `Complete` belongs to `review`.
 
-Also refuse a revision that was itself produced by consuming a consultation: its latest `R-` entry names a consultation as trigger and its `Plan revision` target equals `## Revision`. That revision is already the answer to a critique, and only a replan reopens the question.
+One consultation per revision, and refuse a second by either of two checks on `## Revision`:
+
+- `## Consultation` already carries a `settled` entry for that revision — the question was asked and closed there, whatever the answer was, including a consultation whose findings were all rejected or that found nothing;
+- the latest `R-` entry names a consultation as trigger and its `Plan revision` target equals that revision — the revision is itself the answer to a critique.
+
+Either way only a replan reopens the question, with one exception: `settled — host cannot prompt` records that no question was ever put to a human, so a human explicitly consulting that revision is legitimate and you proceed. An `awaiting` entry for that revision is not a refusal either: it is the offer you were asked to answer.
+
+When you refuse, say which check refused and that only a replan reopens it. Write no report block for a refused subject.
 
 Do not touch the plan's `## Consultation` section. The orchestrator opens and settles that entry; you only write the report.
 

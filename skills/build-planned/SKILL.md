@@ -14,7 +14,7 @@ Read `../../references/planned-build-contract.md`, `../../references/artifact-co
 
 Accept only the canonical Feature Brief path.
 
-For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. Record HEAD as `base_commit`; append Build start evidence with `Build strategy: planned`; change Brief to `Building`.
+For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. An uncommitted `consult-{slug}.md` is the only permitted exception, per the Build start rule in `../../references/artifact-contracts.md`. Record HEAD as `base_commit`; append Build start evidence with `Build strategy: planned`; change Brief to `Building`.
 
 If `execution-map.md` exists, stop: autonomous execution state cannot be converted silently to planned Build.
 
@@ -82,15 +82,17 @@ Then advance that revision's entry to `settled — consulted {report path}, acce
 
 A finding classified `intent` is never a plan edit and never merely a note: append an `intent deviation` and stop for an explicit Brief amendment exactly as `## Handle deviations` requires, before any further execution. Use the pre-execution deviation form in `planned-build-contract.md` — `no task` in the header, the report path and accepted `C-IDs` as its observable evidence — so the finding stays traceable to the amendment it forces.
 
-If you accepted any plan finding, revise the plan for it and record that bump the way every bump is recorded: append an `R-` entry whose trigger is the consultation and the accepted `C-IDs`, increment the revision to `N+1`, and re-run the validation list for whatever you changed. That bump is not a replan, so leave the status where it was — a `Ready` plan stays `Ready` — and carry `none` in the entry's task fields that do not apply. Write no `## Consultation` entry for `N+1` — a revision produced by consuming a consultation is never consulted again, and only a replan reopens the offer.
+If you accepted any plan finding, revise the plan for it and record that bump the way every bump is recorded: append an `R-` entry whose trigger is the consultation and the accepted `C-IDs`, increment the revision to `N+1`, and re-run the validation list for whatever you changed. That bump is not a replan, so leave the status where it was — a `Ready` plan stays `Ready`, a `Needs Replan` plan stays `Needs Replan` until the replan that owns it finishes, per `### After a replan` — and carry `none` in the entry's task fields that do not apply. Write no `## Consultation` entry for `N+1` — a revision produced by consuming a consultation is never consulted again, and only a replan reopens the offer.
 
 When the human declines and tells you to execute now, advance the entry to `settled — declined` and continue.
 
-A consultation you never requested carries no weight: read it, dispose of its findings the same way, and record `settled — consulted ...` against the current revision.
+A consultation you never requested carries no weight of its own: read it and dispose of its findings the same way. Record `settled — consulted ...` against the current revision when that revision has no entry yet, or when its entry reads `settled — host cannot prompt` and a consultation has now actually happened. If it already reads any other `settled`, that settlement is final — dispose the findings, write no second entry, reword nothing, and act on any accepted finding exactly as above.
 
 ### After a replan
 
-A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer against that new revision, holding the plan at `Needs Replan` until the entry is `settled`. Return to `Executing` then.
+A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer against that new revision, holding the plan at `Needs Replan` until the entry is `settled`.
+
+Then, in this order: settle the entry, dispose the findings, and apply whatever you accepted — including the consultation `R-` bump, which leaves the status at `Needs Replan` like every consultation bump. Only after that does the replan itself finish: return the plan to `Executing`. An `intent` finding stops here instead, for the Brief amendment.
 
 ## Execute one task at a time
 
