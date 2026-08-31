@@ -16,6 +16,10 @@ The plan is implementation evidence, not product intent and not a partial releas
 
 `Draft -> Ready -> Executing -> Needs Replan -> Executing -> Complete`
 
+A plan whose pending frontier has not yet been executed may be consulted through `consult` in Plan mode: status `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
+
+A Review blocker on a `Complete` plan reopens it: the orchestrator appends the corrective work as a reopened task or a replan entry and returns the plan to `Executing`. A `Complete` plan is never recreated and its completed task history is never rewritten.
+
 Task lifecycle:
 
 `pending -> in-progress -> complete`
@@ -39,6 +43,9 @@ Draft | Ready | Executing | Needs Replan | Complete
 - Base revision: `{base_commit}`
 - Build strategy: planned
 
+## Consultation
+- Revision {N}: not offered — {reason} | offered, declined | consulted — `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs | none}
+
 ## Strategy
 Concise implementation architecture, ordering rationale, and integration approach.
 
@@ -59,12 +66,13 @@ Concise implementation architecture, ordering rationale, and integration approac
 - Required behavior: {what must become true}
 - Constraints and invariants: {task-local rules and explicit exclusions}
 - Implementation guidance: {WHAT/WHERE/WHY plus verification-relevant guidance; omit local HOW unless a specific mechanism is binding}
+- Tests: {behavior the worker must assert, and realistic failure/boundary worth covering} | none — {exemption reason}
 - Verification: {focused commands/checks}
-- Completion evidence: pending | {changed areas; checks/results; local decisions}
+- Completion evidence: pending | {changed areas; tests added/updated; checks/results; local decisions}
 - Deviation: none | D-NNN
 
 ## Final verification
-- Whole-feature integration/build/test checks.
+- Whole-feature integration/build/test checks, including the primary accepted path exercised at integration level.
 
 ## Deviations and replans
 None yet, or append entries below.
@@ -72,7 +80,11 @@ None yet, or append entries below.
 
 ## Task design
 
-A task is a bounded execution contract, not a checklist item. The orchestrator owns decomposition, dependency order, change-surface accuracy, cross-task contracts and verification design. A worker owns only local coding choices inside the task boundary.
+A task is a bounded execution contract, not a checklist item. The orchestrator owns decomposition, dependency order, change-surface accuracy, cross-task contracts and verification design. A worker owns only local coding choices inside the task boundary, including how it structures the tests the task requires.
+
+Test expectations follow [`verification-doctrine.md`](verification-doctrine.md). Behavior-changing tasks include their test paths in the change surface; the task is complete only when those tests exist and pass or a recorded exemption applies.
+
+Two tasks may name the same existing test file when each only adds its own cases, provided the plan names the distinct cases per task. That is the one accepted change-surface overlap. Two tasks must never own the same production path, and a new test file belongs to exactly one task.
 
 Do not encode new product intent in tasks. A behavior/scope/public-contract/security/data/migration/material-cost change requires a Feature Brief amendment.
 
@@ -136,10 +148,12 @@ Only the high-capability orchestrator may replan. Preserve completed task eviden
 - Added tasks: none | {IDs and reason}
 - Dependency changes: none | {changes and reason}
 - Plan revision: {old} -> {new}
-- Validation: coverage complete; dependencies acyclic; no intent expansion
+- Validation: coverage complete; dependencies acyclic; revised behavior-changing tasks carry a test expectation or recorded exemption, with their test paths in the change surface; no intent expansion
 ```
 
 Replan the blocked task and transitive pending frontier only, unless evidence proves a broader pending frontier invalid. Never rewrite completed task history to hide divergence.
+
+A replan that materially changes the pending frontier may be consulted once at the new revision, before returning the plan to `Executing`. Record the outcome in `## Consultation` against that revision.
 
 ## Completion
 

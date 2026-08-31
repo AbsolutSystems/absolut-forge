@@ -14,4 +14,4 @@ After approval, create `absolutforge/archives/{slug}/feature-record.md`. Preserv
 
 For autonomous Build, consolidate useful execution-map/checkpoint facts. For planned Build, read and remove the active `implementation-plan.md`, and consolidate plan revision count, completed task outcomes, material deviations/replans, routing/escalation summary without provider identity, and final integration verification.
 
-Remove active Brief, execution map or implementation plan, save and review artifacts as applicable. Stage only approved paths and create one local commit. Never push, create a PR, merge, deploy or rewrite history.
+Remove active Brief, execution map or implementation plan, consultation report, save and review artifacts as applicable. Consolidate a consultation only as durable knowledge worth keeping: whether a plan or Brief was consulted, and any accepted finding that changed the delivered feature. Stage only approved paths and create one local commit. Never push, create a PR, merge, deploy or rewrite history.

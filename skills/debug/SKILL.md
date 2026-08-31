@@ -9,4 +9,4 @@ Work from observable evidence: reproduce, isolate the violated invariant, test a
 
 For diagnosis-only, change no files. For an explicit fix with unambiguous expected behavior, make the smallest root-cause correction and focused regression verification. If the fix changes product behavior, public contract, security/data handling, migration, material cost or requires major architecture judgment, route to `discuss` instead.
 
-When invoked inside an active feature, respect its recorded Build strategy and append relevant failure/verification evidence without taking ownership from `build` or `build-planned`.
+When invoked inside an active feature, respect its recorded Build strategy and append relevant failure/verification evidence without taking ownership from `build` or `build-planned`. A fix there follows `../../references/verification-doctrine.md`: pin the defect with a regression test, or record the exemption and its reason in that stage's evidence. Never weaken, skip or delete an existing test to reach green.

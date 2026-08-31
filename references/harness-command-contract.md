@@ -8,7 +8,7 @@ Claude Code:
 
 ```text
 /absolutforge:discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
-/absolutforge:consult absolutforge/features/{slug}/feature-brief.md
+/absolutforge:consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
 /absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -22,7 +22,7 @@ Codex:
 
 ```text
 $absolutforge discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
-$absolutforge consult absolutforge/features/{slug}/feature-brief.md
+$absolutforge consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
 $absolutforge review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -36,7 +36,7 @@ opencode:
 
 ```text
 /absolutforge-discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
-/absolutforge-consult absolutforge/features/{slug}/feature-brief.md
+/absolutforge-consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /absolutforge-build absolutforge/features/{slug}/feature-brief.md
 /absolutforge-build-planned absolutforge/features/{slug}/feature-brief.md
 /absolutforge-review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -47,6 +47,10 @@ opencode:
 ```
 
 opencode exposes no per-skill implicit-invocation switch, so these command wrappers are the authoritative explicit entry points on that host. See [`opencode-tools.md`](opencode-tools.md).
+
+## Cross-session consultation
+
+`consult` is the one stage designed to run outside the session that requested it, so a second opinion can come from a different model family. The requesting context gives the exact command and stops; the consulting session writes `absolutforge/features/{slug}/consult-{slug}.md`; the human returns to the original session and says the report is ready. Nothing is handed back through conversation state, and no other stage may be split this way.
 
 ## Build strategy choice
 

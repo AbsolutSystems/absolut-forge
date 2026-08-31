@@ -5,6 +5,86 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-08-31
+
+### Added
+
+- `references/verification-doctrine.md`: canonical meaning of focused and final
+  verification for both Build strategies, and for a `debug` fix made inside a
+  feature under Build. Automated tests for changed behavior are the default per
+  outcome or task, written by default after that stage's implementation and in
+  every case before it is marked complete; omission requires a recorded
+  exemption with reason. Defines the test value bar, explicitly excludes
+  speculative edge cases, coverage targets and test theater, forbids weakening
+  existing assertions to reach green, and requires the feature's primary
+  accepted path to be exercised at integration level at finish.
+- Consultation report artifact `absolutforge/features/{slug}/consult-{slug}.md`,
+  with a canonical schema in `references/artifact-contracts.md`. `consult` is
+  the one stage meant to run in a separate session and preferably another model
+  family: it appends a consultation block with `C-{NNN}` findings at
+  `Disposition: open`, and the requesting context reads the report back and
+  disposes each finding. The report is transient evidence, removed at Ship, and
+  is never an input to `review`.
+- `consult` gains a second subject: an `implementation-plan.md` at `Ready`, or
+  at `Needs Replan` once the replan entry exists and the revision was
+  incremented. Plan mode critiques the pending frontier — coverage,
+  decomposition, dependencies, change-surface overlap, capability routing,
+  verification and planner/executor-boundary violations — against the accepted
+  Brief, and writes nothing but its own report. A finding that would change
+  accepted behavior or scope is classified `intent` and routed to a Brief
+  amendment. `execution-map.md` is not a valid subject.
+- `build-planned` offers plan consultation after marking the plan `Ready`, and
+  again once after a replan that materially changes the pending frontier, but
+  only when the plan carries material risk: several tasks, planned delegation,
+  cross-cutting or shared-contract tasks, or coverage leaning on final
+  verification. The offer is a hard stop that prints the exact command for the
+  other session and ends the turn with the plan persisted. The offer and its
+  outcome are recorded in a new plan `## Consultation` section per revision, so
+  a resuming context never re-asks a settled question. Hosts that cannot prompt
+  execute and record that fact instead of blocking.
+
+### Changed
+
+- `build` and `build-planned` now make behavior tests part of stage completion
+  instead of leaving "focused verification" open to interpretation. The
+  autonomous outcome loop is `implement -> test the changed behavior -> focused
+  verification -> diagnosis -> bounded fix`. Planned tasks carry an explicit
+  `Tests` expectation, own their test paths in the change surface, and are
+  validated by the orchestrator for real assertions rather than worker claims.
+  Two tasks may share an existing test file when each adds named distinct cases;
+  no two tasks own the same production path or the same new test file.
+- `review` judges test value against the doctrine: accepted behavior with no
+  test and no recorded exemption is a finding, as is a test whose assertions
+  bind nothing the change produces. That is judged by reading the test against
+  the diff — never by reverting production code — and the worktree stays clean.
+- `build-planned` resume is now exhaustive over plan status, closing the gap
+  that left a Review blocker with nowhere to go: `Draft` finishes compilation,
+  `Ready` executes or revises, `Executing` selects the next task, `Needs Replan`
+  replans, and `Complete` reopens through a task or replan entry and returns to
+  `Executing`. An existing plan is never recreated; only a `Building` Brief with
+  no plan file at all returns to plan compilation.
+- Replan validation now also checks the test expectations of revised tasks.
+- `consult` reads `references/artifact-contracts.md` explicitly instead of
+  referring to schemas by name, and fixes its finding ID scheme to `C-{NNN}`
+  with class, evidence anchor, impact and proposed change. Acceptance is per ID,
+  not per batch, and a finding that cannot be applied without rewriting the
+  immutable Ready baseline is reported for a human amendment-or-`Draft` decision
+  instead of applied. Additional context paths may follow the subject path.
+- Schemas: `Tests` added to the planned task contract and the autonomous
+  execution map section; `Tests added/updated` and final-entry `Whole-feature
+  path exercised` added to Build evidence; `## Consultation` added to the plan.
+- `debug` is bound by the verification doctrine when it fixes inside an active
+  feature: pin the defect with a regression test or record the exemption in that
+  stage's evidence, and never weaken an existing test to reach green.
+  Diagnosis-only runs and read-only `tech-debt` are unaffected.
+- `references/harness-command-contract.md` documents the cross-session
+  consultation handoff and states the `consult` argument form as
+  `<brief OR plan> [extra-context-path ...]` instead of a `|` alternation that
+  read like a shell pipe.
+- `ship` removes the consultation report with the other transient artifacts and
+  consolidates only what changed the delivered feature.
+- Plugin manifests bumped to `0.3.0`.
+
 ## [0.2.0] - 2026-08-30
 
 ### Added

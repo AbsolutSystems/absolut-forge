@@ -19,6 +19,10 @@ Request exactly one fresh generic read-only reviewer when the harness can provid
 
 Check intent/scope fidelity, correctness, concrete edge cases, security/data integrity, test value, regressions/compatibility, unintended scope, missing critical docs and diff garbage. Findings are only `BLOCKING` or `FOLLOW-UP`, with stable IDs, evidence, impact and smallest sensible correction.
 
+Judge tests against `../../references/verification-doctrine.md`. Accepted behavior shipped with neither an automated test nor a recorded exemption is a finding, as is test theater, a test whose assertions bind nothing the change actually produces, or an existing assertion weakened or skipped without an accepted Brief basis. Judge that binding by reading the test against the diff; never revert production code to prove it, and leave the worktree clean. Do not raise findings demanding speculative edge cases or coverage targets the doctrine excludes.
+
+A `consult-{slug}.md` report is neither intent nor absolution. An accepted consult finding does not license a Brief deviation, and a rejected one is not a Review finding by itself.
+
 When no BLOCKING finding remains, record exact reviewed HEAD/range, set Review `Complete`, decision `Ready for ship`, and hand off to `ship`.
 
 When blockers remain, return Brief status to `Building` and hand off to the strategy recorded in Build start evidence:

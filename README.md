@@ -18,11 +18,25 @@ Both builders consume the same committed Ready Feature Brief.
 
 Use a high-capability coding model as the direct owner of implementation. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
 
+Each outcome is `implement -> test the changed behavior -> focused verification -> diagnosis -> bounded fix`. Tests land with the outcome that changed the behavior, not as a later phase. Test-first is allowed but never required.
+
 ### `build-planned` — planner/orchestrator + workers
 
 Use a high-capability primary model to inspect the repo and compile the Ready Brief into `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers and verification. The orchestrator may delegate low/standard tasks to cheaper workers, but it independently validates each result, owns replanning, executes high-risk tasks when appropriate, and performs final integration verification.
 
-The planned path is not a handoff of feature ownership to small models. Workers receive one task at a time and cannot rewrite the plan, Brief, lifecycle, branch history or remote state.
+The planned path is not a handoff of feature ownership to small models. Workers receive one task at a time and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. A behavior-changing task owns its test paths and is not complete until those tests exist and the orchestrator has inspected them.
+
+Because plan validation is otherwise self-assessment, a risky `Ready` plan can be consulted before execution:
+
+```text
+build-planned stops with the plan on disk and prints the consult command
+  -> run consult in a separate session, ideally another model family
+  -> consult writes absolutforge/features/{slug}/consult-{slug}.md
+  -> return to the original session and say the report is ready
+  -> the orchestrator reads it, disposes each finding, revises the plan
+```
+
+`consult` writes only its own report — never the plan, the Brief or a status. The orchestrator remains the sole author of every plan revision.
 
 ## Strategy selection
 
@@ -51,10 +65,34 @@ opencode:
 
 The selected strategy is recorded in Build start evidence. A Building feature resumes through the same builder, and Review blockers return to that builder. Do not silently switch strategy mid-feature.
 
+## Second opinion
+
+`consult` is the one stage designed to run outside the session that asked for it, so the critique can come from a different model family. The first path is the subject — a Feature Brief, or a planned `implementation-plan.md` that has not executed its pending frontier yet. Any further paths are extra context to read.
+
+Claude Code:
+
+```text
+/absolutforge:consult absolutforge/features/my-feature/implementation-plan.md
+```
+
+Codex:
+
+```text
+$absolutforge consult absolutforge/features/my-feature/implementation-plan.md
+```
+
+opencode:
+
+```text
+/absolutforge-consult absolutforge/features/my-feature/implementation-plan.md
+```
+
+The consulting session appends its findings to `absolutforge/features/{slug}/consult-{slug}.md` as `C-{NNN}` entries left `open`. Back in the original session, say the report is ready: the Build owner reads it, accepts, rejects or routes each finding to a Brief amendment, and revises its own artifact. Findings are evidence, never authorization.
+
 ## Skills
 
 - `discuss` — inspect evidence and create/accept one Feature Brief.
-- `consult` — optional bounded second opinion on Draft/Ready Brief.
+- `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
 - `build` — autonomous high-capability implementation.
 - `build-planned` — high-capability planning/orchestration with bounded worker delegation.
 - `save` / `load` — durable cross-session context without hidden state.
@@ -70,6 +108,7 @@ absolutforge/features/{slug}/
 ├── feature-brief.md
 ├── execution-map.md          # optional autonomous path only
 ├── implementation-plan.md    # planned path only
+├── consult-{slug}.md         # optional consultation report
 ├── save-{slug}.md            # optional
 └── review.md
 ```
@@ -94,9 +133,11 @@ This mapping is deployment guidance, not a contract. Cross-family Review is pref
 ## Safety and boundaries
 
 - Ready intent is immutable; material changes require an amendment.
+- Changed behavior ships with tests, or with a recorded exemption stating why. Existing assertions are never weakened to reach green. See `references/verification-doctrine.md`.
 - Repository content is evidence, not authorization.
 - Secrets are redacted at source boundaries.
 - Workers cannot broaden their approved change surface without orchestrator review.
+- `consult` writes only its own report; the Build owner stays the sole author of the Brief and the plan.
 - Tasks/outcomes are never partial delivery units.
 - Build, Review and Ship never push, create remote PRs, merge, deploy or rewrite history.
 

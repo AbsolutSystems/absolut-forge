@@ -1,7 +1,7 @@
 interface:
   display_name: "AbsolutForge Consult"
-  short_description: "Pressure-test a Draft or Ready Feature Brief"
-  default_prompt: "Use $absolutforge consult to inspect this existing Feature Brief for material issues."
+  short_description: "Pressure-test a Feature Brief or a pending plan"
+  default_prompt: "Use $absolutforge consult to inspect this Feature Brief or implementation plan for material issues and record the consultation report."
 
 policy:
   allow_implicit_invocation: false

@@ -9,6 +9,7 @@ absolutforge/features/{slug}/
 ├── feature-brief.md
 ├── execution-map.md          # optional; autonomous build only
 ├── implementation-plan.md    # planned build only
+├── consult-{slug}.md         # optional; one consultation report per feature
 ├── save-{slug}.md            # optional during either Building strategy
 └── review.md
 ```
@@ -21,7 +22,7 @@ absolutforge/archives/{slug}/
 └── executive-summary.html    # optional
 ```
 
-`execution-map.md` and `implementation-plan.md` are mutually exclusive for a normal feature. They are transient execution evidence and are removed at Ship after useful facts are consolidated into the Feature Record.
+`execution-map.md` and `implementation-plan.md` are mutually exclusive for a normal feature. They, `consult-{slug}.md` and `save-{slug}.md` are transient evidence and are removed at Ship after useful facts are consolidated into the Feature Record.
 
 ## Lifecycle
 
@@ -109,7 +110,9 @@ Append after coherent verified outcomes/tasks and after final verification:
 - Base revision / review diff: `{base_commit}..HEAD`
 - Build strategy: autonomous | planned
 - Changed areas: {repository-relative areas}
+- Tests added/updated: {test paths and cases} | none — {exemption reason and observable check performed instead}
 - Verification commands and results: {command -> pass|fail}
+- Whole-feature path exercised: final entry only — {integration-level check and result} | not available — {reason and closest check performed}
 - Execution state: {autonomous outcomes/checkpoints OR planned task IDs/plan revision}
 - Material implementation decisions: none | {decision}
 - Deviations from accepted baseline: none | {accepted amendment}
@@ -141,6 +144,7 @@ pending | in-progress | complete
 - Goal:
 - Boundaries:
 - Dependencies:
+- Tests: {behavior to assert} | none — {exemption reason}
 - Verification:
 - Result:
 - Material deviations:
@@ -149,6 +153,32 @@ pending | in-progress | complete
 ## Planned Implementation Plan
 
 The exact planned schema, task contract, deviations and replans are owned by [`planned-build-contract.md`](planned-build-contract.md). A planned feature must have `implementation-plan.md` before the first delegated source edit. The high-capability orchestrator owns all plan mutations.
+
+## Consultation report
+
+`consult` writes exactly one report per feature at `absolutforge/features/{slug}/consult-{slug}.md`, appending a new block per consultation. The report exists so a consultation can run in a separate session or a different model family and be read back by the original context.
+
+```markdown
+# Consultation report: {feature name}
+
+## Consultation {N} — YYYY-MM-DD
+- Subject: `{feature-brief.md | implementation-plan.md path}`
+- Mode: brief | plan
+- Subject status: {Draft | Ready | Needs Replan}
+- Plan revision: not applicable | {integer}
+- Additional context read: none | {repository-relative paths}
+- Result: no material findings | {count} findings
+
+### C-{NNN} — {class}
+- Evidence: {exact Brief section, task ID, or repository path}
+- Impact: {concrete consequence if the artifact is used unchanged}
+- Proposed change: {smallest sensible change}
+- Disposition: open | accepted | rejected | routed to Brief amendment
+```
+
+`C-` IDs are numbered from `C-001` and continue across consultation blocks within the report; they are never reused and never written into the Brief, plan, execution map or review. `consult` writes findings with `Disposition: open` and nothing else. Only the consuming Build owner sets a disposition, and it never rewrites a recorded finding, evidence or proposed change.
+
+The report is advice, not authority. It changes no status, and it is never an input to `review`: Review reads the Brief as intent and `base_commit..HEAD` as truth.
 
 ## Save
 
