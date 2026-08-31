@@ -1,7 +1,6 @@
 ---
 name: discuss
 description: "Explicitly turn a product idea or existing Draft into one evidence-backed accepted Feature Brief before implementation. Use only when the user invokes AbsolutForge discuss."
-disable-model-invocation: true
 ---
 
 # Discuss

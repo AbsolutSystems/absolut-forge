@@ -1,8 +1,10 @@
 {
   "name": "absolutforge",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Intent-driven development workflow with autonomous and planned/delegated build strategies.",
-  "author": {"name": "Absolut Systems"},
+  "author": {
+    "name": "Absolut Systems"
+  },
   "skills": "./skills/",
   "interface": {
     "displayName": "AbsolutForge",
@@ -10,8 +12,13 @@
     "longDescription": "Discuss intent once, then choose autonomous build or strong-planner/delegated build, followed by one independent review and local ship closeout.",
     "developerName": "Absolut Systems",
     "category": "Coding",
-    "capabilities": ["Interactive", "Write"],
-    "defaultPrompt": ["Use AbsolutForge to discuss this change, then choose the appropriate build strategy."] ,
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use AbsolutForge to discuss this change, then choose the appropriate build strategy."
+    ],
     "brandColor": "#C2410C"
   }
 }

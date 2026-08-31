@@ -2,6 +2,3 @@ interface:
   display_name: "AbsolutForge Save"
   short_description: "Persist concise Build resume context"
   default_prompt: "Use $absolutforge save to capture the current Building feature state before I switch branches."
-
-policy:
-  allow_implicit_invocation: false

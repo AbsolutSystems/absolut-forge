@@ -1,7 +1,6 @@
 ---
 name: consult
 description: "Give an optional explicit second opinion on an existing Feature Brief or on a planned implementation plan, recorded as a consultation report the requesting context reads back. Use only when the user invokes AbsolutForge consult with a canonical Brief or implementation-plan path."
-disable-model-invocation: true
 ---
 
 # Consult

@@ -1,7 +1,6 @@
 ---
 name: build-planned
 description: "Explicitly implement an accepted Ready Feature Brief using a high-capability planner/orchestrator that creates a durable implementation task graph, delegates bounded low/standard tasks when useful, validates worker results, replans on evidence, and performs whole-feature integration verification. Use only when the user invokes AbsolutForge build-planned."
-disable-model-invocation: true
 ---
 
 # Build Planned

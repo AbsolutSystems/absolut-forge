@@ -1,7 +1,6 @@
 ---
 name: ship
 description: "Explicitly close a review-complete AbsolutForge feature into durable documentation and one local commit, for either autonomous or planned Build strategy."
-disable-model-invocation: true
 ---
 
 # Ship

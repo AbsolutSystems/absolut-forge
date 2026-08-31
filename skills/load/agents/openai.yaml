@@ -2,6 +2,3 @@ interface:
   display_name: "AbsolutForge Load"
   short_description: "Validate saved context and resume the Build strategy"
   default_prompt: "Use $absolutforge load to restore this saved AbsolutForge Build context."
-
-policy:
-  allow_implicit_invocation: false

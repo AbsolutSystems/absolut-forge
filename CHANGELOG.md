@@ -5,6 +5,22 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-08-31
+
+### Changed
+
+- All ten AbsolutForge skills are now available in the Codex session context.
+  The nine explicit workflow skills no longer set
+  `policy.allow_implicit_invocation: false`, which prevented the model from
+  resolving a typed invocation and caused it to report that only `debug` was
+  available. Their descriptions still require explicit user invocation.
+- Removed `disable-model-invocation: true` from the shared skill frontmatter.
+  Codex does not support that Claude-specific field and its bundled plugin and
+  skill validators reject it. Claude Code now relies on the same
+  description-level explicit-invocation guard as other hosts without a hard
+  per-skill switch.
+- Plugin manifests bumped to `0.3.1`.
+
 ## [0.3.0] - 2026-08-31
 
 ### Added

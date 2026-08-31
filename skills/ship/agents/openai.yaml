@@ -2,6 +2,3 @@ interface:
   display_name: "AbsolutForge Ship"
   short_description: "Close a reviewed feature into durable local records"
   default_prompt: "Use $absolutforge ship with the final Brief and Review paths for this feature."
-
-policy:
-  allow_implicit_invocation: false

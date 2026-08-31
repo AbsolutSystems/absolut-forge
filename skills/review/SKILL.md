@@ -1,7 +1,6 @@
 ---
 name: review
 description: "Explicitly run one independent evidence-based whole-feature review after either autonomous or planned Build. Use only when the user invokes AbsolutForge review with matching Brief and review paths."
-disable-model-invocation: true
 ---
 
 # Review

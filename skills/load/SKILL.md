@@ -1,7 +1,6 @@
 ---
 name: load
 description: "Explicitly validate a saved Build context against the current repository and hand the feature back to the same selected Build strategy."
-disable-model-invocation: true
 ---
 
 # Load

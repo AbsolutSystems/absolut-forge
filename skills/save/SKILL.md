@@ -1,7 +1,6 @@
 ---
 name: save
 description: "Explicitly persist concise, secret-redacted resume context for an active Building feature while preserving its selected autonomous or planned Build strategy."
-disable-model-invocation: true
 ---
 
 # Save

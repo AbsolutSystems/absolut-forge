@@ -1,7 +1,6 @@
 ---
 name: tech-debt
 description: "Explicitly perform a static read-only evidence-backed technical-debt audit of a repository or bounded repository-relative path and route findings to discuss, debug, or watch."
-disable-model-invocation: true
 ---
 
 # Tech Debt

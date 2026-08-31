@@ -2,6 +2,3 @@ interface:
   display_name: "AbsolutForge Review"
   short_description: "Run one independent whole-feature review"
   default_prompt: "Use $absolutforge review to independently assess this completed feature."
-
-policy:
-  allow_implicit_invocation: false

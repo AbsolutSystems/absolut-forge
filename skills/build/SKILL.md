@@ -1,7 +1,6 @@
 ---
 name: build
 description: "Explicitly implement an accepted Ready Feature Brief autonomously with a high-capability primary coding model, focused verification, optional outcome map, and whole-feature handoff to Review. Use only when the user invokes AbsolutForge build."
-disable-model-invocation: true
 ---
 
 # Build — Autonomous Strategy
