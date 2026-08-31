@@ -47,6 +47,10 @@ Merge accepted findings into a `Draft` in place, in the canonical sections they 
 
 Accept only plan status `Ready`, or `Needs Replan` whose latest replan entry is already appended and whose revision was incremented. Refuse `Draft` as premature, `Executing` as a moving target, and a `Needs Replan` plan with no matching `R-` entry yet, since the decomposition under critique does not exist yet. `Complete` belongs to `review`.
 
+Also refuse a revision that was itself produced by consuming a consultation: its latest `R-` entry names a consultation as trigger and its `Plan revision` target equals `## Revision`. That revision is already the answer to a critique, and only a replan reopens the question.
+
+Do not touch the plan's `## Consultation` section. The orchestrator opens and settles that entry; you only write the report.
+
 Plan mode never writes outside the consultation report: no plan edit, no Brief edit, no status change, under any acceptance offered in the session. The high-capability orchestrator owns every plan mutation and every replan; consult supplies evidence for that decision and nothing more. Read the accepted Brief as intent authority, since a plan is only correct relative to it.
 
 Critique the pending frontier: tasks that are `pending` or `blocked`, coverage, dependencies and final verification. Completed task history is immutable evidence — read it for context, and raise it only when a completed task's result invalidates a pending task or leaves an accepted outcome uncovered.

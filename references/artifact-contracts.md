@@ -112,7 +112,7 @@ Append after coherent verified outcomes/tasks and after final verification:
 - Changed areas: {repository-relative areas}
 - Tests added/updated: {test paths and cases} | none — {exemption reason and observable check performed instead}
 - Verification commands and results: {command -> pass|fail}
-- Whole-feature path exercised: final entry only — {integration-level check and result} | not available — {reason and closest check performed}
+- Whole-feature path exercised: {integration-level check and result} | not available — {reason and closest whole-feature check performed}  (final entry only)
 - Execution state: {autonomous outcomes/checkpoints OR planned task IDs/plan revision}
 - Material implementation decisions: none | {decision}
 - Deviations from accepted baseline: none | {accepted amendment}
@@ -121,6 +121,8 @@ Append after coherent verified outcomes/tasks and after final verification:
 - Documentation maintenance: none | {result}
 - Durable memory lesson: none | {candidate}
 ```
+
+The `(final entry only)` marker is not part of the recorded value: intermediate entries omit that line entirely and the final entry writes the field without the marker. Every other field appears in every entry.
 
 ## Autonomous Execution Map
 

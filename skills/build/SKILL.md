@@ -34,12 +34,14 @@ implement -> test the changed behavior -> focused verification -> diagnosis -> b
 
 Focused verification means executable evidence, not inspection. Per `verification-doctrine.md`, an outcome that changes observable behavior lands with automated tests written after its implementation, matching the repository's existing test framework and layout, covering the accepted behavior and the realistic failure or boundary the change introduces — not speculative edge cases. Omit tests only under a recorded exemption.
 
+When you keep an `execution-map.md`, record each section's `Tests` expectation or its exemption there, so the autonomous path leaves the same testable trail a planned task does.
+
 Mark outcome complete only after those tests and the focused checks pass. Before a second speculative repair for the same observable failure, verify causal mapping, the violated invariant, and scope boundary. Escalate rather than broadening scope blindly. Never weaken or skip an existing test to reach green.
 
 A strictly trivial adjacent defect inside the touched surface may be fixed and reported; non-trivial adjacent work remains follow-up unless explicitly approved.
 
 ## Finish
 
-After all accepted outcomes, run relevant broader checks once and exercise the feature's primary accepted path at integration level as `verification-doctrine.md` requires, inspect the complete `base_commit..HEAD` diff against the Brief, append final Build Evidence naming tests added or updated and any recorded exemption, set the Brief to `In Review`, and leave all feature source/artifacts committed locally.
+After all accepted outcomes, run relevant broader checks once and exercise the feature's primary accepted path at integration level as `verification-doctrine.md` requires, inspect the complete `base_commit..HEAD` diff against the Brief, then append final Build Evidence to the evidence schema in `../../references/artifact-contracts.md`, naming `Tests added/updated` with any recorded exemption and `Whole-feature path exercised` with its result or the recorded reason it was not available. Set the Brief to `In Review` and leave all feature source/artifacts committed locally.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

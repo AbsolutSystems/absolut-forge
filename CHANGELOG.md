@@ -34,18 +34,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   verification and planner/executor-boundary violations — against the accepted
   Brief, and writes nothing but its own report. A finding that would change
   accepted behavior or scope is classified `intent` and routed to a Brief
-  amendment. `execution-map.md` is not a valid subject.
+  amendment. `execution-map.md` is not a valid subject, and neither is a
+  revision that was itself produced by consuming a consultation.
 - `build-planned` offers plan consultation after marking the plan `Ready`, and
   again once after a replan that materially changes the pending frontier, but
   only when the plan carries material risk: several tasks, planned delegation,
   cross-cutting or shared-contract tasks, or coverage leaning on final
   verification. The offer is a hard stop that prints the exact command for the
   other session and ends the turn with the plan persisted. A new plan
-  `## Consultation` section carries one append-only entry per revision, one of
-  `not offered`, `offered — awaiting answer`, `offered, declined` or
-  `consulted`. A resuming context re-states an offer still `awaiting answer` and
-  holds the plan, and never re-asks a settled question. Hosts that cannot prompt
-  execute and record that fact instead of blocking.
+  `## Consultation` section tracks only whether a question is open, in two
+  states: `awaiting` holds the plan at its current status, `settled` releases it
+  whatever the answer was, and no entry means nothing was ever asked. It carries
+  at most one entry per revision and is append-only; the sole permitted rewrite
+  is advancing that revision's `awaiting` to `settled`. A resuming context
+  re-states an open offer and keeps holding, and never re-asks a settled
+  question. A host that cannot prompt records `settled — host cannot prompt` and
+  executes, whether it is the offering host or a later one resuming an open
+  entry, so an unanswered question cannot deadlock a plan.
+- `docs/adr/2026-08-31-verification-doctrine-and-plan-consultation.md` records
+  both decisions and the rejected alternatives, including richer consultation
+  state and letting `consult` edit a plan.
 
 ### Changed
 
@@ -70,7 +78,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replans, and `Complete` reopens through a task or replan entry and returns to
   `Executing`. An existing plan is never recreated; only a `Building` Brief with
   no plan file at all returns to plan compilation.
-- Replan validation now also checks the test expectations of revised tasks.
+- Replan validation now also checks the test expectations of revised tasks, and
+  every plan revision increment is recorded as an `R-` entry whatever caused it:
+  a deviation, or accepted consultation findings named by `C-ID` in its trigger.
+  A plan revision can no longer move without a record of what changed. A
+  consultation-driven bump is not a replan: the plan keeps the status it had, a
+  `Ready` plan never passes through `Needs Replan`, and inapplicable task fields
+  of the entry carry `none`.
+- A consultation finding classified `intent` is now a hard stop rather than a
+  note: `build-planned` settles the consultation entry, appends an intent
+  deviation in the pre-execution form and waits for an explicit Brief amendment
+  before further execution.
+- `build` and `build-planned` name the Build evidence fields they must fill at
+  finish — `Tests added/updated` and `Whole-feature path exercised` — instead of
+  leaving `review` to police a field neither builder was told to write.
+  Autonomous Build records the same `Tests` expectation per execution-map
+  section when it keeps a map.
 - `consult` reads `references/artifact-contracts.md` explicitly instead of
   referring to schemas by name, and fixes its finding ID scheme to `C-{NNN}`
   with class, evidence anchor, impact and proposed change. Acceptance is per ID,
@@ -78,8 +101,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   immutable Ready baseline is reported for a human amendment-or-`Draft` decision
   instead of applied. Additional context paths may follow the subject path.
 - Schemas: `Tests` added to the planned task contract and the autonomous
-  execution map section; `Tests added/updated` and final-entry `Whole-feature
-  path exercised` added to Build evidence; `## Consultation` added to the plan.
+  execution map section; `Tests added/updated` and `Whole-feature path
+  exercised` added to Build evidence, the latter carrying a `(final entry only)`
+  marker beside the field rather than inside its own value alternation;
+  `## Consultation` added to the plan; the `D-` deviation entry gained a
+  pre-execution form — `no task` in the header, a consultation report and its
+  `C-IDs` as observable evidence — so an intent finding raised before any task
+  ran stays traceable to the amendment it forces.
+- `save` records that the plan carries an open `awaiting` consultation entry and
+  points at it rather than copying the command it already holds, so a resumed
+  session does not lose the question and cannot drift from the plan.
+- `docs/product-vision.md` states the shared verification bar and the optional
+  second-opinion stage.
 - `debug` is bound by the verification doctrine when it fixes inside an active
   feature: pin the defect with a regression test or record the exemption in that
   stage's evidence, and never weaken an existing test to reach green.

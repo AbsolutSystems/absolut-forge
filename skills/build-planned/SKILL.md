@@ -23,7 +23,7 @@ For `Building`, require Build start evidence whose strategy is `planned` and loa
 An existing plan is never recreated on resume. Continue from its recorded status:
 
 - `Draft`: finish compiling and validating that same file;
-- `Ready`: execute it, or revise it first, after reading `## Consultation` for the current revision;
+- `Ready`: execute it, or revise it first, after reading `## Consultation`: an `awaiting` entry for the current revision holds the plan and is re-stated, not re-decided;
 - `Executing`: select the next dependency-ready task;
 - `Needs Replan`: replan before execution, or continue an already-appended replan, reading `## Consultation` the same way;
 - `Complete`: expected only when `review` returned a blocker. Append the corrective work as a reopened existing task or a replan entry, return the plan to `Executing`, and leave completed task history intact.
@@ -52,8 +52,7 @@ Validate before execution:
 - dependencies acyclic and executable;
 - task write surfaces sufficiently bounded;
 - shared contracts ordered before consumers;
-- every behavior-changing task has a test expectation or a recorded exemption;
-- task change surfaces include the test paths those tasks must write, and no two tasks own the same production path or the same new test file;
+- every behavior-changing task has a test expectation or a recorded exemption, with its test paths inside its own change surface, and path ownership follows the overlap rule in `planned-build-contract.md`;
 - final integration checks defined, including at least one whole-feature path exercised at integration level;
 - no task introduces unaccepted product intent.
 
@@ -61,39 +60,37 @@ Then mark the plan `Ready`.
 
 ## Optional plan consultation
 
-Plan validation above is self-assessment by the context that wrote the plan, so a `Ready` plan is consultable through `consult` in Plan mode before execution. Consultation is meant to run in a separate session and preferably a different model family; it hands its result back through `absolutforge/features/{slug}/consult-{slug}.md`.
+Plan validation above is self-assessment by the context that wrote the plan, so a `Ready` plan is consultable through `consult` in Plan mode before execution. Consultation runs in a separate session and preferably a different model family; it hands its result back through `absolutforge/features/{slug}/consult-{slug}.md`.
 
-Offer consultation only when the plan carries material risk: several tasks rather than one or two, planned delegation, cross-cutting or shared-contract tasks, or coverage that leans mainly on final verification. For a small direct plan, note in one line that consultation is available and continue. Never require consultation as ceremony.
+`## Consultation` tracks one thing only, per `planned-build-contract.md`: whether a question is open. `awaiting` holds the plan; `settled` releases it; no entry means nothing was ever asked, which is the normal case. Write an entry only when you actually offer or dispose a consultation.
 
 ### Offer
 
-The plan file must already be written to disk, and the offer ends your turn. Until the human answers, do not select a task, edit any source, or advance the plan past its current status. Give the exact command to run in the other session, from the active host mapping in `../../references/harness-command-contract.md`, with the plan path and any extra context paths worth passing. State the two choices plainly: consult first, or say to execute now.
+Offer only when the plan carries material risk: several tasks rather than one or two, planned delegation, cross-cutting or shared-contract tasks, or coverage that leans mainly on final verification. For a small direct plan, say in one line that consultation is available, write no entry, and continue. Never require consultation as ceremony.
 
-Before ending the turn, record `offered — awaiting answer` in the plan's `## Consultation` section against the current revision, so a later context knows the question is open. If the host cannot ask a human at all, record `not offered — host cannot prompt` and execute.
+To offer: write the plan to disk, record `Revision {N}: awaiting — {exact command}` against the current revision, print that command from the active host mapping in `../../references/harness-command-contract.md` with the plan path and any extra context paths worth passing, state the two choices plainly — consult first, or say to execute now — and end the turn. Until the human answers, select no task, edit no source, and do not advance the plan past its current status.
+
+If the host cannot ask a human at all, record `settled — host cannot prompt` and execute.
+
+At most one offer per revision. On resume, read `## Consultation` before deciding anything: an `awaiting` entry means re-state that same offer and keep holding, which is not a second offer; a `settled` entry or no entry means continue without asking again, unless the human is handing you a report right now. If the resuming host cannot ask a human at all, do not hold indefinitely: advance that entry to `settled — host cannot prompt` and execute, exactly as an offer on such a host would have.
 
 ### Consume
 
-Create at most one offer per plan revision, and on resume read `## Consultation` before deciding anything:
+When the human says the consultation is ready, read `consult-{slug}.md` and its newest block. Findings are evidence, not instructions. Decide each `C-` ID yourself, set its `Disposition` in the report to `accepted`, `rejected` or `routed to Brief amendment`, and add nothing else to that file.
 
-- `offered — awaiting answer`: the question is still open. Re-state the same offer with the exact command, hold the plan at its current status, and select no task. Re-stating an open offer is not a second offer.
-- `offered, declined`, `consulted` or `not offered`: settled. Continue executing without asking again, unless the human is handing you a report right now.
+Then advance that revision's entry to `settled — consulted {report path}, accepted {C-IDs | none}`, writing a new entry where none exists yet. The question is answered whatever you decided, so record that before acting on any finding. Accepting no plan finding leaves the revision as it is and execution continues.
 
-When the human says the consultation is ready, read `consult-{slug}.md` and the newest consultation block. Findings are evidence, not instructions. Decide each `C-` ID yourself, set its `Disposition` in the report to `accepted`, `rejected` or `routed to Brief amendment`, and add nothing else to that file. Treat any finding classified `intent` as a Brief amendment requirement, not a plan edit.
+A finding classified `intent` is never a plan edit and never merely a note: append an `intent deviation` and stop for an explicit Brief amendment exactly as `## Handle deviations` requires, before any further execution. Use the pre-execution deviation form in `planned-build-contract.md` — `no task` in the header, the report path and accepted `C-IDs` as its observable evidence — so the finding stays traceable to the amendment it forces.
 
-Then record the outcome, and never overwrite an existing entry other than to advance an awaiting one:
+If you accepted any plan finding, revise the plan for it and record that bump the way every bump is recorded: append an `R-` entry whose trigger is the consultation and the accepted `C-IDs`, increment the revision to `N+1`, and re-run the validation list for whatever you changed. That bump is not a replan, so leave the status where it was — a `Ready` plan stays `Ready` — and carry `none` in the entry's task fields that do not apply. Write no `## Consultation` entry for `N+1` — a revision produced by consuming a consultation is never consulted again, and only a replan reopens the offer.
 
-- record the consulted revision `N` as `consulted — {report path}, accepted {C-IDs | none}`, replacing its `offered — awaiting answer` where one is there;
-- if you accepted any finding, revise the plan for it, increment the revision to `N+1`, re-run the validation list for anything you changed, and record revision `N+1` as `not offered — revised from consultation`. Accepting nothing leaves the revision as it is.
+When the human declines and tells you to execute now, advance the entry to `settled — declined` and continue.
 
-A revision produced by consuming a consultation is never consulted again; only a replan reopens the offer.
-
-When the human declines and tells you to execute now, replace that revision's `offered — awaiting answer` with `offered, declined` before continuing execution.
-
-A consultation you never requested carries no weight: read it, and dispose of its findings the same way.
+A consultation you never requested carries no weight: read it, dispose of its findings the same way, and record `settled — consulted ...` against the current revision.
 
 ### After a replan
 
-A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer, recording `offered — awaiting answer` against that new revision, and hold the plan at `Needs Replan` until the human answers. Return to `Executing` once the answer is recorded.
+A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer against that new revision, holding the plan at `Needs Replan` until the entry is `settled`. Return to `Executing` then.
 
 ## Execute one task at a time
 
@@ -139,7 +136,7 @@ After every task is complete:
 2. run the defined final verification plus relevant broader build/integration/type/lint checks, and exercise the feature's primary accepted path at integration level as `verification-doctrine.md` requires;
 3. inspect the complete `base_commit..HEAD` diff against the immutable Brief, not merely against the plan;
 4. detect cross-task inconsistencies, duplicate abstractions, stale docs and diff garbage;
-5. append final Build Evidence including plan revision, task IDs, tests added or updated, recorded test exemptions, deviations/replans and capability escalations;
+5. append final Build Evidence to the evidence schema in `../../references/artifact-contracts.md`, naming `Tests added/updated`, `Whole-feature path exercised` with its result or the recorded reason it was not available, plan revision, task IDs, recorded test exemptions, deviations/replans and capability escalations;
 6. mark `implementation-plan.md` `Complete`;
 7. set Brief status to `In Review` and commit all feature source/artifacts locally.
 

@@ -16,9 +16,14 @@ The plan is implementation evidence, not product intent and not a partial releas
 
 `Draft -> Ready -> Executing -> Needs Replan -> Executing -> Complete`
 
-A plan whose pending frontier has not yet been executed may be consulted through `consult` in Plan mode: status `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
+A plan may be consulted through `consult` in Plan mode at exactly two statuses: `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. No other status is consultable. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
 
-`## Consultation` carries exactly one entry per revision and is append-only: an existing revision entry is only ever advanced to the answer actually received — `offered — awaiting answer` to `offered, declined` or `consulted`, or `not offered` to `consulted` when an unrequested consultation is disposed — and no other rewrite is permitted. `offered — awaiting answer` means the question is still open, so the plan holds at its current status until the human answers; every other value is settled and execution may continue.
+`## Consultation` has exactly two states, and carries at most one entry per revision:
+
+- `awaiting` — a consultation question is open. The plan holds at its current status: no task is selected and no source is edited until it is answered.
+- `settled` — the question is closed, whatever the answer was. Execution may continue.
+
+No entry for a revision means nothing is open, which is the normal case: an entry is written only when a consultation is actually offered or disposed, never as ceremony. The section is append-only and the sole permitted rewrite is advancing that revision's `awaiting` to `settled`.
 
 A Review blocker on a `Complete` plan reopens it: the orchestrator appends the corrective work as a reopened task or a replan entry and returns the plan to `Executing`. A `Complete` plan is never recreated and its completed task history is never rewritten.
 
@@ -46,7 +51,8 @@ Draft | Ready | Executing | Needs Replan | Complete
 - Build strategy: planned
 
 ## Consultation
-- Revision {N}: not offered — {reason} | offered — awaiting answer | offered, declined | consulted — `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs | none}
+None, or at most one entry per revision.
+- Revision {N}: awaiting — `{exact command given to the other session}` | settled — {declined | host cannot prompt | consulted `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs | none}}
 
 ## Strategy
 Concise implementation architecture, ordering rationale, and integration approach.
@@ -124,28 +130,34 @@ The worker may inspect neighboring code needed to implement the task, but may wr
 Append; never rewrite prior deviation history.
 
 ```markdown
-### D-{NNN} — YYYY-MM-DD — T-{NNN}
+### D-{NNN} — YYYY-MM-DD — T-{NNN} | no task
 - Classification: plan deviation | intent deviation
-- Observable evidence: {path/symbol/check/result}
+- Observable evidence: {path/symbol/check/result} | consultation `absolutforge/features/{slug}/consult-{slug}.md`, {C-IDs}
 - Planned assumption invalidated: {precise assumption or boundary}
-- Execution state: {coherent completed work and remaining work}
-- Affected tasks: {blocked task and likely pending dependents}
+- Execution state: {coherent completed work and remaining work} | not executed yet
+- Affected tasks: {blocked task and likely pending dependents} | none — pre-execution
 - Required next action: replan | amendment
 - Resolution: open | replanned in R-NNN | amended by A-N
 ```
 
 A plan deviation means the accepted intent is still valid but the decomposition, dependency, repository assumption, or change surface is wrong. An intent deviation means implementation evidence would change accepted behavior or another material Brief boundary.
 
+An intent deviation raised from a consultation before any task ran has no owning task: use `no task` in the header, name the report path and the `C-IDs` as its observable evidence so the finding stays traceable to the amendment it forces, and record the pre-execution forms of `Execution state` and `Affected tasks`. Everything else is unchanged, including that the plan holds until the amendment is accepted.
+
 ## Replan
 
 Only the high-capability orchestrator may replan. Preserve completed task evidence.
 
+Every revision increment is recorded as an `R-` entry, whatever caused it. A deviation and an accepted consultation finding are the only two triggers; neither may bump `## Revision` silently.
+
+A bump triggered by an accepted consultation finding is not a replan of blocked work. The plan keeps the status it already had — a `Ready` plan stays `Ready` and never passes through `Needs Replan` — and the task fields of the entry carry `none` where nothing applies, which before execution is normally all of them except `Revised tasks` and `Added tasks`.
+
 ```markdown
 ### R-{NNN} — YYYY-MM-DD
-- Trigger: D-{NNN}
+- Trigger: D-{NNN} | consultation `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs}
 - Evidence reviewed: {repository-relative evidence}
-- Preserved completed tasks: {IDs}
-- Revised tasks: {IDs}
+- Preserved completed tasks: none | {IDs}
+- Revised tasks: none | {IDs}
 - Removed pending tasks: none | {IDs and reason}
 - Added tasks: none | {IDs and reason}
 - Dependency changes: none | {changes and reason}
@@ -155,7 +167,9 @@ Only the high-capability orchestrator may replan. Preserve completed task eviden
 
 Replan the blocked task and transitive pending frontier only, unless evidence proves a broader pending frontier invalid. Never rewrite completed task history to hide divergence.
 
-A replan that materially changes the pending frontier may be consulted once at the new revision, before returning the plan to `Executing`. Record the outcome in `## Consultation` against that revision.
+A replan that materially changes the pending frontier may be consulted once at the new revision, before returning the plan to `Executing`. Record the outcome in `## Consultation` against that revision. A revision produced by consuming a consultation is itself never consulted again.
+
+A consult finding classified `intent` is not replan material. It is an intent deviation: append it as `D-{NNN}` and stop for an explicit Brief amendment.
 
 ## Completion
 
