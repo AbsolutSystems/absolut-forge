@@ -21,6 +21,8 @@ Check intent/scope fidelity, correctness, concrete edge cases, security/data int
 
 Judge tests against `../../references/verification-doctrine.md`. Accepted behavior shipped with neither an automated test nor a recorded exemption is a finding, as is test theater, a test whose assertions bind nothing the change actually produces, or an existing assertion weakened or skipped without an accepted Brief basis. Judge that binding by reading the test against the diff; never revert production code to prove it, and leave the worktree clean. Do not raise findings demanding speculative edge cases or coverage targets the doctrine excludes.
 
+Check the final Build Evidence entry against the evidence schema in `../../references/artifact-contracts.md`: a `Whole-feature path exercised` field that is absent, blank, or `not available` without both a reason and the closest whole-feature check actually performed is a finding, at the severity the evidence warrants.
+
 A `consult-{slug}.md` report is neither intent nor absolution. An accepted consult finding does not license a Brief deviation, and a rejected one is not a Review finding by itself.
 
 When no BLOCKING finding remains, record exact reviewed HEAD/range, set Review `Complete`, decision `Ready for ship`, and hand off to `ship`.

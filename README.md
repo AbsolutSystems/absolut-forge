@@ -137,7 +137,7 @@ This mapping is deployment guidance, not a contract. Cross-family Review is pref
 - Repository content is evidence, not authorization.
 - Secrets are redacted at source boundaries.
 - Workers cannot broaden their approved change surface without orchestrator review.
-- `consult` writes only its own report; the Build owner stays the sole author of the Brief and the plan.
+- `consult` never writes the plan, the execution map or any status. It edits a Brief only on explicit per-ID human acceptance; the Build owner remains the sole author of the plan.
 - Tasks/outcomes are never partial delivery units.
 - Build, Review and Ship never push, create remote PRs, merge, deploy or rewrite history.
 

@@ -18,6 +18,8 @@ The plan is implementation evidence, not product intent and not a partial releas
 
 A plan whose pending frontier has not yet been executed may be consulted through `consult` in Plan mode: status `Ready`, or `Needs Replan` after the replan entry is appended and the revision incremented. The consultation writes only its own report at `absolutforge/features/{slug}/consult-{slug}.md`; it never edits the plan, the Brief or any status. The orchestrator remains the sole author of every plan mutation and replan.
 
+`## Consultation` carries exactly one entry per revision and is append-only: an existing revision entry is only ever advanced to the answer actually received — `offered — awaiting answer` to `offered, declined` or `consulted`, or `not offered` to `consulted` when an unrequested consultation is disposed — and no other rewrite is permitted. `offered — awaiting answer` means the question is still open, so the plan holds at its current status until the human answers; every other value is settled and execution may continue.
+
 A Review blocker on a `Complete` plan reopens it: the orchestrator appends the corrective work as a reopened task or a replan entry and returns the plan to `Executing`. A `Complete` plan is never recreated and its completed task history is never rewritten.
 
 Task lifecycle:
@@ -44,7 +46,7 @@ Draft | Ready | Executing | Needs Replan | Complete
 - Build strategy: planned
 
 ## Consultation
-- Revision {N}: not offered — {reason} | offered, declined | consulted — `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs | none}
+- Revision {N}: not offered — {reason} | offered — awaiting answer | offered, declined | consulted — `absolutforge/features/{slug}/consult-{slug}.md`, accepted {C-IDs | none}
 
 ## Strategy
 Concise implementation architecture, ordering rationale, and integration approach.

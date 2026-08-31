@@ -23,8 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the one stage meant to run in a separate session and preferably another model
   family: it appends a consultation block with `C-{NNN}` findings at
   `Disposition: open`, and the requesting context reads the report back and
-  disposes each finding. The report is transient evidence, removed at Ship, and
-  is never an input to `review`.
+  disposes each finding. Only the consuming context sets any other disposition —
+  the Build owner for a plan consultation, or the Brief-mode session acting on
+  explicit per-ID human acceptance. The report is transient evidence, removed at
+  Ship, and is never an input to `review`.
 - `consult` gains a second subject: an `implementation-plan.md` at `Ready`, or
   at `Needs Replan` once the replan entry exists and the revision was
   incremented. Plan mode critiques the pending frontier — coverage,
@@ -38,9 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   only when the plan carries material risk: several tasks, planned delegation,
   cross-cutting or shared-contract tasks, or coverage leaning on final
   verification. The offer is a hard stop that prints the exact command for the
-  other session and ends the turn with the plan persisted. The offer and its
-  outcome are recorded in a new plan `## Consultation` section per revision, so
-  a resuming context never re-asks a settled question. Hosts that cannot prompt
+  other session and ends the turn with the plan persisted. A new plan
+  `## Consultation` section carries one append-only entry per revision, one of
+  `not offered`, `offered — awaiting answer`, `offered, declined` or
+  `consulted`. A resuming context re-states an offer still `awaiting answer` and
+  holds the plan, and never re-asks a settled question. Hosts that cannot prompt
   execute and record that fact instead of blocking.
 
 ### Changed
@@ -57,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   test and no recorded exemption is a finding, as is a test whose assertions
   bind nothing the change produces. That is judged by reading the test against
   the diff — never by reverting production code — and the worktree stays clean.
+  `review` also checks the final Build Evidence entry for the whole-feature
+  integration path: absent, blank, or `not available` without a reason and the
+  closest check actually performed is a finding.
 - `build-planned` resume is now exhaustive over plan status, closing the gap
   that left a Review blocker with nowhere to go: `Draft` finishes compilation,
   `Ready` executes or revises, `Executing` selects the next task, `Needs Replan`

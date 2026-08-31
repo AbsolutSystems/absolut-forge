@@ -176,7 +176,7 @@ The exact planned schema, task contract, deviations and replans are owned by [`p
 - Disposition: open | accepted | rejected | routed to Brief amendment
 ```
 
-`C-` IDs are numbered from `C-001` and continue across consultation blocks within the report; they are never reused and never written into the Brief, plan, execution map or review. `consult` writes findings with `Disposition: open` and nothing else. Only the consuming Build owner sets a disposition, and it never rewrites a recorded finding, evidence or proposed change.
+`C-` IDs are numbered from `C-001` and continue across consultation blocks within the report; they are never reused and never written into the Brief, plan, execution map or review. Findings are always written at `Disposition: open`. Only the context that consumes the report sets any other disposition — the Build owner for a plan consultation, or the Brief-mode `consult` session acting on explicit per-ID human acceptance — and it never rewrites a recorded finding, its evidence or its proposed change.
 
 The report is advice, not authority. It changes no status, and it is never an input to `review`: Review reads the Brief as intent and `base_commit..HEAD` as truth.
 

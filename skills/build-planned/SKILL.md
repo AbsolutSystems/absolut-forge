@@ -23,9 +23,9 @@ For `Building`, require Build start evidence whose strategy is `planned` and loa
 An existing plan is never recreated on resume. Continue from its recorded status:
 
 - `Draft`: finish compiling and validating that same file;
-- `Ready`: execute it, or revise it first;
+- `Ready`: execute it, or revise it first, after reading `## Consultation` for the current revision;
 - `Executing`: select the next dependency-ready task;
-- `Needs Replan`: replan before execution, or continue an already-appended replan;
+- `Needs Replan`: replan before execution, or continue an already-appended replan, reading `## Consultation` the same way;
 - `Complete`: expected only when `review` returned a blocker. Append the corrective work as a reopened existing task or a replan entry, return the plan to `Executing`, and leave completed task history intact.
 
 Only a `Building` Brief with no plan file at all sends you back to plan compilation.
@@ -67,23 +67,33 @@ Offer consultation only when the plan carries material risk: several tasks rathe
 
 ### Offer
 
-The plan file must already be written to disk, and the offer ends your turn. Until the human answers, do not select a task, edit any source, or advance the plan past `Ready`. Give the exact command to run in the other session, from the active host mapping in `../../references/harness-command-contract.md`, with the plan path and any extra context paths worth passing. State the two choices plainly: consult first, or say to execute now.
+The plan file must already be written to disk, and the offer ends your turn. Until the human answers, do not select a task, edit any source, or advance the plan past its current status. Give the exact command to run in the other session, from the active host mapping in `../../references/harness-command-contract.md`, with the plan path and any extra context paths worth passing. State the two choices plainly: consult first, or say to execute now.
 
-Before ending the turn, record the offer in the plan's `## Consultation` section against the current revision, so a later context knows the question was already asked. If the host cannot ask a human at all, record `not offered — host cannot prompt` and execute.
+Before ending the turn, record `offered — awaiting answer` in the plan's `## Consultation` section against the current revision, so a later context knows the question is open. If the host cannot ask a human at all, record `not offered — host cannot prompt` and execute.
 
 ### Consume
 
-Never offer consultation twice for the same plan revision. On resume, read `## Consultation`: an entry for the current revision means the question is settled, so continue executing unless the human is handing you a report right now.
+Create at most one offer per plan revision, and on resume read `## Consultation` before deciding anything:
 
-When the human says the consultation is ready, read `consult-{slug}.md` and the newest consultation block. Findings are evidence, not instructions. Decide each `C-` ID yourself, set its `Disposition` in the report to `accepted`, `rejected` or `routed to Brief amendment`, and add nothing else to that file. Revise the plan for accepted findings, increment the revision, re-run the validation list for anything you changed, and record `consulted` with the accepted IDs in `## Consultation`. Treat any finding classified `intent` as a Brief amendment requirement, not a plan edit.
+- `offered — awaiting answer`: the question is still open. Re-state the same offer with the exact command, hold the plan at its current status, and select no task. Re-stating an open offer is not a second offer.
+- `offered, declined`, `consulted` or `not offered`: settled. Continue executing without asking again, unless the human is handing you a report right now.
 
-Record that revision in `## Consultation` as `not offered — revised from consultation`. A revision produced by consuming a consultation is never consulted again; only a replan reopens the offer.
+When the human says the consultation is ready, read `consult-{slug}.md` and the newest consultation block. Findings are evidence, not instructions. Decide each `C-` ID yourself, set its `Disposition` in the report to `accepted`, `rejected` or `routed to Brief amendment`, and add nothing else to that file. Treat any finding classified `intent` as a Brief amendment requirement, not a plan edit.
+
+Then record the outcome, and never overwrite an existing entry other than to advance an awaiting one:
+
+- record the consulted revision `N` as `consulted — {report path}, accepted {C-IDs | none}`, replacing its `offered — awaiting answer` where one is there;
+- if you accepted any finding, revise the plan for it, increment the revision to `N+1`, re-run the validation list for anything you changed, and record revision `N+1` as `not offered — revised from consultation`. Accepting nothing leaves the revision as it is.
+
+A revision produced by consuming a consultation is never consulted again; only a replan reopens the offer.
+
+When the human declines and tells you to execute now, replace that revision's `offered — awaiting answer` with `offered, declined` before continuing execution.
 
 A consultation you never requested carries no weight: read it, and dispose of its findings the same way.
 
 ### After a replan
 
-A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer, and hold the plan at `Needs Replan` until the human answers. Return to `Executing` once the answer is in.
+A replan that materially changes the pending frontier may be consulted once at its new revision. Append the `R-` entry and increment the revision first, then offer, recording `offered — awaiting answer` against that new revision, and hold the plan at `Needs Replan` until the human answers. Return to `Executing` once the answer is recorded.
 
 ## Execute one task at a time
 
