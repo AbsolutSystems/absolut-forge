@@ -1,4 +1,4 @@
 interface:
   display_name: "AbsolutForge Build Planned"
-  short_description: "Plan, delegate, integrate and verify an accepted Brief"
+  short_description: "Plan, delegate and rotate context across durable tasks"
   default_prompt: "Use $absolutforge build-planned to compile this accepted Feature Brief into a task graph and deliver it."

@@ -1,58 +1,43 @@
 # Verification Doctrine
 
-Defines what `focused verification` and `final verification` mean for both Build strategies. Host-agnostic and strategy-agnostic.
+Binding for `build`, `build-planned`, `review`, and a `debug` fix made inside an active feature.
 
-## Scope
+## Test charter
 
-Binding for `build` and `build-planned`, and for any bounded fix `debug` makes inside a feature under Build. A `debug` fix that changes observable behavior carries a regression test pinning the defect, under the same exemption rule; the Build owner records it in that stage's evidence. Standalone `debug` diagnosis writes no code and needs no test. `tech-debt` is read-only and out of scope.
+For every coherent outcome or task that changes observable behavior, identify the distinct risks introduced by the change and add automated tests for every applicable obligation:
 
-## Default expectation
+1. the primary accepted behavior;
+2. an error or boundary introduced by the change;
+3. a state or data-integrity invariant placed at risk;
+4. a contract at a seam used by an existing caller or consumer;
+5. a regression test for a defect fixed during the work.
 
-Every coherent outcome or task that changes observable behavior lands together with executable automated tests that exercise that behavior. By default write them after that stage's implementation; in every case before the stage is marked complete. An outcome or task whose behavior change has no executable test and no recorded exemption is not complete.
+The number of tests follows the number of distinct risks, not the number of outcomes or tasks. One test per task is not a default. Tests land with the outcome or task before it is complete and use the repository's existing framework, layout, fixtures, and helpers.
 
-This is not test-driven development. Test-first is allowed but never required, and no ceremony, coverage target, or test plan artifact is expected.
+Apply extra attention where relevant:
 
-## Test value bar
+- authorization or security: denied behavior and absence of an unintended effect;
+- persistence: partial failure, atomicity, or idempotency;
+- public contracts: compatibility with existing consumers;
+- asynchronous or concurrent work: the material ordering, retry, or duplicate-delivery risk;
+- migrations: representative old state and the resulting state.
 
-Aim at what a senior engineer would write to convince themselves the change actually works:
+An outcome or task has no obligation to invent inapplicable cases. Its evidence must nevertheless make the applicable obligations visible through named tests or a recorded exemption.
 
-- the primary accepted behavior of the change;
-- the realistic failure or boundary the change itself introduces — specified error paths, absent/empty input that is genuinely reachable, contract behavior at a seam other code depends on;
-- a regression test pinning any defect fixed during the stage.
+## Test value
 
-Prefer a few meaningful assertions over many shallow ones. A test must fail if the change is reverted; if it passes either way it has no value.
+A useful test binds an observable value or effect produced by the change and would fail if that behavior were absent. Prefer meaningful assertions over mock configuration, framework behavior, tautologies, or snapshots that merely restate whole output. Never weaken, skip, or delete an existing assertion to reach green unless an accepted Brief change explicitly requires the old behavior to change.
 
-That criterion is judged by inspection: does at least one assertion bind an observable value or effect that only the change produces? Do not revert production code to prove it. Deliberately breaking the implementation to watch a test fail is a local scratch experiment only, and the worktree must be restored before the stage is marked complete.
-
-## Explicitly out of scope
-
-- speculative edge cases with no reachable caller;
-- exhaustive input permutations, parameterized matrices for their own sake;
-- tests asserting mock configuration, framework behavior, or tautologies;
-- whole-output snapshots used as a substitute for a real assertion;
-- coverage percentage goals;
-- restructuring existing production code purely to make it testable, beyond the accepted change surface.
-
-## Follow the repository
-
-Discover the existing test framework, layout, naming, fixtures, and helpers, and match them. Introducing a new test framework, runner, or testing architecture is product-material: it needs Brief, amendment, ADR, or binding-rule basis, otherwise it is an intent deviation.
+Do not introduce a new test framework or restructure unrelated production code solely for testing without accepted product or architecture authority.
 
 ## Recorded exemption
 
-Tests may be omitted for a stage only when the change is genuinely untestable or has no behavior to assert — configuration or docs only, pure rename/move, generated output, or a surface that cannot be exercised without infrastructure the Brief did not accept. Repository lacking any runnable test harness is also a valid exemption.
+Omit automated tests only when there is no behavior to assert or the behavior cannot be exercised within accepted scope: documentation or configuration only, a pure rename/move, generated output, missing runnable test infrastructure, or required external infrastructure outside the Brief.
 
-An exemption is never silent. Record `Tests: none — {reason}` plus whatever observable check was performed instead. Difficulty, time, or unfamiliarity is not a reason.
+Record `Tests: none — {reason}` and the closest observable check performed. Difficulty, time, or unfamiliarity are not exemptions.
 
-## Green is not negotiable
+## Focused and final verification
 
-A failing check is evidence; handle it under the active Build failure boundary. Never delete, weaken, loosen, or skip an existing assertion or test to reach green. Changing an existing test is legitimate only when the accepted Brief changed that behavior; then state which accepted outcome authorizes it. Any other weakening of an existing test is a blocking deviation.
+Focused verification runs the tests owned by the outcome or task plus the narrow build, type, lint, or integration checks capable of exposing its risks. Evidence names test files and cases, commands, and results; `tests pass` alone is not evidence.
 
-## Final whole-feature verification
-
-At finish, beyond re-running relevant broader build/test/type/lint checks, exercise the feature's primary accepted path at integration level at least once — an existing integration/e2e suite, a new integration test where the repository already supports that layer, or a scripted end-to-end run of the real entry point.
-
-Keep it to the main accepted path or two, not an integration matrix. If the repository cannot run that layer, or standing it up would exceed the accepted scope, record that plus the closest whole-feature check actually performed.
-
-## Evidence
-
-Verification evidence names test files and cases added or updated, the commands run, and their results. `tests pass` without command or scope is not evidence.
+At finish, run relevant broader checks and exercise the feature's primary accepted path at integration level once through an existing integration/e2e suite, a supported integration test, or a scripted run of the real entry point. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.

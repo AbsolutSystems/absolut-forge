@@ -99,11 +99,13 @@ Append exactly once before the first source edit:
 - Execution artifact: none | `absolutforge/features/{slug}/execution-map.md` | `absolutforge/features/{slug}/implementation-plan.md`
 ```
 
-A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start. An uncommitted `consult-{slug}.md` is the one exception: a consultation may run between the committed Ready Brief and Build start, so the report is a permitted uncommitted workflow artifact there, exactly as the active `review.md` is at Review. Build inspects nothing in it, and its first commit of feature artifacts picks it up. Any uncommitted source change still blocks Build start.
+A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start. An uncommitted `consult-{slug}.md` is the one exception: a consultation may run between the committed Ready Brief and Build start, so the report is a permitted uncommitted workflow artifact there, exactly as the active `review.md` is at Review. Any uncommitted source change still blocks Build start.
+
+Before any source edit, the selected builder appends this evidence, changes the Brief to `Building`, and creates a local Build-start checkpoint commit. Planned Build later commits its validated Ready plan before its first source edit. Every verified outcome or task receives an orchestrator-owned checkpoint commit, and final evidence plus the `In Review` transition receive a final handoff commit. Workers never commit.
 
 ## Build evidence
 
-Append after coherent verified outcomes/tasks and after final verification:
+Autonomous Build appends evidence after coherent verified outcomes and after final verification. Planned Build keeps per-task evidence in `implementation-plan.md` and appends one consolidated Build evidence entry only after final verification, avoiding duplicate state in the Brief.
 
 ```markdown
 ### Build evidence — YYYY-MM-DD
@@ -116,13 +118,13 @@ Append after coherent verified outcomes/tasks and after final verification:
 - Execution state: {autonomous outcomes/checkpoints OR planned task IDs/plan revision}
 - Material implementation decisions: none | {decision}
 - Deviations from accepted baseline: none | {accepted amendment}
-- Plan deviations/replans: not applicable | none | {D/R IDs}
+- Plan changes: not applicable | none | {PC-IDs}
 - Scout disposition: none | {result}
 - Documentation maintenance: none | {result}
 - Durable memory lesson: none | {candidate}
 ```
 
-The `(final entry only)` marker is not part of the recorded value: intermediate entries omit that line entirely and the final entry writes the field without the marker. Every other field appears in every entry.
+The `(final entry only)` marker is not part of the recorded value: autonomous intermediate entries omit that line and the final entry writes the field without the marker. Every other field appears in each applicable entry.
 
 ## Autonomous Execution Map
 
@@ -146,7 +148,7 @@ pending | in-progress | complete
 - Goal:
 - Boundaries:
 - Dependencies:
-- Tests: {behavior to assert} | none — {exemption reason}
+- Test obligations: {applicable risks and observable behaviors} | none — {exemption reason}
 - Verification:
 - Result:
 - Material deviations:
@@ -154,11 +156,11 @@ pending | in-progress | complete
 
 ## Planned Implementation Plan
 
-The exact planned schema, task contract, deviations and replans are owned by [`planned-build-contract.md`](planned-build-contract.md). A planned feature must have `implementation-plan.md` before the first delegated source edit. The high-capability orchestrator owns all plan mutations.
+The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
 
 ## Consultation report
 
-`consult` writes exactly one report per feature at `absolutforge/features/{slug}/consult-{slug}.md`, appending a new block per consultation. The report exists so a consultation can run in a separate session or a different model family and be read back by the original context.
+`consult` writes one report per feature at `absolutforge/features/{slug}/consult-{slug}.md`, appending an immutable block per consultation. The report is optional evidence and never controls lifecycle state.
 
 ```markdown
 # Consultation report: {feature name}
@@ -166,7 +168,8 @@ The exact planned schema, task contract, deviations and replans are owned by [`p
 ## Consultation {N} — YYYY-MM-DD
 - Subject: `{feature-brief.md | implementation-plan.md path}`
 - Mode: brief | plan
-- Subject status: {Draft | Ready | Needs Replan}
+- Subject status: {Draft | Ready | Executing}
+- Subject revision: {git HEAD}
 - Plan revision: not applicable | {integer}
 - Additional context read: none | {repository-relative paths}
 - Result: no material findings | {count} findings
@@ -175,12 +178,11 @@ The exact planned schema, task contract, deviations and replans are owned by [`p
 - Evidence: {exact Brief section, task ID, or repository path}
 - Impact: {concrete consequence if the artifact is used unchanged}
 - Proposed change: {smallest sensible change}
-- Disposition: open | accepted | rejected | routed to Brief amendment
 ```
 
-`C-` IDs are numbered from `C-001` and continue across consultation blocks within the report; they are never reused and never written into the Brief, plan, execution map or review. Findings are always written at `Disposition: open`. Only the context that consumes the report sets any other disposition — the Build owner for a plan consultation, or the Brief-mode `consult` session acting on explicit per-ID human acceptance — and it never rewrites a recorded finding, its evidence or its proposed change.
+`C-` IDs are numbered from `C-001` and continue across consultation blocks; they are never reused. Earlier blocks and findings are never edited. The receiving `discuss` or Build context decides whether a finding still applies and records accepted changes in its own Brief amendment or plan-change entry. The report itself carries no disposition.
 
-The report is advice, not authority. It changes no status, and it never enters Review's judgment: Review reads the Brief as intent and `base_commit..HEAD` as truth. Review may read the report to understand how the implementation arrived, but an accepted finding never excuses a Brief violation and a rejected one is not a finding by itself.
+The report is advice, not authority. Duplicate or stale consultations are harmless evidence. Review reads the Brief as intent and `base_commit..HEAD` as truth; a consultation never excuses a Brief violation.
 
 ## Save
 
@@ -210,7 +212,7 @@ Saved
 ## Resume notes
 ```
 
-Save is context only; it does not preserve dirty source by itself.
+Save is context only; it does not preserve dirty source by itself. At a clean planned-task boundary, the committed plan and Git state are already the canonical resume record, so Save is normally unnecessary. Use it for a mid-task or otherwise unresolved stop.
 
 ## Review
 
@@ -250,8 +252,8 @@ Review treats the Brief as intent authority, source/tests and `base_commit..HEAD
 
 ## Feature Record
 
-Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, deviations/replans and final integration verification. Autonomous Build includes execution-map/checkpoint facts when present.
+Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. Autonomous Build includes execution-map/checkpoint facts when present.
 
-Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each accepted finding that changed the delivered feature, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
+Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 
 Verification in the record names the tests that cover the delivered behavior, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.

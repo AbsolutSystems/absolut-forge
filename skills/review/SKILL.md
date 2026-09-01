@@ -18,7 +18,7 @@ Request exactly one fresh generic read-only reviewer when the harness can provid
 
 Check intent/scope fidelity, correctness, concrete edge cases, security/data integrity, test value, regressions/compatibility, unintended scope, missing critical docs and diff garbage. Findings are only `BLOCKING` or `FOLLOW-UP`, with stable IDs, evidence, impact and smallest sensible correction.
 
-Judge tests against `../../references/verification-doctrine.md`. Accepted behavior shipped with neither an automated test nor a recorded exemption is a finding, as is test theater, a test whose assertions bind nothing the change actually produces, or an existing assertion weakened or skipped without an accepted Brief basis. Judge that binding by reading the test against the diff; never revert production code to prove it, and leave the worktree clean. Do not raise findings demanding speculative edge cases or coverage targets the doctrine excludes.
+Judge tests against the risk-based obligations in `../../references/verification-doctrine.md`. Raise a finding when an applicable primary, failure/boundary, state/data, seam-contract, or regression obligation is uncovered without an exemption; when assertions bind nothing the change produces; or when an existing assertion was weakened without accepted Brief authority. Judge by reading tests against the diff, never by reverting production code, and leave the worktree clean.
 
 Check the final Build Evidence entry against the evidence schema in `../../references/artifact-contracts.md`: a `Whole-feature path exercised` field that is absent, blank, or `not available` without both a reason and the closest whole-feature check actually performed is a finding, at the severity the evidence warrants.
 
@@ -31,4 +31,4 @@ When blockers remain, return Brief status to `Building` and hand off to the stra
 - `autonomous` -> `build`;
 - `planned` -> `build-planned`.
 
-A planned blocker should normally become a focused existing-task correction or an orchestrator-created replan entry; do not make Review mutate the plan itself. After two failed attempts on the same blocker or material scope expansion, escalate to the human rather than loop indefinitely.
+A planned blocker should become a new bounded corrective task recorded through a `PC-` plan entry; Review never mutates the plan itself. After two failed attempts on the same blocker or material scope expansion, escalate to the human rather than loop indefinitely.

@@ -50,17 +50,21 @@ opencode exposes no per-skill implicit-invocation switch, so these command wrapp
 
 ## Cross-session consultation
 
-`consult` is the one stage designed to run outside the session that requested it, so a second opinion can come from a different model family. The requesting context gives the exact command and stops; the consulting session writes `absolutforge/features/{slug}/consult-{slug}.md`; the human returns to the original session and says the report is ready. Nothing is handed back through conversation state, and no other stage may be split this way.
+`consult` may run outside the owning session so a second opinion can come from a different model family. It writes immutable evidence to `absolutforge/features/{slug}/consult-{slug}.md`; the human may return that report to `discuss` or the selected builder. Consultation never opens, settles, pauses, or resumes workflow state, and Build never offers it automatically.
 
 ## Build strategy choice
 
 After `discuss` produces a committed Ready Brief, the developer explicitly chooses exactly one strategy:
 
-- `build`: high-capability model owns implementation directly.
-- `build-planned`: high-capability orchestrator creates a durable task graph and delegates bounded tasks when useful.
+- `build`: default; a high-capability model owns implementation directly.
+- `build-planned`: use when durable decomposition, meaningful bounded delegation, or cross-session resume justifies a task graph.
 
 Invocation is the strategy selection. The selected builder records `Build strategy: autonomous | planned` in the Build start evidence. A Building Brief resumes only through that same skill. Review blockers return to the recorded builder. Do not silently switch build strategy mid-feature.
+
+The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after focused verification. Final Build evidence and the `In Review` transition receive a final local handoff commit.
 
 ## Resume invariant
 
 The selected strategy is durable execution state. Any resume, correction after Review, or saved-context handoff returns to the same builder that recorded Build start evidence.
+
+For planned Build, a clean completed-task checkpoint is also a context-rotation boundary. A fresh session resumes by invoking `build-planned` with the canonical Brief and rehydrating from the Brief, plan and Git. No `save` artifact is required at that boundary; `save/load` covers mid-task or otherwise unresolved interruption.

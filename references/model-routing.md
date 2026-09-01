@@ -22,6 +22,8 @@ Prefer a different model family for Review when practical, because correlated im
 
 ## Planned task routing
 
+Prefer autonomous `build` unless the expected delegation or durable decomposition benefit exceeds the cost of compiling and maintaining a task graph.
+
 Start from the task's declared capability.
 
 - `low`: mechanical/local change, narrow surface, explicit contract and focused verification.

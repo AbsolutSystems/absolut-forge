@@ -5,6 +5,61 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-01
+
+### Changed
+
+- Autonomous `build` is now the recommended default. `build-planned` remains a
+  first-class strategy for features where durable decomposition, meaningful
+  bounded delegation, or cross-session resume repays its overhead.
+- Planned Build has a smaller lifecycle (`Ready -> Executing -> Complete`) and
+  one append-only `PC-` plan-change record. The previous `Needs Replan`, `D-`,
+  `R-`, and consultation-control states were removed while completed task
+  evidence, outcome coverage, dependency validation, write ownership, and
+  orchestrator verification remain binding.
+- Consultation is evidence rather than workflow state. Build no longer offers,
+  awaits, settles, or limits consultations by plan revision. Reports are
+  immutable, carry the subject Git/plan revision, and leave accepted-change
+  recording to the owning Brief or plan context.
+- Verification now uses a positive risk-based Test Charter. Every changed
+  behavior considers primary, failure/boundary, state/data, seam-contract, and
+  regression obligations, with additional attention to security, persistence,
+  compatibility, concurrency, and migrations. Test count follows distinct
+  risks rather than task count.
+- Both builders now require local orchestrator-owned checkpoint commits for
+  Build start, every verified outcome/task, and the final Review handoff.
+  Planned Build also commits the validated Ready plan before source edits.
+- Planned Build may dispatch one dependency-ready parallel wave when all write
+  surfaces are fully disjoint; the orchestrator still validates, stages, and
+  checkpoint-commits each task separately.
+- Planned Build now treats the active orchestrator context as disposable. Every
+  completed-task checkpoint must let a fresh high-capability session resume
+  from the Brief, plan and Git without prior conversation. Rotation is
+  recommended under context pressure, after large waves or plan changes, and
+  before substantial high-capability work or final integration when practical.
+- Planned per-task Completion Evidence is stored only in the implementation
+  plan; the Brief receives one consolidated final Build Evidence entry. This
+  removes duplicate state and keeps rehydration smaller. `save/load` is now
+  positioned for mid-task or otherwise unresolved interruption rather than
+  routine clean task boundaries.
+- Core skill entrypoints were shortened and conditional detail consolidated in
+  canonical references to reduce instruction load and drift.
+
+### Removed
+
+- Automatic pre-execution plan-consultation offers and their `awaiting`,
+  `settled`, `host cannot prompt`, per-revision refusal, and consultation-driven
+  replan rules.
+- Finding dispositions from consultation reports; reports are never rewritten.
+
+### Documentation
+
+- Added ADR `2026-09-01-lean-planned-build-and-risk-based-tests.md`, which
+  supersedes the plan-consultation state machine and test-framing portions of
+  the 2026-08-31 ADR, and records durable fresh-context rotation for long
+  planned builds.
+- Codex and Claude plugin manifests bumped to the base release version `0.4.0`.
+
 ## [0.3.1] - 2026-08-31
 
 ### Changed

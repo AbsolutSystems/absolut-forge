@@ -7,6 +7,8 @@ description: "Explicitly persist concise, secret-redacted resume context for an 
 
 Accept one canonical `Building` Feature Brief. Read Build start evidence and determine the recorded strategy. Validate the current branch/base revision and actual worktree.
 
-Write only `absolutforge/features/{slug}/save-{slug}.md` using the Save contract. Include strategy, execution artifact path, verified completed work, current work, next action and open items. For planned Build include current plan revision/task, any open deviation, and the fact that the plan's `## Consultation` carries an `awaiting` entry for that revision, pointing at it rather than restating the command it already holds; for autonomous Build include current outcome/map/checkpoint facts.
+For planned Build at a clean completed-task boundary, explain that the committed plan and Git state already support direct resume through `build-planned`; do not create redundant save context unless the human still requests it. Save is useful for a mid-task or otherwise unresolved stop.
+
+Write only `absolutforge/features/{slug}/save-{slug}.md` using the Save contract. Include strategy, execution artifact path, verified completed work, current work, next action and open items. For planned Build include current plan revision/task and any blocked task or unresolved intent change; for autonomous Build include current outcome/map/checkpoint facts.
 
 Save does not preserve dirty source by itself and never commits, stashes, switches branches, pushes or changes lifecycle state.

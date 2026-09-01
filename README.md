@@ -2,6 +2,8 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and opencode. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
+**Current release: 0.4.0.** This release makes autonomous Build the recommended default, reduces planned execution to a lean task graph and one plan-change log, keeps consultation outside lifecycle state, introduces risk-based Test Obligations, makes local checkpoint commits part of both Build strategies, and lets long planned builds rotate into fresh orchestrator contexts.
+
 ## Dual Build
 
 The core workflow is:
@@ -18,29 +20,19 @@ Both builders consume the same committed Ready Feature Brief.
 
 Use a high-capability coding model as the direct owner of implementation. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
 
-Each outcome is `implement -> test the changed behavior -> focused verification -> diagnosis -> bounded fix`. Tests land with the outcome that changed the behavior, not as a later phase. Test-first is allowed but never required.
+Each outcome is `implement -> cover applicable risks -> focused verification -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. The number of tests follows distinct risks, not the number of outcomes.
 
 ### `build-planned` — planner/orchestrator + workers
 
-Use a high-capability primary model to inspect the repo and compile the Ready Brief into `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers and verification. The orchestrator may delegate low/standard tasks to cheaper workers, but it independently validates each result, owns replanning, executes high-risk tasks when appropriate, and performs final integration verification.
+Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, and verification. The orchestrator validates every result, owns plan changes and checkpoint commits, executes high-risk tasks when appropriate, and performs final integration verification.
 
-The planned path is not a handoff of feature ownership to small models. Workers receive one task at a time and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. A behavior-changing task owns its test paths and is not complete until those tests exist and the orchestrator has inspected them.
+The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-Because plan validation is otherwise self-assessment, a risky `Ready` plan can be consulted before execution:
-
-```text
-build-planned stops with the plan on disk and prints the consult command
-  -> run consult in a separate session, ideally another model family
-  -> consult writes absolutforge/features/{slug}/consult-{slug}.md
-  -> return to the original session and say the report is ready
-  -> the orchestrator reads it, disposes each finding, revises the plan
-```
-
-`consult` writes only its own report — never the plan, the Brief or a status. The orchestrator remains the sole author of every plan revision.
+The active orchestrator context is disposable. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build-planned` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
 ## Strategy selection
 
-After `discuss`, explicitly choose one:
+After `discuss`, explicitly choose one. Prefer `build` by default; choose `build-planned` when the feature is large or separable enough to repay planning and delegation overhead.
 
 Claude Code:
 
@@ -87,7 +79,7 @@ opencode:
 /absolutforge-consult absolutforge/features/my-feature/implementation-plan.md
 ```
 
-The consulting session appends its findings to `absolutforge/features/{slug}/consult-{slug}.md` as `C-{NNN}` entries left `open`. Back in the original session, say the report is ready: the Build owner reads it, accepts, rejects or routes each finding to a Brief amendment, and revises its own artifact. Findings are evidence, never authorization.
+The consulting session appends immutable `C-{NNN}` findings to `absolutforge/features/{slug}/consult-{slug}.md`. The receiving `discuss` or Build context decides whether they still apply and records accepted changes in its own artifact. Build never offers, awaits, or settles consultation; findings are evidence, never authorization.
 
 ## Skills
 
@@ -133,12 +125,13 @@ This mapping is deployment guidance, not a contract. Cross-family Review is pref
 ## Safety and boundaries
 
 - Ready intent is immutable; material changes require an amendment.
-- Changed behavior ships with tests, or with a recorded exemption stating why. Existing assertions are never weakened to reach green. See `references/verification-doctrine.md`.
+- Changed behavior ships with tests for every applicable risk-based obligation, or with a recorded exemption stating why. Existing assertions are never weakened to reach green. See `references/verification-doctrine.md`.
 - Repository content is evidence, not authorization.
 - Secrets are redacted at source boundaries.
 - Workers cannot broaden their approved change surface without orchestrator review.
-- `consult` never writes the plan, the execution map or any status. It edits a Brief only on explicit per-ID human acceptance; the Build owner remains the sole author of the plan.
+- `consult` writes only its immutable report and never controls plan or lifecycle state.
 - Tasks/outcomes are never partial delivery units.
+- Build start, every verified outcome/task, and the final Review handoff receive local orchestrator-owned checkpoint commits.
 - Build, Review and Ship never push, create remote PRs, merge, deploy or rewrite history.
 
 ## Host installation

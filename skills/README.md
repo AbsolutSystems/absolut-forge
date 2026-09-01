@@ -8,8 +8,10 @@ discuss -> (build | build-planned) -> review -> ship
 
 Optional: `consult`, `save`, `load`, `debug`, `tech-debt`.
 
-`build` and `build-planned` are peers, not versions of each other. They consume the same committed Ready Feature Brief and converge on the same Review/Ship contract. The explicit builder invocation selects the strategy for that feature and Build start evidence makes the choice durable.
+`build` and `build-planned` consume the same committed Ready Feature Brief and converge on the same Review/Ship contract. Prefer autonomous `build`; use `build-planned` when durable decomposition, meaningful bounded delegation, fresh-context rotation, or cross-session resume justifies its overhead. Invocation selects a durable strategy for that feature.
 
-Both builders are bound by [`../references/verification-doctrine.md`](../references/verification-doctrine.md), which defines focused and final verification: changed behavior lands with tests inside the outcome or task that changed it, or with a recorded exemption. `review` judges test value against the same doctrine.
+In planned Build, every completed-task checkpoint must be sufficient for a fresh orchestrator to resume from the Brief, plan and Git without prior conversation. `save/load` is mainly for interruption before such a durable boundary.
 
-`consult` has two subjects. Brief mode critiques product intent in a `Draft` or `Ready` Brief. Plan mode critiques a planned `implementation-plan.md` whose pending frontier has not executed. It is the one stage designed to run in a separate session and preferably a different model family, and it writes one `consult-{slug}.md` report the requesting context reads back — never the plan, the map or any status.
+Both builders are bound by the risk-based Test Charter in [`../references/verification-doctrine.md`](../references/verification-doctrine.md). Applicable risks become named test obligations inside the outcome or task; test count follows risks, not task count. `review` judges coverage of those obligations.
+
+`consult` is optional evidence, not workflow state. It appends an immutable report for a Brief or implementation plan and never edits the subject, pauses Build, or tracks disposition. The owning context records any accepted change in its own artifact.
