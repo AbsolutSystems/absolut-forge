@@ -21,13 +21,14 @@ Persist a Draft when useful or requested. When no material question remains, pre
 
 ## Handoff
 
-After acceptance, tell the developer to commit the Ready Brief on the feature branch. Present both implementation choices without selecting silently:
+After acceptance, tell the developer to commit the Ready Brief on the feature branch. Present both first-class strategies and the experimental planned TDD methodology without selecting silently:
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
+/absolutforge:build-planned-tdd absolutforge/features/{slug}/feature-brief.md
 ```
 
 Codex:
@@ -35,6 +36,15 @@ Codex:
 ```text
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
+$absolutforge build-planned-tdd absolutforge/features/{slug}/feature-brief.md
 ```
 
-Recommend `build` by default. Recommend `build-planned` when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead. Do not create implementation tasks during Discuss.
+Pi:
+
+```text
+/skill:build absolutforge/features/{slug}/feature-brief.md
+/skill:build-planned absolutforge/features/{slug}/feature-brief.md
+/skill:build-planned-tdd absolutforge/features/{slug}/feature-brief.md
+```
+
+Recommend `build` by default. Recommend the `planned` strategy when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead: `build-planned` is its standard methodology. Present experimental `build-planned-tdd` only when the human wants an auditable TDD comparison or explicitly prefers RED-GREEN-REFACTOR execution. Do not create implementation tasks during Discuss.

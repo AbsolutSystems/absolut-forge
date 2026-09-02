@@ -1,8 +1,8 @@
 # AbsolutForge
 
-AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and opencode. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
+AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.4.0.** This release makes autonomous Build the recommended default, reduces planned execution to a lean task graph and one plan-change log, keeps consultation outside lifecycle state, introduces risk-based Test Obligations, makes local checkpoint commits part of both Build strategies, and lets long planned builds rotate into fresh orchestrator contexts.
+**Current release: 0.5.0.** This release adds experimental `build-planned-tdd`: an auditable RED-GREEN-REFACTOR methodology inside the existing planned Build strategy. Standard `build-planned` remains available unchanged, durable methodology state keeps later stages on the selected execution path, and the shared skill package now supports Pi with clean-session Review handoff.
 
 ## Dual Build
 
@@ -12,9 +12,10 @@ The core workflow is:
                  ┌─ build ──────────────┐
 discuss -> Ready ┤                      ├-> review -> ship
                  └─ build-planned ──────┘
+                    └ methodology: standard | experimental TDD
 ```
 
-Both builders consume the same committed Ready Feature Brief.
+Both strategies consume the same committed Ready Feature Brief.
 
 ### `build` — autonomous
 
@@ -30,15 +31,20 @@ The planned path is not a handoff of feature ownership to small models. Workers 
 
 The active orchestrator context is disposable. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build-planned` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
+### `build-planned-tdd` — experimental planned methodology
+
+This explicit alternative selects the same first-class `planned` strategy but makes methodology durable as `tdd`. Each changed behavior is developed through auditable RED-GREEN-REFACTOR cycles derived from the same risk-based Test Obligations. Behavior-preserving refactors use characterization coverage; valid non-behavior exemptions remain available. Tasks run serially so RED attribution and test-before-production ordering remain clear.
+
 ## Strategy selection
 
-After `discuss`, explicitly choose one. Prefer `build` by default; choose `build-planned` when the feature is large or separable enough to repay planning and delegation overhead.
+After `discuss`, explicitly choose one of two first-class strategies. Prefer `build` by default; choose planned Build when the feature is large or separable enough to repay planning and delegation overhead. Within planned Build, use `build-planned` normally or explicitly select experimental `build-planned-tdd` for a TDD quality comparison. Strategy and planned methodology cannot change after Build start.
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/my-feature/feature-brief.md
 /absolutforge:build-planned absolutforge/features/my-feature/feature-brief.md
+/absolutforge:build-planned-tdd absolutforge/features/my-feature/feature-brief.md
 ```
 
 Codex:
@@ -46,6 +52,7 @@ Codex:
 ```text
 $absolutforge build absolutforge/features/my-feature/feature-brief.md
 $absolutforge build-planned absolutforge/features/my-feature/feature-brief.md
+$absolutforge build-planned-tdd absolutforge/features/my-feature/feature-brief.md
 ```
 
 opencode:
@@ -53,9 +60,18 @@ opencode:
 ```text
 /absolutforge-build absolutforge/features/my-feature/feature-brief.md
 /absolutforge-build-planned absolutforge/features/my-feature/feature-brief.md
+/absolutforge-build-planned-tdd absolutforge/features/my-feature/feature-brief.md
 ```
 
-The selected strategy is recorded in Build start evidence. A Building feature resumes through the same builder, and Review blockers return to that builder. Do not silently switch strategy mid-feature.
+Pi:
+
+```text
+/skill:build absolutforge/features/my-feature/feature-brief.md
+/skill:build-planned absolutforge/features/my-feature/feature-brief.md
+/skill:build-planned-tdd absolutforge/features/my-feature/feature-brief.md
+```
+
+The selected strategy and planned methodology are recorded in Build start evidence. A Building feature resumes through the matching builder, and Review blockers return to that builder. Do not silently switch strategy or methodology mid-feature.
 
 ## Second opinion
 
@@ -79,6 +95,12 @@ opencode:
 /absolutforge-consult absolutforge/features/my-feature/implementation-plan.md
 ```
 
+Pi:
+
+```text
+/skill:consult absolutforge/features/my-feature/implementation-plan.md
+```
+
 The consulting session appends immutable `C-{NNN}` findings to `absolutforge/features/{slug}/consult-{slug}.md`. The receiving `discuss` or Build context decides whether they still apply and records accepted changes in its own artifact. Build never offers, awaits, or settles consultation; findings are evidence, never authorization.
 
 ## Skills
@@ -87,6 +109,7 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 - `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
 - `build` — autonomous high-capability implementation.
 - `build-planned` — high-capability planning/orchestration with bounded worker delegation.
+- `build-planned-tdd` — experimental TDD methodology for the same planned strategy.
 - `save` / `load` — durable cross-session context without hidden state.
 - `review` — one fresh read-only whole-feature review.
 - `ship` — archive durable context and create one local closeout commit.
@@ -137,6 +160,21 @@ This mapping is deployment guidance, not a contract. Cross-family Review is pref
 ## Host installation
 
 Claude Code and Codex install the repository as a local plugin through their normal local-plugin flow. The repository root is the plugin root.
+
+Pi consumes the repository as a Pi Package declared by the root `package.json`:
+
+```bash
+pi install /absolute/path/to/absolut-forge
+```
+
+Invoke stages as `/skill:{name}`. Pi core has no native subagents, so a clean-context Review uses a fresh session after Build handoff:
+
+```text
+/new
+/skill:review absolutforge/features/my-feature/feature-brief.md absolutforge/features/my-feature/review.md
+```
+
+Use `/reload` after local changes. See [`references/pi-tools.md`](references/pi-tools.md) for planned-worker behavior and Review isolation.
 
 opencode has no plugin format that packages skills, but it reads the same `SKILL.md` tree natively. Register it once in `opencode.json`:
 

@@ -15,9 +15,9 @@ Accept only `absolutforge/features/{slug}/feature-brief.md`.
 
 For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. The uncommitted consultation report allowed by the artifact contract is the only exception. Reject an existing `implementation-plan.md`.
 
-Record HEAD as `base_commit`, append Build start evidence with strategy `autonomous`, set the Brief to `Building`, and create a local Build-start checkpoint commit before any source edit. Include the permitted consultation report when present.
+Record HEAD as `base_commit`, append Build start evidence with strategy `autonomous` and planned methodology `not applicable`, set the Brief to `Building`, and create a local Build-start checkpoint commit before any source edit. Include the permitted consultation report when present.
 
-For `Building`, require Build start evidence whose strategy is `autonomous`. A planned strategy hands off to `build-planned`; never convert execution state.
+For `Building`, require Build start evidence whose strategy is `autonomous`. A planned strategy hands off by recorded methodology: `build-planned-tdd` for `tdd`, otherwise `build-planned`; never convert execution state.
 
 ## Execute outcomes
 
@@ -43,7 +43,7 @@ After every accepted outcome has a checkpoint commit:
 
 1. run relevant broader checks and exercise the primary accepted path at integration level;
 2. inspect `base_commit..HEAD` against the Brief;
-3. append final Build Evidence, including named tests/cases and whole-feature path evidence;
+3. append final Build Evidence with planned methodology `not applicable`, including named tests/cases and whole-feature path evidence;
 4. set the Brief to `In Review` and create a final local handoff commit containing the completed feature artifacts.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

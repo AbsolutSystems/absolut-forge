@@ -1,0 +1,16 @@
+{
+  "name": "absolutforge",
+  "version": "0.5.0",
+  "description": "Intent-driven delivery skills with autonomous, planned, and planned TDD execution.",
+  "private": true,
+  "keywords": [
+    "pi-package",
+    "agent-skills",
+    "software-delivery"
+  ],
+  "pi": {
+    "skills": [
+      "skills"
+    ]
+  }
+}

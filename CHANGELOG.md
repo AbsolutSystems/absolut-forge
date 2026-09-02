@@ -5,6 +5,32 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-09-02
+
+### Added
+
+- Added experimental `build-planned-tdd`, a RED-GREEN-REFACTOR methodology
+  within the existing first-class planned Build strategy. It keeps the same
+  implementation plan, lifecycle, checkpoint, Review, and Ship contracts while
+  recording durable TDD cycle evidence and executing tasks serially.
+- Added Pi support through a root Pi Package manifest and host mapping. Pi uses
+  the shared skill tree, native `/skill:{name}` invocation, and a `/new` Review
+  handoff so independent Review starts with clean context despite Pi core not
+  shipping a native subagent primitive.
+
+### Changed
+
+- Build artifacts now record `Planned methodology: not applicable | standard |
+  tdd`; legacy planned artifacts without the field remain `standard`.
+- Resume, Review correction, Save/Load, Debug, and Ship routing preserve the
+  selected planned methodology.
+
+### Documentation
+
+- Added the planned TDD contract and ADR, documented native invocation on all
+  four supported hosts, and updated the workflow and artifact documentation.
+- Codex and Claude plugin manifests bumped to the base release version `0.5.0`.
+
 ## [0.4.0] - 2026-09-01
 
 ### Changed

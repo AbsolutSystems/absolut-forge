@@ -9,9 +9,9 @@ Require a matching `In Review` Brief and `Complete` Review with no open BLOCKING
 
 Prepare a closeout preview before mutation. The preview includes archive files, active-artifact cleanup, memory candidates, exact staging set and local conventional commit message. Ask explicitly whether to generate the optional HTML executive summary and whether to promote each durable memory candidate.
 
-After approval, create `absolutforge/archives/{slug}/feature-record.md`. Preserve original intent separately from as-built result, accepted amendments, Build strategy, verification, Review findings/follow-ups and durable knowledge.
+After approval, create `absolutforge/archives/{slug}/feature-record.md`. Preserve original intent separately from as-built result, accepted amendments, Build strategy, planned methodology, verification, Review findings/follow-ups and durable knowledge.
 
-For autonomous Build, consolidate useful execution-map/checkpoint facts. For planned Build, read and remove the active `implementation-plan.md`, and consolidate plan revision count, completed task outcomes, material plan changes, routing/escalation summary without provider identity, and final integration verification.
+For autonomous Build, consolidate useful execution-map/checkpoint facts. For planned Build, read and remove the active `implementation-plan.md`, and consolidate plan revision count, completed task outcomes, material plan changes, routing/escalation summary without provider identity, and final integration verification. For TDD methodology also consolidate task modes and concise cycle evidence or exemptions, never raw logs.
 
 Read `consult-{slug}.md` before removing it and consolidate it to the Feature Record contract in `../../references/artifact-contracts.md`: which artifacts were consulted, and each finding accepted by the owning context that changed the delivered feature, traced through its Brief amendment or `PC-` plan entry. Consulted with none accepted is still recorded. Nothing else from the report survives.
 

@@ -13,17 +13,17 @@ Read `../../references/planned-build-contract.md`, `../../references/artifact-co
 
 Accept only the canonical Feature Brief path.
 
-For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. The permitted uncommitted consultation report is the only exception. Reject an existing `execution-map.md`.
+For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. The permitted uncommitted consultation report is the only exception. Reject an existing `execution-map.md` or `implementation-plan.md`; a new Build never adopts or overwrites stale execution state.
 
-Record HEAD as `base_commit`, append Build start evidence with strategy `planned`, set the Brief to `Building`, and create a local Build-start checkpoint commit before source edits. Include the consultation report when present.
+Record HEAD as `base_commit`, append Build start evidence with strategy `planned` and planned methodology `standard`, set the Brief to `Building`, and create a local Build-start checkpoint commit before source edits. Include the consultation report when present.
 
-For `Building`, require strategy `planned`; an autonomous strategy hands off to `build`. Load the existing plan rather than recreating it. If no plan exists, compile it before source edits. A completed plan returned by Review gains a new corrective task through a `PC-` entry; completed task history remains unchanged.
+For `Building`, require strategy `planned` and methodology `standard`; absence of methodology in legacy evidence means `standard`. An autonomous strategy hands off to `build`, while methodology `tdd` hands off to `build-planned-tdd`. Load the existing plan rather than recreating it. If no plan exists, compile it before source edits. A completed plan returned by Review appends a `PC-` entry that adds one corrective task and increments the revision, then returns to `Executing`; completed task history remains unchanged.
 
 ## Compile the plan
 
 Inspect the accepted Brief, amendments, linked project authority, and relevant current code/tests. Create the smallest useful acyclic graph using `planned-build-contract.md`.
 
-Every Expected Outcome maps to tasks or final verification. Each behavior-changing task names applicable risk-based Test Obligations, not merely a test count. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define focused executable verification.
+Every Expected Outcome maps to tasks or final verification. Record `Planned methodology: standard`. Each behavior-changing task names applicable risk-based Test Obligations, not merely a test count. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define focused executable verification.
 
 Validate outcome coverage, dependency order, write ownership, test obligations, final integration checks, and absence of new product intent. Mark the plan `Ready` and create a local plan checkpoint commit before any source edit.
 
@@ -50,7 +50,7 @@ After every task has a checkpoint commit, rehydrate from durable artifacts rathe
 1. validate Expected Outcome coverage again;
 2. run final broader checks and exercise the primary accepted path at integration level;
 3. inspect `base_commit..HEAD` against the immutable Brief and detect cross-task inconsistencies or diff garbage;
-4. append final Build Evidence with named tests/cases, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
+4. append final Build Evidence with planned methodology `standard`, named tests/cases, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
 5. mark the plan `Complete`, set the Brief to `In Review`, and create a final local handoff commit.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

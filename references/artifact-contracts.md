@@ -8,7 +8,7 @@
 absolutforge/features/{slug}/
 ├── feature-brief.md
 ├── execution-map.md          # optional; autonomous build only
-├── implementation-plan.md    # planned build only
+├── implementation-plan.md    # planned build, standard or TDD methodology
 ├── consult-{slug}.md         # optional; one consultation report per feature
 ├── save-{slug}.md            # optional during either Building strategy
 └── review.md
@@ -30,7 +30,7 @@ absolutforge/archives/{slug}/
 Draft -> Ready -> Building -> In Review -> Shipped
 ```
 
-`Ready` is the immutable intent baseline. The explicit invocation of either `build` or `build-planned` selects the feature's Build strategy. `Building` resumes only through that selected strategy. A Review blocker returns to the selected strategy. Switching strategy requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
+`Ready` is the immutable intent baseline. Explicit invocation selects one of two first-class Build strategies: `build` selects `autonomous`; `build-planned` and experimental `build-planned-tdd` both select `planned`, with methodology `standard` or `tdd`. `Building` resumes only through the selected strategy and planned methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
 
 ## Feature Brief
 
@@ -96,8 +96,11 @@ Append exactly once before the first source edit:
 - Base revision: `{base_commit}`
 - Worktree: clean
 - Build strategy: autonomous | planned
+- Planned methodology: not applicable | standard | tdd
 - Execution artifact: none | `absolutforge/features/{slug}/execution-map.md` | `absolutforge/features/{slug}/implementation-plan.md`
 ```
+
+Artifacts created before the methodology field was introduced remain valid: absence means `not applicable` for autonomous Build and `standard` for planned Build.
 
 A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start. An uncommitted `consult-{slug}.md` is the one exception: a consultation may run between the committed Ready Brief and Build start, so the report is a permitted uncommitted workflow artifact there, exactly as the active `review.md` is at Review. Any uncommitted source change still blocks Build start.
 
@@ -111,6 +114,7 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 ### Build evidence — YYYY-MM-DD
 - Base revision / review diff: `{base_commit}..HEAD`
 - Build strategy: autonomous | planned
+- Planned methodology: not applicable | standard | tdd
 - Changed areas: {repository-relative areas}
 - Tests added/updated: {test paths and cases} | none — {exemption reason and observable check performed instead}
 - Verification commands and results: {command -> pass|fail}
@@ -156,7 +160,7 @@ pending | in-progress | complete
 
 ## Planned Implementation Plan
 
-The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
+The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). TDD-specific behavioral deltas are owned by [`planned-tdd-contract.md`](planned-tdd-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
 
 ## Consultation report
 
@@ -195,6 +199,7 @@ Saved
 ## Context
 - Feature Brief:
 - Build strategy: autonomous | planned
+- Planned methodology: not applicable | standard | tdd
 - Execution artifact: none | execution-map path | implementation-plan path
 - Feature branch:
 - Base revision:
@@ -225,6 +230,7 @@ In Review | Complete
 ## Context
 - Feature Brief:
 - Build strategy: autonomous | planned
+- Planned methodology: not applicable | standard | tdd
 - Base revision:
 - Reviewed revision:
 - Review range:
@@ -252,7 +258,7 @@ Review treats the Brief as intent authority, source/tests and `base_commit..HEAD
 
 ## Feature Record
 
-Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. Autonomous Build includes execution-map/checkpoint facts when present.
+Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, planned methodology, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. A TDD record also consolidates task modes, cycle evidence or exemptions, without raw logs. Autonomous Build includes execution-map/checkpoint facts when present.
 
 Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 

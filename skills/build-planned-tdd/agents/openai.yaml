@@ -1,0 +1,4 @@
+interface:
+  display_name: "AbsolutForge Build Planned TDD"
+  short_description: "Run planned delivery with strict test-driven cycles"
+  default_prompt: "Use $absolutforge build-planned-tdd to deliver this accepted Feature Brief through auditable RED-GREEN-REFACTOR tasks."

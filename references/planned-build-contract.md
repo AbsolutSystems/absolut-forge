@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`build-planned` is the higher-overhead alternative to autonomous `build`. Use it when a feature benefits materially from durable decomposition, bounded delegation, or cross-session resume. The high-capability orchestrator remains owner of the complete feature and validates every result.
+`build-planned` is the higher-overhead alternative to autonomous `build`. `build-planned-tdd` uses the same first-class planned strategy and artifact with the additional methodology contract in `planned-tdd-contract.md`. Use planned Build when a feature benefits materially from durable decomposition, bounded delegation, or cross-session resume. The high-capability orchestrator remains owner of the complete feature and validates every result.
 
 ## Active artifact and lifecycle
 
@@ -11,6 +11,8 @@ Planned Build owns `absolutforge/features/{slug}/implementation-plan.md`.
 Plan lifecycle:
 
 `Ready -> Executing -> Complete`
+
+After Review returns a blocker, and only then, a `Complete` plan may reopen to `Executing`: append one `PC-` entry that preserves completed tasks, adds the bounded corrective task, increments the plan revision, and changes plan status to `Executing`. A `Complete` plan never reopens for new product intent or unrelated work.
 
 Task lifecycle:
 
@@ -32,6 +34,7 @@ Ready | Executing | Complete
 - Base revision: `{base_commit}`
 - Plan revision: {integer starting at 1}
 - Build strategy: planned
+- Planned methodology: standard | tdd
 
 ## Strategy
 Concise implementation architecture, ordering rationale, and integration approach.
@@ -49,6 +52,8 @@ Concise implementation architecture, ordering rationale, and integration approac
 - Change surface: {bounded repository-relative production and test paths}
 - Invariants: {task-local and cross-boundary rules; explicit exclusions when material}
 - Test obligations: {applicable risks and observable behaviors from verification-doctrine.md} | none — {exemption reason}
+- TDD mode: required | characterization | exempt — {reason}  (tdd methodology only)
+- TDD evidence: pending | {ordered cycle evidence} | exempt — {reason and closest check}  (tdd methodology only)
 - Verification: {focused commands/checks}
 - Completion evidence: pending | {changed paths; tests and cases; commands/results; local decisions; new dependency or invariant facts}
 
@@ -59,6 +64,8 @@ Concise implementation architecture, ordering rationale, and integration approac
 None yet, or append entries below.
 ```
 
+For plans created before `Planned methodology` existed, absence means `standard`.
+
 ## Task design
 
 Use the smallest useful acyclic graph. Map every accepted Expected Outcome to tasks or final verification. Put shared contracts before consumers and give each task one bounded production write surface.
@@ -67,7 +74,7 @@ A task states WHAT result must change, WHERE responsibility lives, WHY its invar
 
 Every behavior-changing task carries concrete `Test obligations` derived from `verification-doctrine.md`. Name the applicable risks and observable behavior, not a test count or implementation recipe. Test paths belong to the task's change surface.
 
-Two tasks never own the same production path or new test file. They may add separately named cases to an existing test file, but tasks sharing any writable path must execute sequentially and may not be in the same parallel wave.
+Two tasks never own the same production path or new test file. They may add separately named cases to an existing test file, but tasks sharing any writable path must execute sequentially and may not be in the same parallel wave. The TDD methodology is stricter and executes only one task at a time under `planned-tdd-contract.md`.
 
 ## Dispatch and waves
 
@@ -92,7 +99,7 @@ Durable state has one owner:
 
 Do not copy raw worker conversations, full logs, or facts already recoverable from Git into the plan. After a task is validated, reduce its result to concise durable evidence and let the raw interaction leave active context.
 
-At a clean task boundary, resume directly by invoking `build-planned` with the canonical Brief; `save` is unnecessary because the plan and Git are the resume record. Use `save` when stopping mid-task or while unresolved context exists that has not reached a durable task or `PC-` boundary. Save still does not preserve dirty source by itself.
+At a clean task boundary, resume directly by invoking the planned builder matching `Planned methodology` with the canonical Brief: `build-planned` for `standard`, or `build-planned-tdd` for `tdd`. `save` is unnecessary because the plan and Git are the resume record. Use `save` when stopping mid-task or while unresolved context exists that has not reached a durable task or `PC-` boundary. Save still does not preserve dirty source by itself.
 
 Rotate to a fresh session when context pressure risks losing intent or causal reasoning, especially after a large wave, a `PC-` change, or a long diagnosis, and before a substantial `high` task or final integration when practical. Use no fixed task count. On resume, rehydrate from the complete Brief, current plan and Git, then load only the pending task, completion evidence of its dependencies, and relevant code/tests.
 

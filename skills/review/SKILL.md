@@ -5,7 +5,9 @@ description: "Explicitly run one independent evidence-based whole-feature review
 
 # Review
 
-Review is common to both Build strategies. Require an `In Review` Brief, valid append-only Build start/evidence, a resolvable `base_commit`, and a clean committed source worktree (the active `review.md` is the only permitted uncommitted workflow artifact).
+Review is common to both Build strategies and both planned methodologies. Require an `In Review` Brief, valid append-only Build start/evidence with consistent methodology, a resolvable `base_commit`, and a clean committed source worktree (the active `review.md` is the only permitted uncommitted workflow artifact).
+
+Read `../../references/artifact-contracts.md`, `../../references/verification-doctrine.md`, and the active host mapping before selecting the fresh-reviewer mechanism.
 
 Read the immutable Brief/amendments, linked ADRs/rules/memory, Build Evidence, current source/tests and the selected execution artifact when present:
 
@@ -18,7 +20,7 @@ Request exactly one fresh generic read-only reviewer when the harness can provid
 
 Check intent/scope fidelity, correctness, concrete edge cases, security/data integrity, test value, regressions/compatibility, unintended scope, missing critical docs and diff garbage. Findings are only `BLOCKING` or `FOLLOW-UP`, with stable IDs, evidence, impact and smallest sensible correction.
 
-Judge tests against the risk-based obligations in `../../references/verification-doctrine.md`. Raise a finding when an applicable primary, failure/boundary, state/data, seam-contract, or regression obligation is uncovered without an exemption; when assertions bind nothing the change produces; or when an existing assertion was weakened without accepted Brief authority. Judge by reading tests against the diff, never by reverting production code, and leave the worktree clean.
+Judge tests against the risk-based obligations in `../../references/verification-doctrine.md`. Raise a finding when an applicable primary, failure/boundary, state/data, seam-contract, or regression obligation is uncovered without an exemption; when assertions bind nothing the change produces; or when an existing assertion was weakened without accepted Brief authority. For methodology `tdd`, also validate that every behavior-changing task records credible ordered RED-GREEN-REFACTOR evidence under `../../references/planned-tdd-contract.md`; do not attempt to recreate RED by reverting production code. Judge by reading tests against the diff and leave the worktree clean.
 
 Check the final Build Evidence entry against the evidence schema in `../../references/artifact-contracts.md`: a `Whole-feature path exercised` field that is absent, blank, or `not available` without both a reason and the closest whole-feature check actually performed is a finding, at the severity the evidence warrants.
 
@@ -29,6 +31,7 @@ When no BLOCKING finding remains, record exact reviewed HEAD/range, set Review `
 When blockers remain, return Brief status to `Building` and hand off to the strategy recorded in Build start evidence:
 
 - `autonomous` -> `build`;
-- `planned` -> `build-planned`.
+- `planned` with methodology `standard` or a legacy missing field -> `build-planned`;
+- `planned` with methodology `tdd` -> `build-planned-tdd`.
 
 A planned blocker should become a new bounded corrective task recorded through a `PC-` plan entry; Review never mutates the plan itself. After two failed attempts on the same blocker or material scope expansion, escalate to the human rather than loop indefinitely.

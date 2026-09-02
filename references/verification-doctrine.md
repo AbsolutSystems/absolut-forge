@@ -1,6 +1,6 @@
 # Verification Doctrine
 
-Binding for `build`, `build-planned`, `review`, and a `debug` fix made inside an active feature.
+Binding for `build`, `build-planned`, `build-planned-tdd`, `review`, and a `debug` fix made inside an active feature.
 
 ## Test charter
 
@@ -41,3 +41,7 @@ Record `Tests: none — {reason}` and the closest observable check performed. Di
 Focused verification runs the tests owned by the outcome or task plus the narrow build, type, lint, or integration checks capable of exposing its risks. Evidence names test files and cases, commands, and results; `tests pass` alone is not evidence.
 
 At finish, run relevant broader checks and exercise the feature's primary accepted path at integration level once through an existing integration/e2e suite, a supported integration test, or a scripted run of the real entry point. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
+
+## TDD methodology
+
+`build-planned-tdd` adds chronological RED-GREEN-REFACTOR requirements through `planned-tdd-contract.md`; it does not replace or reduce this risk-based charter. A passing test written first still fails the charter when it binds no observable behavior or leaves an applicable risk uncovered. Conversely, do not manufacture a failing test for a behavior-preserving refactor or a valid recorded exemption.
