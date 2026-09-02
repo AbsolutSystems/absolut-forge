@@ -2,7 +2,7 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.5.1.** This release makes every Build path use narrow unit-test gates during implementation, targeted mutation proof for test guards, and full regression plus integration/e2e verification at the final whole-feature gate.
+**Current release: 0.5.2.** This release makes `discuss` create and verify the local Ready Brief commit immediately after explicit acceptance, so the developer can proceed directly to strategy selection.
 
 ## Dual Build
 
@@ -15,7 +15,7 @@ discuss -> Ready ┤                      ├-> review -> ship
                     └ methodology: standard | experimental TDD
 ```
 
-Both strategies consume the same committed Ready Feature Brief.
+Both strategies consume the same committed Ready Feature Brief. After the developer explicitly accepts the complete proposal, `discuss` commits only the canonical Brief path locally and reports the baseline revision; it never includes unrelated staged or dirty changes.
 
 ### `build` — autonomous
 
@@ -105,7 +105,7 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 
 ## Skills
 
-- `discuss` — inspect evidence and create/accept one Feature Brief.
+- `discuss` — inspect evidence, create and accept one Feature Brief, then commit its Ready baseline locally.
 - `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
 - `build` — autonomous high-capability implementation.
 - `build-planned` — high-capability planning/orchestration with bounded worker delegation.

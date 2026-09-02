@@ -8,7 +8,7 @@ AbsolutForge controls delivered outcomes rather than prescribing every coding st
 discuss -> choose build strategy -> review -> ship
 ```
 
-After `discuss` produces a committed Ready Feature Brief, the developer chooses one of two first-class strategies:
+After the developer explicitly accepts the complete proposal, `discuss` creates a local commit containing only the Ready Feature Brief and reports its baseline revision. The developer then chooses one of two first-class strategies:
 
 ```text
 Ready Brief

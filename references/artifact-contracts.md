@@ -86,6 +86,12 @@ Feature | Fix | Refactor
 
 The immutable Ready baseline is `## Problem and goal` through `## Expected outcomes`, plus accepted amendments. Build may change lifecycle status and append Build Evidence only.
 
+## Ready acceptance checkpoint
+
+Explicit human acceptance authorizes `discuss` to set the complete Brief to `Ready` and create its local acceptance commit. The commit contains exactly `absolutforge/features/{slug}/feature-brief.md`; unrelated staged or dirty paths and an optional consultation report remain outside it. Discuss verifies the committed Ready content and changed path before handing off to Build, and reports the revision. An identical Ready Brief already committed at HEAD is reused without an empty commit.
+
+Discuss requires a non-detached intended feature branch before requesting final acceptance. Commit failure leaves the Ready Brief intact but blocks Build handoff until resolved; Discuss never amends, rewrites history, pushes, or commits another path as part of acceptance.
+
 ## Build start evidence
 
 Append exactly once before the first source edit:

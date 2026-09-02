@@ -17,11 +17,15 @@ Ask a small frontier of material questions whose answers change behavior, scope,
 
 An optional consultation report is evidence only. Decide whether its findings still apply and incorporate accepted product decisions into the complete proposal; do not copy consultation state into the Brief.
 
-Persist a Draft when useful or requested. When no material question remains, present one complete Brief proposal and obtain one explicit acceptance for the whole proposal. Only explicit acceptance changes `Draft` to `Ready`. A Ready Brief is immutable; later material changes use accepted amendments.
+Persist a Draft when useful or requested. Before requesting final acceptance, require a non-detached intended feature branch from which the Ready baseline may be committed; if branch intent is unclear, resolve it before acceptance. When no material question remains, present one complete Brief proposal and obtain one explicit acceptance for the whole proposal. Only explicit acceptance changes `Draft` to `Ready`. A Ready Brief is immutable; later material changes use accepted amendments.
 
 ## Handoff
 
-After acceptance, tell the developer to commit the Ready Brief on the feature branch. Present both first-class strategies and the experimental planned TDD methodology without selecting silently:
+Explicit acceptance authorizes Discuss to set the Brief to `Ready` and immediately create one local path-scoped acceptance commit. Stage the canonical `absolutforge/features/{slug}/feature-brief.md`, then commit with the path-scoped equivalent of `git commit --only -m "docs(absolutforge): accept {slug} feature brief" -- {brief-path}` so unrelated paths already in the index cannot enter the commit. Never include a consultation report, source code, or another path. Preserve unrelated index and worktree state. If the identical Ready Brief is already committed, reuse that commit rather than creating an empty one.
+
+After committing, verify that HEAD contains the accepted Ready content and that the new commit changed exactly the canonical Brief path, then report its revision. If the commit cannot be created or verified, stop before Build handoff, leave the Ready Brief intact, and report the exact blocker; never amend or rewrite history automatically. If unrelated dirty state remains, warn that Build start will reject it even though the Brief commit succeeded.
+
+After the verified acceptance commit, present both first-class strategies and the experimental planned TDD methodology without selecting silently:
 
 Claude Code:
 

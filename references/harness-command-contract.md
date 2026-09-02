@@ -74,7 +74,7 @@ Pi exposes loaded skills through `/skill:{name}`. Because Pi core has no native 
 
 ## Build strategy choice
 
-After `discuss` produces a committed Ready Brief, the developer explicitly chooses one of two strategies and, for planned Build, one methodology:
+After explicit acceptance, `discuss` creates and verifies a local path-scoped commit containing only the Ready Brief. The developer then chooses one of two strategies and, for planned Build, one methodology:
 
 - `build`: default; a high-capability model owns implementation directly.
 - `build-planned`: use the standard methodology when durable decomposition, meaningful bounded delegation, or cross-session resume justifies a task graph.
