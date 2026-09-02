@@ -26,7 +26,7 @@ Prefer autonomous `build` unless the expected delegation or durable decompositio
 
 Start from the task's declared capability.
 
-- `low`: mechanical/local change, narrow surface, explicit contract and focused verification.
+- `low`: mechanical/local change, narrow surface, explicit contract and a fast task gate.
 - `standard`: ordinary multi-file coordination with local design choices.
 - `high`: shared architecture, migrations, security/data boundaries, concurrency/state complexity, or material ambiguity.
 

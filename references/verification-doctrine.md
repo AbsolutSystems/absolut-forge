@@ -30,18 +30,24 @@ A useful test binds an observable value or effect produced by the change and wou
 
 Do not introduce a new test framework or restructure unrelated production code solely for testing without accepted product or architecture authority.
 
+## Binding proof
+
+Every new or materially changed test recorded as a guard needs targeted mutation proof. Temporarily remove or reverse the smallest production behavior that it claims to protect, run the exact test case or narrowest supported target, and confirm it fails for the expected reason. Restore the intended implementation, rerun the same target to green, and inspect the production diff before checkpointing. If the mutation survives, strengthen or replace the test; never cite an unbound test as delivery evidence.
+
+Keep the mutation temporary and local, and never commit mutated production state. A narrowly targeted mutation-testing command may replace the manual change, but a broad mutation suite is not required. Perform unit-level mutation proofs inside the outcome or task's fast gate. When a risk is observable only through integration, map both its exact-case mutation proof and its ordinary verification to the final gate rather than replacing the real boundary with mocks.
+
 ## Recorded exemption
 
 Omit automated tests only when there is no behavior to assert or the behavior cannot be exercised within accepted scope: documentation or configuration only, a pure rename/move, generated output, missing runnable test infrastructure, or required external infrastructure outside the Brief.
 
 Record `Tests: none — {reason}` and the closest observable check performed. Difficulty, time, or unfamiliarity are not exemptions.
 
-## Focused and final verification
+## Fast and final verification
 
-Focused verification runs the tests owned by the outcome or task plus the narrow build, type, lint, or integration checks capable of exposing its risks. Evidence names test files and cases, commands, and results; `tests pass` alone is not evidence.
+During an outcome or task, run only its exact or smallest relevant unit-test targets plus cheap build, type, or lint checks that directly cover its surface. Do not run the full changeset, workspace suite, integration suite, or end-to-end suite at an intermediate checkpoint. Map obligations observable only across a real integration boundary to final verification. Evidence names test files and cases, commands, mutation results, and ordinary results; `tests pass` alone is not evidence.
 
-At finish, run relevant broader checks and exercise the feature's primary accepted path at integration level once through an existing integration/e2e suite, a supported integration test, or a scripted run of the real entry point. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
+At finish, first perform the targeted proofs and checks mapped to real integration boundaries. Then run the authoritative full suite for the affected project or changeset once per final-verification attempt and exercise the feature's primary accepted path. Include the planned integration and end-to-end checks without rerunning a suite separately when the full command already contains it. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
 
 ## TDD methodology
 
-`build-planned-tdd` adds chronological RED-GREEN-REFACTOR requirements through `planned-tdd-contract.md`; it does not replace or reduce this risk-based charter. A passing test written first still fails the charter when it binds no observable behavior or leaves an applicable risk uncovered. Conversely, do not manufacture a failing test for a behavior-preserving refactor or a valid recorded exemption.
+`build-planned-tdd` adds chronological RED-GREEN-REFACTOR evidence and applies the shared binding and cost rules through `planned-tdd-contract.md`; it does not replace or reduce this risk-based charter. Do not manufacture a RED for a behavior-preserving refactor or valid exemption; characterization uses mutation proof instead.

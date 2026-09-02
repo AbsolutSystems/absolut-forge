@@ -29,11 +29,11 @@ For each coherent outcome:
 
 1. implement the accepted behavior;
 2. derive applicable test obligations from `verification-doctrine.md` and add tests for the distinct risks;
-3. run focused executable verification;
+3. run the outcome's exact or smallest relevant unit tests and cheap build, type, or lint checks, and obtain targeted mutation proof for every new or materially changed guard;
 4. diagnose and make one bounded evidence-backed repair when needed;
 5. append intermediate Build Evidence, update the map when present, and create a local checkpoint commit containing the outcome's source, tests, and artifacts.
 
-Do not mark the outcome complete without passing tests or a recorded exemption. Never weaken an existing test to reach green. Before a second speculative repair for the same failure, establish causal mapping and scope or escalate.
+Do not run the full changeset, integration suite, or end-to-end suite at an outcome checkpoint. Map integration-only obligations to final verification. Do not mark the outcome complete without its fast gate, mutation evidence for its unit guards, or a recorded exemption. Never weaken an existing test to reach green. Before a second speculative repair for the same failure, establish causal mapping and scope or escalate.
 
 A strictly trivial adjacent defect inside the touched surface may be fixed and reported. Non-trivial adjacent work remains follow-up unless explicitly approved.
 
@@ -41,9 +41,11 @@ A strictly trivial adjacent defect inside the touched surface may be fixed and r
 
 After every accepted outcome has a checkpoint commit:
 
-1. run relevant broader checks and exercise the primary accepted path at integration level;
+1. perform the exact-case mutation proofs and checks mapped to real integration boundaries, then run the authoritative full suite for the affected project or changeset once per final-verification attempt, without separately rerunning integration/e2e suites already included, and exercise the primary accepted path;
 2. inspect `base_commit..HEAD` against the Brief;
 3. append final Build Evidence with planned methodology `not applicable`, including named tests/cases and whole-feature path evidence;
 4. set the Brief to `In Review` and create a final local handoff commit containing the completed feature artifacts.
+
+If final verification fails, preserve completed outcome history, diagnose the cause, add one bounded corrective outcome with an appropriate fast guard and mutation proof, checkpoint it, and repeat final verification. Do not move a failing feature to Review.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

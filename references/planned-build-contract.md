@@ -54,11 +54,11 @@ Concise implementation architecture, ordering rationale, and integration approac
 - Test obligations: {applicable risks and observable behaviors from verification-doctrine.md} | none — {exemption reason}
 - TDD mode: required | characterization | exempt — {reason}  (tdd methodology only)
 - TDD evidence: pending | {ordered cycle evidence} | exempt — {reason and closest check}  (tdd methodology only)
-- Verification: {focused commands/checks}
-- Completion evidence: pending | {changed paths; tests and cases; commands/results; local decisions; new dependency or invariant facts}
+- Verification: {fast task-owned unit-test targets and cheap build/type/lint checks}
+- Completion evidence: pending | {changed paths; tests and cases; mutation proofs; commands/results; local decisions; new dependency or invariant facts}
 
 ## Final verification
-- Whole-feature integration/build/test checks, including the primary accepted path.
+- Integration-only mutation proofs and checks, the authoritative full suite for the affected project or changeset, and the primary accepted path.
 
 ## Plan changes
 None yet, or append entries below.
@@ -72,7 +72,7 @@ Use the smallest useful acyclic graph. Map every accepted Expected Outcome to ta
 
 A task states WHAT result must change, WHERE responsibility lives, WHY its invariants matter, and HOW correctness will be demonstrated. It does not prescribe method bodies, helper decomposition, naming, pseudo-patches, or ordered edit scripts. If safe delegation would require describing most of the patch, mark the task `high` and keep it with the orchestrator.
 
-Every behavior-changing task carries concrete `Test obligations` derived from `verification-doctrine.md`. Name the applicable risks and observable behavior, not a test count or implementation recipe. Test paths belong to the task's change surface.
+Every behavior-changing task carries concrete `Test obligations` derived from `verification-doctrine.md`. Name the applicable risks and observable behavior, not a test count or implementation recipe. Test paths belong to the task's change surface. Keep unit guards and their targeted mutation proofs in the fast task gate; map risks observable only across a real integration boundary to final verification.
 
 Two tasks never own the same production path or new test file. They may add separately named cases to an existing test file, but tasks sharing any writable path must execute sequentially and may not be in the same parallel wave. The TDD methodology is stricter and executes only one task at a time under `planned-tdd-contract.md`.
 
@@ -80,9 +80,9 @@ Two tasks never own the same production path or new test file. They may add sepa
 
 Select only dependency-ready tasks. Execute one directly or dispatch a parallel wave only when every task in the wave has a fully disjoint write surface and all shared contracts are already complete.
 
-Give a worker one task contract, the minimum relevant Brief/ADR/rule and dependency facts, its write boundary, and verification commands. The task is incomplete until its tests exist and pass. A worker may inspect neighboring code but may write only inside its surface. It never edits the Brief, plan, other tasks, review, branch history, remote state, or existing tests merely to reach green.
+Give a worker one task contract, the minimum relevant Brief/ADR/rule and dependency facts, its write boundary, fast verification commands, and required targeted mutation proofs. A worker executing alone may produce mutation evidence; workers in a parallel wave leave temporary production mutations to the orchestrator. The task is incomplete until its unit guards are mutation-bound and its fast gate passes. A worker may inspect neighboring code but may write only inside its surface. It never edits the Brief, plan, other tasks, review, branch history, remote state, or existing tests merely to reach green.
 
-After return, the orchestrator independently inspects the task diff and test value, confirms the write boundary, and reruns focused checks when evidence is incomplete or stale. Only then does it fill Completion Evidence, mark the task complete, and create the task checkpoint commit. Results from a parallel wave are validated and committed one task at a time by staging only that task's paths.
+After return, the orchestrator independently inspects the task diff, test value, mutation evidence, and restored production state, confirms the write boundary, and reruns the fast task gate when evidence is incomplete or stale. For a parallel wave, it performs targeted mutations sequentially while validating each task so one temporary change cannot contaminate another task's proof. Only then does it fill Completion Evidence, mark the task complete, and create the task checkpoint commit. Results from a parallel wave are validated and committed one task at a time by staging only that task's paths.
 
 ## Context rotation
 
@@ -129,3 +129,5 @@ An optional consultation report is evidence, not plan state. The orchestrator de
 ## Completion
 
 Mark the plan `Complete` only when every task is complete, Expected Outcome coverage still holds, final whole-feature verification passes, and the complete implementation diff has been inspected against the Brief. For a long Build, prefer performing this final integration pass from a fresh orchestrator context rehydrated from the durable artifacts.
+
+If final verification fails before completion, preserve completed tasks and append one `PC-` entry adding a bounded corrective task with a new plan revision. Execute and checkpoint it under the selected planned methodology, then repeat final verification.

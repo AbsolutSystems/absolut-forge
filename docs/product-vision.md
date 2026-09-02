@@ -31,7 +31,7 @@ Experimental `build-planned-tdd` preserves this strategy and lifecycle while rep
 
 ## Verification
 
-Both strategies share one positive, risk-based Test Charter. For each changed behavior, tests cover every applicable primary, failure/boundary, state/data, seam-contract, and regression obligation, with extra attention to security, persistence, compatibility, concurrency, and migrations. Test count follows distinct risks rather than task count. Existing assertions are never weakened to reach green, and the feature's primary accepted path is exercised at integration level before handoff.
+Both strategies share one positive, risk-based Test Charter. For each changed behavior, tests cover every applicable primary, failure/boundary, state/data, seam-contract, and regression obligation, with extra attention to security, persistence, compatibility, concurrency, and migrations. Test count follows distinct risks rather than task count. Intermediate checkpoints use narrow unit targets, and every new or changed guard receives targeted mutation proof that reversing its protected production behavior makes it fail. Broad regression and integration/e2e checks run at final whole-feature verification before handoff. Existing assertions are never weakened to reach green.
 
 ## Second opinion
 

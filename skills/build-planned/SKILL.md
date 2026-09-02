@@ -23,7 +23,7 @@ For `Building`, require strategy `planned` and methodology `standard`; absence o
 
 Inspect the accepted Brief, amendments, linked project authority, and relevant current code/tests. Create the smallest useful acyclic graph using `planned-build-contract.md`.
 
-Every Expected Outcome maps to tasks or final verification. Record `Planned methodology: standard`. Each behavior-changing task names applicable risk-based Test Obligations, not merely a test count. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define focused executable verification.
+Every Expected Outcome maps to tasks or final verification. Record `Planned methodology: standard`. Each behavior-changing task names applicable risk-based Test Obligations, not merely a test count. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define each task's fast unit-test gate separately from final broad and integration verification.
 
 Validate outcome coverage, dependency order, write ownership, test obligations, final integration checks, and absence of new product intent. Mark the plan `Ready` and create a local plan checkpoint commit before any source edit.
 
@@ -33,9 +33,9 @@ Build never automatically offers or waits for consultation. If the human supplie
 
 Mark the plan `Executing` when work begins. Select one dependency-ready task or a parallel wave whose write surfaces are fully disjoint, as allowed by the planned-build contract.
 
-Delegate only when useful. A worker receives one bounded task, minimum relevant context, its write boundary, Test Obligations, and verification commands. It owns local implementation choices but no lifecycle, plan, commits, remote state, or broader redesign.
+Delegate only when useful. A worker receives one bounded task, minimum relevant context, its write boundary, Test Obligations, fast verification commands, and the targeted mutation proofs required for new or materially changed guards. It owns local implementation choices but no lifecycle, plan, commits, remote state, or broader redesign. A worker executing alone may produce the mutation evidence; workers in a parallel wave leave targeted mutation to the orchestrator so temporary production changes cannot contaminate another task's test run.
 
-The orchestrator independently inspects every task diff and its tests, confirms the write boundary, and reruns focused checks when evidence is incomplete. Validate and checkpoint-commit one task at a time, staging only its paths when a parallel wave returned multiple results. A task is complete only when its obligations are covered and focused checks pass or its exemption is recorded.
+The orchestrator independently inspects every task diff and its tests, confirms the write boundary, mutation evidence, and restored production state, and reruns the task's fast unit-test gate when evidence is incomplete. For a parallel wave, it performs each task's targeted mutations sequentially during that task's validation. Do not run the full changeset, integration suite, or end-to-end suite at a task checkpoint; map integration-only obligations to final verification. Validate and checkpoint-commit one task at a time, staging only its paths when a parallel wave returned multiple results. A task is complete only when its obligations are covered, its unit guards are mutation-bound, and its fast gate passes or its exemption is recorded.
 
 After each task, reduce the result to concise Completion Evidence, including any new dependency or invariant fact. Leave a clean committed boundary from which a fresh orchestrator can resume using the Brief, plan, Git, and relevant code/tests without the earlier conversation. Do not retain raw worker dialogue or logs as durable plan content.
 
@@ -48,9 +48,11 @@ Rotate to a fresh session when context pressure threatens intent or causal reaso
 After every task has a checkpoint commit, rehydrate from durable artifacts rather than conversational memory; for a long Build, prefer a fresh orchestrator context for this pass:
 
 1. validate Expected Outcome coverage again;
-2. run final broader checks and exercise the primary accepted path at integration level;
+2. perform the exact-case mutation proofs and checks mapped to real integration boundaries, then run the authoritative full suite for the affected project or changeset once per final-verification attempt, without separately rerunning integration/e2e suites already included, and exercise the primary accepted path;
 3. inspect `base_commit..HEAD` against the immutable Brief and detect cross-task inconsistencies or diff garbage;
 4. append final Build Evidence with planned methodology `standard`, named tests/cases, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
 5. mark the plan `Complete`, set the Brief to `In Review`, and create a final local handoff commit.
+
+If final verification fails, preserve completed task history, append one `PC-` entry that adds a bounded corrective task, execute and checkpoint it with the same fast verification and mutation rules, then repeat final verification. Do not move a failing feature to Review.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

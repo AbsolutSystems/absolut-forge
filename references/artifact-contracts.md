@@ -117,6 +117,7 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 - Planned methodology: not applicable | standard | tdd
 - Changed areas: {repository-relative areas}
 - Tests added/updated: {test paths and cases} | none — {exemption reason and observable check performed instead}
+- Test binding proofs: {test case; targeted production mutation; expected failure; restored pass} | none — {reason}
 - Verification commands and results: {command -> pass|fail}
 - Whole-feature path exercised: {integration-level check and result} | not available — {reason and closest whole-feature check performed}  (final entry only)
 - Execution state: {autonomous outcomes/checkpoints OR planned task IDs/plan revision}
@@ -129,6 +130,8 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 ```
 
 The `(final entry only)` marker is not part of the recorded value: autonomous intermediate entries omit that line and the final entry writes the field without the marker. Every other field appears in each applicable entry.
+
+Build Evidence and completed planned-task evidence created before `Test binding proofs` was introduced remain valid legacy evidence. Any new evidence entry uses the field, and resumed Build applies the current binding rule to new or materially changed guards without rewriting completed history.
 
 ## Autonomous Execution Map
 
@@ -153,7 +156,8 @@ pending | in-progress | complete
 - Boundaries:
 - Dependencies:
 - Test obligations: {applicable risks and observable behaviors} | none — {exemption reason}
-- Verification:
+- Verification: {fast unit-test targets and cheap build/type/lint checks}
+- Test binding proofs: {test case; targeted production mutation; expected failure; restored pass} | pending | none — {reason}
 - Result:
 - Material deviations:
 ```
@@ -262,4 +266,4 @@ Ship archives one record containing original intent, accepted amendments, as-bui
 
 Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 
-Verification in the record names the tests that cover the delivered behavior, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.
+Verification in the record names the tests that cover the delivered behavior, their targeted mutation binding proofs, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.

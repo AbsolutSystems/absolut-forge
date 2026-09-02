@@ -5,6 +5,30 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-09-02
+
+### Changed
+
+- All three Build paths now keep intermediate feedback fast by running exact or
+  narrowly scoped unit targets plus cheap static checks. Full regression and
+  integration/e2e suites run at final whole-feature verification.
+- New or materially changed test guards now require targeted mutation proof:
+  reversing the protected production behavior must make the narrow test fail
+  before the intended implementation is restored and reconfirmed green.
+- Standard planned parallel waves defer temporary production mutations to the
+  orchestrator's sequential task validation so one proof cannot contaminate
+  another worker's test run.
+- Build Evidence, implementation plans, Review, and shipped Feature Records now
+  preserve test-binding evidence, with compatibility for legacy artifacts.
+
+### Documentation
+
+- Updated the verification doctrine, all Build entrypoints, shared contracts,
+  README, product vision, and planned TDD ADR for the fast-feedback and mutation
+  policy.
+- Package, Codex, and Claude plugin manifests bumped to base release version
+  `0.5.1`.
+
 ## [0.5.0] - 2026-09-02
 
 ### Added

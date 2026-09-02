@@ -82,7 +82,7 @@ After `discuss` produces a committed Ready Brief, the developer explicitly choos
 
 Invocation selects the strategy and, for planned Build, its methodology. The selected builder records `Build strategy: autonomous | planned` and `Planned methodology: not applicable | standard | tdd` in Build start evidence. A Building Brief resumes only through the matching skill. Review blockers return to the recorded builder. Do not silently switch strategy or planned methodology mid-feature.
 
-The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after focused verification. Final Build evidence and the `In Review` transition receive a final local handoff commit.
+The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after their fast unit-test gate and targeted test-binding proofs. Broad regression and integration/e2e checks run at final verification before the `In Review` handoff commit.
 
 ## Resume invariant
 

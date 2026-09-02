@@ -23,7 +23,7 @@ For `Building`, require strategy `planned` and methodology `tdd`. A missing meth
 
 Inspect the accepted Brief, amendments, linked project authority, and relevant current code/tests. Create the smallest useful acyclic graph using the planned Build contract, record `Planned methodology: tdd`, and add the TDD fields required by the TDD contract.
 
-Every Expected Outcome maps to tasks or final verification. Each behavior-changing task names risk-based Test Obligations and uses TDD mode `required` unless a valid verification-doctrine exemption applies. A behavior-preserving task may use `characterization`; only a valid doctrine exemption uses `exempt`. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define focused executable verification.
+Every Expected Outcome maps to tasks or final verification. Each behavior-changing task names risk-based Test Obligations and uses TDD mode `required` unless a valid verification-doctrine exemption applies. A behavior-preserving task may use `characterization`; only a valid doctrine exemption uses `exempt`. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define the fast inner-loop and task-gate verification separately from final integration verification.
 
 Validate outcome coverage, dependency order, write ownership, TDD modes, test obligations, final integration checks, and absence of new product intent. Mark the plan `Ready` and create a local plan checkpoint commit before any source edit.
 
@@ -37,17 +37,22 @@ Delegate only when useful. A worker receives one bounded task, minimum relevant 
 
 For every behavior slice in a `required` task:
 
-1. establish that relevant baseline tests pass;
-2. **RED** — add the smallest meaningful test for an applicable obligation, run it, and confirm it fails because accepted behavior is absent;
-3. **GREEN** — make the smallest production change that satisfies that behavior and confirm the RED test passes;
-4. **REFACTOR** — assess the resulting design, improve production or test structure where useful, and keep the relevant suite green;
-5. repeat for remaining distinct risks, then run the task's focused verification.
+1. establish that the narrow unit-test baseline for the touched contract passes;
+2. **RED** — add the smallest meaningful unit test for an applicable obligation, run only that test case or the narrowest test target the framework supports, and confirm it fails because accepted behavior is absent;
+3. **GREEN** — make the smallest production change that satisfies that behavior and rerun the same narrow test target until it passes;
+4. **REFACTOR** — assess the resulting design, improve production or test structure where useful, and keep that test plus the smallest relevant unit-test target green;
+5. **MUTATION PROOF** — temporarily remove or reverse the smallest production behavior that the new guard claims to protect, rerun its exact unit test and confirm the expected failure, then restore the intended code and confirm the same test passes;
+6. repeat for remaining distinct risks, then run the task's owned fast unit tests and any cheap compile, type, or lint checks declared as its task gate.
+
+Keep the TDD feedback loop cheap. Do not run the complete changeset, workspace suite, integration suite, or end-to-end suite during baseline, RED, GREEN, REFACTOR, or the task gate. Do not substitute heavily mocked unit tests that erase the observable contract merely to keep the loop fast. Map risks that are observable only across a real integration boundary to final verification and state that mapping in the plan.
+
+A guard is not bound until its targeted mutation proof fails for the expected reason. If the test stays green, strengthen or replace it and repeat the proof; never record an unbound regression test as evidence. Keep mutations temporary and narrow, never commit mutated production state, restore the intended implementation before continuing, and inspect the diff after restoration. A narrow mutation-testing command may replace the manual mutation, but never run a broad mutation suite inside the task loop.
 
 Test fixtures and test-only support may be prepared before RED; production behavior may not. Syntax errors, broken fixtures, unrelated failures, and assertions that bind no changed behavior are not valid RED evidence. A compile or type failure is valid only when it is narrowly and directly caused by the intentionally missing accepted contract exercised by the new test. If the new test passes before production changes, do not invent a failure or continue to implementation: determine whether the behavior already exists, the test is weak, or the pending plan is invalid.
 
-For `characterization`, prove the protective test or existing focused suite passes before a behavior-preserving production change, then keep it green through refactoring. For `exempt`, record the contract reason and closest observable check; difficulty, schedule, or unfamiliarity never qualify.
+For `characterization`, prove the protective unit test or fast focused unit suite passes before a behavior-preserving production change, confirm it fails under a targeted mutation of the behavior it claims to protect, then keep it green through refactoring. For `exempt`, record the contract reason and closest observable check; difficulty, schedule, or unfamiliarity never qualify.
 
-The orchestrator independently inspects every task diff and test value, confirms its write boundary and chronology evidence, and reruns focused checks. It records concise TDD evidence under the task contract, marks the task complete, and creates one checkpoint commit for the verified task. RED and GREEN do not require separate commits. Leave a clean committed boundary sufficient for a fresh orchestrator to resume without prior conversation.
+The orchestrator independently inspects every task diff and test value, confirms its write boundary, RED-GREEN chronology, mutation evidence, and restored production state, and reruns the task's fast unit-test gate. It records concise TDD evidence under the task contract, marks the task complete, and creates one checkpoint commit for the verified task. RED and GREEN do not require separate commits. Leave a clean committed boundary sufficient for a fresh orchestrator to resume without prior conversation.
 
 When evidence invalidates pending execution details, append one `PC-` entry and revise only the affected pending frontier. When it changes accepted intent, stop for an amendment. Never weaken or skip an existing test to reach GREEN.
 
@@ -58,9 +63,11 @@ At a clean task boundary, resume by invoking this skill again with the canonical
 After every task has a checkpoint commit, rehydrate from durable artifacts and:
 
 1. validate Expected Outcome and Test Obligation coverage again;
-2. run final broader checks and exercise the primary accepted path at integration level;
+2. run the authoritative full test suite for the affected project or changeset once per final-verification attempt, including the planned integration and end-to-end checks without rerunning them separately when the full suite already includes them, and exercise the primary accepted path;
 3. inspect `base_commit..HEAD` against the immutable Brief, including test value and cross-task consistency;
 4. append final Build Evidence with strategy `planned`, methodology `tdd`, named tests/cases, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
 5. mark the plan `Complete`, set the Brief to `In Review`, and create a final local handoff commit.
+
+If the final gate fails, preserve completed task history, append one `PC-` entry that adds a bounded corrective TDD task, execute and checkpoint that task with the same fast unit loop, then repeat the final gate. Do not move a failing feature to Review.
 
 Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.

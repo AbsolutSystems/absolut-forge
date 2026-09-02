@@ -2,7 +2,7 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.5.0.** This release adds experimental `build-planned-tdd`: an auditable RED-GREEN-REFACTOR methodology inside the existing planned Build strategy. Standard `build-planned` remains available unchanged, durable methodology state keeps later stages on the selected execution path, and the shared skill package now supports Pi with clean-session Review handoff.
+**Current release: 0.5.1.** This release makes every Build path use narrow unit-test gates during implementation, targeted mutation proof for test guards, and full regression plus integration/e2e verification at the final whole-feature gate.
 
 ## Dual Build
 
@@ -21,11 +21,11 @@ Both strategies consume the same committed Ready Feature Brief.
 
 Use a high-capability coding model as the direct owner of implementation. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
 
-Each outcome is `implement -> cover applicable risks -> focused verification -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. The number of tests follows distinct risks, not the number of outcomes.
+Each outcome is `implement -> cover applicable risks -> fast unit gate + targeted mutation proof -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
 
 ### `build-planned` — planner/orchestrator + workers
 
-Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, and verification. The orchestrator validates every result, owns plan changes and checkpoint commits, executes high-risk tasks when appropriate, and performs final integration verification.
+Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast task gates, and final verification. Each task checkpoint uses narrow unit targets and targeted mutation proof; broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
 
 The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
@@ -33,7 +33,7 @@ The active orchestrator context is disposable. Every completed-task checkpoint l
 
 ### `build-planned-tdd` — experimental planned methodology
 
-This explicit alternative selects the same first-class `planned` strategy but makes methodology durable as `tdd`. Each changed behavior is developed through auditable RED-GREEN-REFACTOR cycles derived from the same risk-based Test Obligations. Behavior-preserving refactors use characterization coverage; valid non-behavior exemptions remain available. Tasks run serially so RED attribution and test-before-production ordering remain clear.
+This explicit alternative selects the same first-class `planned` strategy but makes methodology durable as `tdd`. Each changed behavior is developed through auditable RED-GREEN-REFACTOR cycles derived from the same risk-based Test Obligations, then receives a targeted mutation proof that temporarily reversing the guarded production behavior makes its unit test fail. The inner loop runs only the narrowest relevant unit test, each task closes with a fast unit-test gate, and broad regression plus integration/e2e checks are deferred to final whole-feature verification. Behavior-preserving refactors use characterization coverage with the same mutation proof; valid non-behavior exemptions remain available. Tasks run serially so failure attribution and test-before-production ordering remain clear.
 
 ## Strategy selection
 
