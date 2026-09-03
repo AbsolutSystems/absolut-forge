@@ -5,7 +5,11 @@ description: "Explicitly close a review-complete AbsolutForge feature into durab
 
 # Ship
 
-Require a matching `In Review` Brief and `Complete` Review with no open BLOCKING finding. Require the branch still points at the Reviewed revision and source state remains clean.
+Read `../../references/artifact-contracts.md` and `../../references/verification-doctrine.md` before evaluating the closeout gate.
+
+Require a matching `In Review` Brief and `Complete` Review with decision `Ready for ship` and no open BLOCKING finding. Require the branch still points at the Reviewed revision and source state remains clean. Revalidate that final Build Evidence satisfies the delivery gate in `../../references/artifact-contracts.md`; refuse Ship if it is stale, structurally incomplete, or missing required verification proof even when Review mislabeled the defect as `FOLLOW-UP`.
+
+Ship never backfills Build Evidence, changes implementation or reclassifies Review findings. Return a Build-owned evidence defect to the recorded builder and an incomplete or inconsistent Review to `review`. Valid FOLLOW-UP findings do not block Ship and are preserved in the Feature Record.
 
 Prepare a closeout preview before mutation. The preview includes archive files, active-artifact cleanup, memory candidates, exact staging set and local conventional commit message. Ask explicitly whether to generate the optional HTML executive summary and whether to promote each durable memory candidate.
 

@@ -34,6 +34,8 @@ Do not introduce a new test framework or restructure unrelated production code s
 
 Every new or materially changed test recorded as a guard needs targeted mutation proof. Temporarily remove or reverse the smallest production behavior that it claims to protect, run the exact test case or narrowest supported target, and confirm it fails for the expected reason. Restore the intended implementation, rerun the same target to green, and inspect the production diff before checkpointing. If the mutation survives, strengthen or replace the test; never cite an unbound test as delivery evidence.
 
+Review may inspect a recorded proof for credibility, but inspection that a test appears capable of failing does not replace execution of the mutation. For current evidence, an unrecorded proof is missing evidence. The artifact contract's explicit legacy compatibility rule is the only exception.
+
 Keep the mutation temporary and local, and never commit mutated production state. A narrowly targeted mutation-testing command may replace the manual change, but a broad mutation suite is not required. Perform unit-level mutation proofs inside the outcome or task's fast gate. When a risk is observable only through integration, map both its exact-case mutation proof and its ordinary verification to the final gate rather than replacing the real boundary with mocks.
 
 ## Recorded exemption
@@ -47,6 +49,8 @@ Record `Tests: none — {reason}` and the closest observable check performed. Di
 During an outcome or task, run only its exact or smallest relevant unit-test targets plus cheap build, type, or lint checks that directly cover its surface. Do not run the full changeset, workspace suite, integration suite, or end-to-end suite at an intermediate checkpoint. Map obligations observable only across a real integration boundary to final verification. Evidence names test files and cases, commands, mutation results, and ordinary results; `tests pass` alone is not evidence.
 
 At finish, first perform the targeted proofs and checks mapped to real integration boundaries. Then run the authoritative full suite for the affected project or changeset once per final-verification attempt and exercise the feature's primary accepted path. Include the planned integration and end-to-end checks without rerunning a suite separately when the full command already contains it. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
+
+A compile, bundle, package, or artifact-production command is not by itself an exercised whole-feature path unless producing that artifact is the accepted behavior under review. Otherwise record it only as the closest check, together with the reason the primary accepted path could not be exercised.
 
 ## TDD methodology
 

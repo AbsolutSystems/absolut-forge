@@ -65,9 +65,11 @@ After every task has a checkpoint commit, rehydrate from durable artifacts and:
 1. validate Expected Outcome and Test Obligation coverage again;
 2. run the authoritative full test suite for the affected project or changeset once per final-verification attempt, including the planned integration and end-to-end checks without rerunning them separately when the full suite already includes them, and exercise the primary accepted path;
 3. inspect `base_commit..HEAD` against the immutable Brief, including test value and cross-task consistency;
-4. append final Build Evidence with strategy `planned`, methodology `tdd`, named tests/cases, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
+4. append final Build Evidence with strategy `planned`, methodology `tdd`, every current-schema field, named tests/cases, targeted mutation proofs or valid exemptions, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
 5. mark the plan `Complete`, set the Brief to `In Review`, and create a final local handoff commit.
+
+Before the transition, verify that the final entry describes the implementation state being handed off and satisfies the delivery gate in `artifact-contracts.md`. Any later source or test change invalidates it: return to `Building`, append one `PC-` corrective TDD task when work is required, repeat affected final verification, and append a new complete final entry before another Review handoff. Compilation, bundling, packaging, or artifact production alone is not a whole-feature exercise unless it is the accepted behavior.
 
 If the final gate fails, preserve completed task history, append one `PC-` entry that adds a bounded corrective TDD task, execute and checkpoint that task with the same fast unit loop, then repeat the final gate. Do not move a failing feature to Review.
 
-Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.
+Handoff to `review` by reporting the canonical Brief and Review paths. Do not invoke Review unless the human explicitly invoked it or authorized this request through Review. Never push, create a PR, merge, deploy, or rewrite history.

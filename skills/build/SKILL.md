@@ -43,9 +43,11 @@ After every accepted outcome has a checkpoint commit:
 
 1. perform the exact-case mutation proofs and checks mapped to real integration boundaries, then run the authoritative full suite for the affected project or changeset once per final-verification attempt, without separately rerunning integration/e2e suites already included, and exercise the primary accepted path;
 2. inspect `base_commit..HEAD` against the Brief;
-3. append final Build Evidence with planned methodology `not applicable`, including named tests/cases and whole-feature path evidence;
-4. set the Brief to `In Review` and create a final local handoff commit containing the completed feature artifacts.
+3. append final Build Evidence with planned methodology `not applicable`, including every current-schema field, named tests/cases, targeted mutation proofs or valid exemptions, and whole-feature path evidence under the verification doctrine;
+4. verify that this final entry describes the implementation state being handed off, then set the Brief to `In Review` and create a final local handoff commit containing the completed feature artifacts.
+
+Any later source or test change invalidates the final Build Evidence. Return the Brief to `Building`, repeat the affected final verification, and append a new complete final entry before another Review handoff. A compile, bundle, package, or produced artifact is not a whole-feature exercise unless artifact production is itself the accepted behavior.
 
 If final verification fails, preserve completed outcome history, diagnose the cause, add one bounded corrective outcome with an appropriate fast guard and mutation proof, checkpoint it, and repeat final verification. Do not move a failing feature to Review.
 
-Handoff to `review`. Never push, create a PR, merge, deploy, or rewrite history.
+Handoff to `review` by reporting the canonical Brief and Review paths. Do not invoke Review unless the human explicitly invoked it or authorized this request through Review. Never push, create a PR, merge, deploy, or rewrite history.

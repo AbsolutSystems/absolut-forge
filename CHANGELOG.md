@@ -5,6 +5,23 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] - 2026-09-03
+
+### Fixed
+
+- Made Review severity deterministic: stale or incomplete final Build Evidence,
+  invalid whole-feature-path records, and missing current mutation proof are
+  `BLOCKING` delivery-gate failures rather than discretionary follow-ups.
+- Defined Review's write boundary so it may update only `review.md` and the
+  Brief lifecycle status; Build-owned evidence returns to the recorded builder.
+- Prevented Build, Review, and Ship handoffs from implicitly invoking the next
+  explicit workflow skill without human authorization through that stage.
+- Clarified that compilation, packaging, and artifact production do not by
+  themselves exercise the primary accepted path, and that test inspection does
+  not substitute for an executed targeted mutation proof.
+- Added defense-in-depth Ship validation so an incorrectly classified Review
+  cannot archive a feature with an unmet Build delivery gate.
+
 ## [0.5.2] - 2026-09-02
 
 ### Changed

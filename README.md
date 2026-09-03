@@ -2,7 +2,7 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.5.2.** This release makes `discuss` create and verify the local Ready Brief commit immediately after explicit acceptance, so the developer can proceed directly to strategy selection.
+**Current release: 0.5.3.** This release makes Review delivery gates deterministic, clarifies evidence ownership and whole-feature verification, and prevents implicit execution across explicit workflow stages.
 
 ## Dual Build
 

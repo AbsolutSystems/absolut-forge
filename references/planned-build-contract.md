@@ -128,6 +128,6 @@ An optional consultation report is evidence, not plan state. The orchestrator de
 
 ## Completion
 
-Mark the plan `Complete` only when every task is complete, Expected Outcome coverage still holds, final whole-feature verification passes, and the complete implementation diff has been inspected against the Brief. For a long Build, prefer performing this final integration pass from a fresh orchestrator context rehydrated from the durable artifacts.
+Mark the plan `Complete` only when every task is complete, Expected Outcome coverage still holds, final whole-feature verification passes, the complete implementation diff has been inspected against the Brief, and the final Build Evidence satisfies the delivery gate in `artifact-contracts.md`. Any later source or test change invalidates that gate and requires a new final-verification attempt and final evidence entry before Review handoff. For a long Build, prefer performing this final integration pass from a fresh orchestrator context rehydrated from the durable artifacts.
 
 If final verification fails before completion, preserve completed tasks and append one `PC-` entry adding a bounded corrective task with a new plan revision. Execute and checkpoint it under the selected planned methodology, then repeat final verification.

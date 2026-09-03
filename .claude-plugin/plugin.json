@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Intent-driven delivery with autonomous and planned/delegated build strategies.",
   "author": {"name": "Absolut Systems"}
 }

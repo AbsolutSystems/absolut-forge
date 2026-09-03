@@ -139,6 +139,8 @@ The `(final entry only)` marker is not part of the recorded value: autonomous in
 
 Build Evidence and completed planned-task evidence created before `Test binding proofs` was introduced remain valid legacy evidence. Any new evidence entry uses the field, and resumed Build applies the current binding rule to new or materially changed guards without rewriting completed history.
 
+The final Build Evidence entry is a delivery gate, not optional documentation. It must use the complete current schema, describe verification of the implementation state handed to Review, and contain a valid `Whole-feature path exercised` value under `verification-doctrine.md`. A later source or test change invalidates that final entry; the matching builder must repeat affected final verification and append a new final entry before setting the Brief to `In Review` again. Lifecycle-only and Review-artifact commits do not invalidate it.
+
 ## Autonomous Execution Map
 
 Autonomous `build` may create `execution-map.md` for dependent outcomes, meaningful uncertainty or durable resume. It is outcome-oriented, not a task recipe.
@@ -265,6 +267,15 @@ Fixes required | Ready for ship
 ```
 
 Review treats the Brief as intent authority, source/tests and `base_commit..HEAD` as implementation truth, and execution artifacts only as supporting evidence. It never excuses a Brief violation because the plan/map said otherwise.
+
+Review finding severity is deterministic:
+
+- `BLOCKING` means a correction or missing delivery proof is required before Ship. This includes stale or structurally incomplete final Build Evidence, an invalid or missing whole-feature-path record, and missing credible targeted mutation proof for a current new or materially changed guard.
+- `FOLLOW-UP` means no correction is required for this feature before Ship. It is never used to waive a failed delivery gate.
+
+Review may write only `review.md` and the Feature Brief lifecycle status. It never changes production code, tests, execution artifacts, or Build Evidence. A Build-owned evidence defect returns to the builder recorded in Build start evidence.
+
+Workflow handoff names the eligible next skill and required artifact paths; it does not invoke that skill automatically. A downstream skill runs in the same request only when the human explicitly invoked it or expressly authorized the workflow through that stage.
 
 ## Feature Record
 
