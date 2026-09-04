@@ -5,6 +5,56 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-09-04
+
+### Added
+
+- Added `build-planned-delegated`, a planned methodology in which a
+  high-capability orchestrator resolves architecture and writes bounded prose
+  task contracts for one fixed host-mapped executor. Plans name implementation
+  approach, relevant symbols, traps, decision boundaries, risk-based tests and
+  verification without embedding code or pseudo-patches.
+- Added binding host mappings for delegated execution: Codex dispatches every
+  source/test task and correction to Luna with high reasoning effort; Claude
+  dispatches the plugin agent `absolutforge:delegated-executor`, whose
+  descriptor sets Opus 5 with low reasoning effort and a bounded tool set.
+  Claude preflight rejects environment overrides that would change the
+  effective model or effort. Other hosts must provide an explicit equivalent
+  profile or stop before Build starts.
+
+### Changed
+
+- Delegated methodology makes implementation ownership strict: the executor
+  writes every production and test change, while the orchestrator owns only
+  planning, supervision, verification, lifecycle artifacts, integration and
+  checkpoint commits. There is no silent primary-model or stronger-worker
+  fallback.
+- Planned artifacts now record methodology `standard | delegated`. Legacy
+  `tdd` artifacts remain valid historical evidence but require an older
+  compatible release to resume, or explicit abandonment and restart from a
+  clean committed Ready baseline.
+
+### Removed
+
+- Removed the experimental `build-planned-tdd` skill, its methodology contract,
+  host commands and active workflow documentation.
+- Removed the prose-only `agents/README.md`, which Claude Code discovered as an
+  unintended plugin agent, and replaced it with the executable delegated agent
+  descriptor.
+
+## [0.5.4] - 2026-09-04
+
+### Changed
+
+- Build and Review handoffs now end with one copy-ready native continuation
+  prompt containing resolved artifact paths. Review blockers route back to the
+  recorded builder, successful Review routes to Ship, and Pi preserves its
+  clean-context `/new` Review transition.
+- Removed mandatory targeted mutation proofs and their artifact fields. Build
+  now requires meaningful tests to pass green gates, while Review judges
+  whether tests cover repository-owned behavior instead of mock setup,
+  framework/library behavior, or incidental implementation details.
+
 ## [0.5.3] - 2026-09-03
 
 ### Fixed

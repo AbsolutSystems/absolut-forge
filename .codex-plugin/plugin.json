@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
-  "version": "0.5.3+codex.20260903074847",
+  "version": "0.6.0+codex.20260904191252",
   "description": "Intent-driven development workflow with autonomous and planned/delegated build strategies.",
   "author": {
     "name": "Absolut Systems"

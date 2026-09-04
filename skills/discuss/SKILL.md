@@ -25,14 +25,14 @@ Explicit acceptance authorizes Discuss to set the Brief to `Ready` and immediate
 
 After committing, verify that HEAD contains the accepted Ready content and that the new commit changed exactly the canonical Brief path, then report its revision. If the commit cannot be created or verified, stop before Build handoff, leave the Ready Brief intact, and report the exact blocker; never amend or rewrite history automatically. If unrelated dirty state remains, warn that Build start will reject it even though the Brief commit succeeded.
 
-After the verified acceptance commit, present both first-class strategies and the experimental planned TDD methodology without selecting silently:
+After the verified acceptance commit, present both first-class strategies and the fixed-executor planned methodology without selecting silently:
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
-/absolutforge:build-planned-tdd absolutforge/features/{slug}/feature-brief.md
+/absolutforge:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
 Codex:
@@ -40,7 +40,15 @@ Codex:
 ```text
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
-$absolutforge build-planned-tdd absolutforge/features/{slug}/feature-brief.md
+$absolutforge build-planned-delegated absolutforge/features/{slug}/feature-brief.md
+```
+
+opencode:
+
+```text
+/absolutforge-build absolutforge/features/{slug}/feature-brief.md
+/absolutforge-build-planned absolutforge/features/{slug}/feature-brief.md
+/absolutforge-build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
 Pi:
@@ -48,7 +56,7 @@ Pi:
 ```text
 /skill:build absolutforge/features/{slug}/feature-brief.md
 /skill:build-planned absolutforge/features/{slug}/feature-brief.md
-/skill:build-planned-tdd absolutforge/features/{slug}/feature-brief.md
+/skill:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
-Recommend `build` by default. Recommend the `planned` strategy when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead: `build-planned` is its standard methodology. Present experimental `build-planned-tdd` only when the human wants an auditable TDD comparison or explicitly prefers RED-GREEN-REFACTOR execution. Do not create implementation tasks during Discuss.
+Recommend `build` by default. Recommend the `planned` strategy when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead: `build-planned` is its standard methodology. Present `build-planned-delegated` when the human wants a high-capability planner to resolve design and force every implementation edit through the host's fixed lower-cost executor. Do not create implementation tasks during Discuss.

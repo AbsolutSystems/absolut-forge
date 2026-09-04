@@ -1,6 +1,6 @@
 # Verification Doctrine
 
-Binding for `build`, `build-planned`, `build-planned-tdd`, `review`, and a `debug` fix made inside an active feature.
+Binding for `build`, `build-planned`, `build-planned-delegated`, `review`, and a `debug` fix made inside an active feature.
 
 ## Test charter
 
@@ -26,17 +26,13 @@ An outcome or task has no obligation to invent inapplicable cases. Its evidence 
 
 ## Test value
 
-A useful test binds an observable value or effect produced by the change and would fail if that behavior were absent. Prefer meaningful assertions over mock configuration, framework behavior, tautologies, or snapshots that merely restate whole output. Never weaken, skip, or delete an existing assertion to reach green unless an accepted Brief change explicitly requires the old behavior to change.
+A useful test exercises repository-owned observable behavior: a business result, state transition, persisted effect, error, or contract at a meaningful seam. Its assertions must establish that outcome rather than merely repeat setup, prove that a mock was configured, count calls with no behavioral significance, or validate framework/library behavior that the repository does not own.
+
+Mocks and fakes are acceptable at external or expensive seams, but the test must still assert the resulting repository-owned behavior or an outbound contract that is itself part of the accepted behavior. Avoid tests coupled mainly to private helpers, incidental implementation structure, dependency-injection wiring, framework defaults, or snapshots that restate undifferentiated output. Review judges this from the test, production diff, and accepted behavior; Build does not deliberately break working production code to prove that a test can fail.
+
+All required test targets must be green before an outcome, task, or final gate completes. Never weaken, skip, or delete an existing assertion to reach green unless an accepted Brief change explicitly requires the old behavior to change.
 
 Do not introduce a new test framework or restructure unrelated production code solely for testing without accepted product or architecture authority.
-
-## Binding proof
-
-Every new or materially changed test recorded as a guard needs targeted mutation proof. Temporarily remove or reverse the smallest production behavior that it claims to protect, run the exact test case or narrowest supported target, and confirm it fails for the expected reason. Restore the intended implementation, rerun the same target to green, and inspect the production diff before checkpointing. If the mutation survives, strengthen or replace the test; never cite an unbound test as delivery evidence.
-
-Review may inspect a recorded proof for credibility, but inspection that a test appears capable of failing does not replace execution of the mutation. For current evidence, an unrecorded proof is missing evidence. The artifact contract's explicit legacy compatibility rule is the only exception.
-
-Keep the mutation temporary and local, and never commit mutated production state. A narrowly targeted mutation-testing command may replace the manual change, but a broad mutation suite is not required. Perform unit-level mutation proofs inside the outcome or task's fast gate. When a risk is observable only through integration, map both its exact-case mutation proof and its ordinary verification to the final gate rather than replacing the real boundary with mocks.
 
 ## Recorded exemption
 
@@ -46,12 +42,12 @@ Record `Tests: none — {reason}` and the closest observable check performed. Di
 
 ## Fast and final verification
 
-During an outcome or task, run only its exact or smallest relevant unit-test targets plus cheap build, type, or lint checks that directly cover its surface. Do not run the full changeset, workspace suite, integration suite, or end-to-end suite at an intermediate checkpoint. Map obligations observable only across a real integration boundary to final verification. Evidence names test files and cases, commands, mutation results, and ordinary results; `tests pass` alone is not evidence.
+During an outcome or task, run only its exact or smallest relevant unit-test targets plus cheap build, type, or lint checks that directly cover its surface. Do not run the full changeset, workspace suite, integration suite, or end-to-end suite at an intermediate checkpoint. Map obligations observable only across a real integration boundary to final verification. Evidence names test files and cases, commands, and results; `tests pass` alone is not sufficiently specific evidence.
 
-At finish, first perform the targeted proofs and checks mapped to real integration boundaries. Then run the authoritative full suite for the affected project or changeset once per final-verification attempt and exercise the feature's primary accepted path. Include the planned integration and end-to-end checks without rerunning a suite separately when the full command already contains it. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
+At finish, run the authoritative full suite for the affected project or changeset once per final-verification attempt and exercise the feature's primary accepted path. Include the planned integration and end-to-end checks without rerunning a suite separately when the full command already contains it. If that layer is unavailable or outside accepted scope, record the reason and the closest whole-feature check actually performed.
 
 A compile, bundle, package, or artifact-production command is not by itself an exercised whole-feature path unless producing that artifact is the accepted behavior under review. Otherwise record it only as the closest check, together with the reason the primary accepted path could not be exercised.
 
-## TDD methodology
+## Delegated methodology
 
-`build-planned-tdd` adds chronological RED-GREEN-REFACTOR evidence and applies the shared binding and cost rules through `planned-tdd-contract.md`; it does not replace or reduce this risk-based charter. Do not manufacture a RED for a behavior-preserving refactor or valid exemption; characterization uses mutation proof instead.
+`build-planned-delegated` applies this charter through `planned-delegated-contract.md`. The fixed executor writes and runs focused tests; the orchestrator independently judges their semantic value and reruns required gates. A missing or weak guard returns as a bounded correction to the same executor profile rather than being repaired in the orchestrator context.

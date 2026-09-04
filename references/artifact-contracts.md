@@ -8,7 +8,7 @@
 absolutforge/features/{slug}/
 ├── feature-brief.md
 ├── execution-map.md          # optional; autonomous build only
-├── implementation-plan.md    # planned build, standard or TDD methodology
+├── implementation-plan.md    # planned build, standard or delegated methodology
 ├── consult-{slug}.md         # optional; one consultation report per feature
 ├── save-{slug}.md            # optional during either Building strategy
 └── review.md
@@ -30,7 +30,7 @@ absolutforge/archives/{slug}/
 Draft -> Ready -> Building -> In Review -> Shipped
 ```
 
-`Ready` is the immutable intent baseline. Explicit invocation selects one of two first-class Build strategies: `build` selects `autonomous`; `build-planned` and experimental `build-planned-tdd` both select `planned`, with methodology `standard` or `tdd`. `Building` resumes only through the selected strategy and planned methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
+`Ready` is the immutable intent baseline. Explicit invocation selects one of two first-class Build strategies: `build` selects `autonomous`; `build-planned` and `build-planned-delegated` both select `planned`, with methodology `standard` or `delegated`. `Building` resumes only through the selected strategy and planned methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
 
 ## Feature Brief
 
@@ -102,11 +102,11 @@ Append exactly once before the first source edit:
 - Base revision: `{base_commit}`
 - Worktree: clean
 - Build strategy: autonomous | planned
-- Planned methodology: not applicable | standard | tdd
+- Planned methodology: not applicable | standard | delegated
 - Execution artifact: none | `absolutforge/features/{slug}/execution-map.md` | `absolutforge/features/{slug}/implementation-plan.md`
 ```
 
-Artifacts created before the methodology field was introduced remain valid: absence means `not applicable` for autonomous Build and `standard` for planned Build.
+Artifacts created before the methodology field was introduced remain valid: absence means `not applicable` for autonomous Build and `standard` for planned Build. Legacy value `tdd` remains valid historical evidence but cannot be selected or resumed by a current builder.
 
 A dirty worktree, detached HEAD, or uncommitted Ready Brief blocks Build start. An uncommitted `consult-{slug}.md` is the one exception: a consultation may run between the committed Ready Brief and Build start, so the report is a permitted uncommitted workflow artifact there, exactly as the active `review.md` is at Review. Any uncommitted source change still blocks Build start.
 
@@ -120,10 +120,9 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 ### Build evidence — YYYY-MM-DD
 - Base revision / review diff: `{base_commit}..HEAD`
 - Build strategy: autonomous | planned
-- Planned methodology: not applicable | standard | tdd
+- Planned methodology: not applicable | standard | delegated
 - Changed areas: {repository-relative areas}
 - Tests added/updated: {test paths and cases} | none — {exemption reason and observable check performed instead}
-- Test binding proofs: {test case; targeted production mutation; expected failure; restored pass} | none — {reason}
 - Verification commands and results: {command -> pass|fail}
 - Whole-feature path exercised: {integration-level check and result} | not available — {reason and closest whole-feature check performed}  (final entry only)
 - Execution state: {autonomous outcomes/checkpoints OR planned task IDs/plan revision}
@@ -137,7 +136,7 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 
 The `(final entry only)` marker is not part of the recorded value: autonomous intermediate entries omit that line and the final entry writes the field without the marker. Every other field appears in each applicable entry.
 
-Build Evidence and completed planned-task evidence created before `Test binding proofs` was introduced remain valid legacy evidence. Any new evidence entry uses the field, and resumed Build applies the current binding rule to new or materially changed guards without rewriting completed history.
+Legacy Build Evidence and completed planned-task evidence may retain `Test binding proofs` fields created under the previous mutation-proof policy. Do not rewrite append-only history, but omit that field from new evidence; its presence or absence is no longer a delivery gate.
 
 The final Build Evidence entry is a delivery gate, not optional documentation. It must use the complete current schema, describe verification of the implementation state handed to Review, and contain a valid `Whole-feature path exercised` value under `verification-doctrine.md`. A later source or test change invalidates that final entry; the matching builder must repeat affected final verification and append a new final entry before setting the Brief to `In Review` again. Lifecycle-only and Review-artifact commits do not invalidate it.
 
@@ -165,14 +164,13 @@ pending | in-progress | complete
 - Dependencies:
 - Test obligations: {applicable risks and observable behaviors} | none — {exemption reason}
 - Verification: {fast unit-test targets and cheap build/type/lint checks}
-- Test binding proofs: {test case; targeted production mutation; expected failure; restored pass} | pending | none — {reason}
 - Result:
 - Material deviations:
 ```
 
 ## Planned Implementation Plan
 
-The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). TDD-specific behavioral deltas are owned by [`planned-tdd-contract.md`](planned-tdd-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
+The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). Fixed-executor behavioral deltas are owned by [`planned-delegated-contract.md`](planned-delegated-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
 
 ## Consultation report
 
@@ -211,7 +209,7 @@ Saved
 ## Context
 - Feature Brief:
 - Build strategy: autonomous | planned
-- Planned methodology: not applicable | standard | tdd
+- Planned methodology: not applicable | standard | delegated
 - Execution artifact: none | execution-map path | implementation-plan path
 - Feature branch:
 - Base revision:
@@ -242,7 +240,7 @@ In Review | Complete
 ## Context
 - Feature Brief:
 - Build strategy: autonomous | planned
-- Planned methodology: not applicable | standard | tdd
+- Planned methodology: not applicable | standard | delegated
 - Base revision:
 - Reviewed revision:
 - Review range:
@@ -270,17 +268,17 @@ Review treats the Brief as intent authority, source/tests and `base_commit..HEAD
 
 Review finding severity is deterministic:
 
-- `BLOCKING` means a correction or missing delivery proof is required before Ship. This includes stale or structurally incomplete final Build Evidence, an invalid or missing whole-feature-path record, and missing credible targeted mutation proof for a current new or materially changed guard.
+- `BLOCKING` means a correction or missing delivery proof is required before Ship. This includes stale or structurally incomplete final Build Evidence, an invalid or missing whole-feature-path record, or tests that fail to meaningfully cover an applicable accepted behavior or risk without a valid exemption.
 - `FOLLOW-UP` means no correction is required for this feature before Ship. It is never used to waive a failed delivery gate.
 
 Review may write only `review.md` and the Feature Brief lifecycle status. It never changes production code, tests, execution artifacts, or Build Evidence. A Build-owned evidence defect returns to the builder recorded in Build start evidence.
 
-Workflow handoff names the eligible next skill and required artifact paths; it does not invoke that skill automatically. A downstream skill runs in the same request only when the human explicitly invoked it or expressly authorized the workflow through that stage.
+Workflow handoff reports the eligible next stage and required artifact paths, then ends with the copy-ready, active-host continuation prompt defined in `harness-command-contract.md`. The prompt uses resolved canonical paths and contains only the one eligible invocation; naming a skill or listing artifacts without the invocation is not a complete handoff. Emitting the prompt does not invoke that skill automatically. A downstream skill runs in the same request only when the human explicitly invoked it or expressly authorized the workflow through that stage.
 
 ## Feature Record
 
-Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, planned methodology, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. A TDD record also consolidates task modes, cycle evidence or exemptions, without raw logs. Autonomous Build includes execution-map/checkpoint facts when present.
+Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, planned methodology, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. A delegated record also notes whether implementation remained executor-owned and records material dispatch/correction outcomes without provider identity or raw dialogue. Autonomous Build includes execution-map/checkpoint facts when present.
 
 Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 
-Verification in the record names the tests that cover the delivered behavior, their targeted mutation binding proofs, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.
+Verification in the record names the tests and cases that cover the delivered behavior, their commands and green results, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.

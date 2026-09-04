@@ -22,7 +22,9 @@ Use `/reload` after local skill changes, or start a new session. Skill descripti
 
 Pi core has no native subagent primitive. Keep the invoking high-capability context as orchestrator and execute tasks directly unless the user has installed a trusted extension that exposes genuinely fresh bounded workers. Never pretend delegation occurred.
 
-When such a worker primitive exists, apply the same capability tiers, minimum-context package, write boundaries, and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation; TDD remains serial.
+When such a worker primitive exists, apply the same capability tiers, minimum-context package, write boundaries, and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation.
+
+`build-planned-delegated` requires a trusted extension that can request one explicitly configured fixed executor and reasoning profile. Without it, refuse the methodology before Build start. With it, dispatch one fresh bounded task at a time and keep every production/test edit in that executor; never fall back to direct primary-context implementation.
 
 ## Clean-context Review
 

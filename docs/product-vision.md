@@ -13,8 +13,9 @@ After the developer explicitly accepts the complete proposal, `discuss` creates 
 ```text
 Ready Brief
   ├─ build          -> autonomous strong-model implementation
-  └─ build-planned  -> strong planner/orchestrator + bounded delegated workers
-       └ methodology: standard | experimental TDD
+  └─ planned strategy
+       ├─ build-planned            -> strong orchestrator + capability-routed tasks
+       └─ build-planned-delegated  -> strong planner + fixed executor for all implementation
 ```
 
 Both paths produce one complete verified feature, append durable Build Evidence, commit the feature locally, and hand the same Brief to one independent whole-feature Review. Neither path deploys, pushes, creates a PR, merges, or partially ships outcomes/tasks.
@@ -27,11 +28,11 @@ This is the default. Use it when a strong coding model can efficiently own the c
 
 Use when durable decomposition, meaningful bounded delegation, context rotation, or cross-session resume is expected to repay the task-graph overhead. The strong primary role remains responsible for the whole feature, but its active conversation context is disposable: completed-task evidence and checkpointed Git state let a fresh high-capability orchestrator continue. Workers receive bounded tasks, verify them, and return evidence; fully disjoint dependency-ready tasks may form one parallel wave. Invalid plan assumptions become one recorded plan change; material intent changes return to Brief amendment.
 
-Experimental `build-planned-tdd` preserves this strategy and lifecycle while replacing standard task execution with serial, auditable RED-GREEN-REFACTOR cycles. It exists to compare resulting code and test quality without changing the accepted Brief or creating a third first-class strategy.
+`build-planned-delegated` preserves this strategy and lifecycle while making the planner/executor split binding. The high-capability orchestrator resolves architecture and writes precise prose guidance, traps, decision boundaries, and verification obligations for an early-mid executor. The host fixes the executor profile; every source/test edit and correction is dispatched to it, while the orchestrator only plans, supervises, verifies, and integrates. No implementation code or pseudo-patch belongs in the plan, and no primary-context fallback is permitted.
 
 ## Verification
 
-Both strategies share one positive, risk-based Test Charter. For each changed behavior, tests cover every applicable primary, failure/boundary, state/data, seam-contract, and regression obligation, with extra attention to security, persistence, compatibility, concurrency, and migrations. Test count follows distinct risks rather than task count. Intermediate checkpoints use narrow unit targets, and every new or changed guard receives targeted mutation proof that reversing its protected production behavior makes it fail. Broad regression and integration/e2e checks run at final whole-feature verification before handoff. Existing assertions are never weakened to reach green.
+Both strategies share one positive, risk-based Test Charter. For each changed behavior, tests cover every applicable primary, failure/boundary, state/data, seam-contract, and regression obligation, with extra attention to security, persistence, compatibility, concurrency, and migrations. Test count follows distinct risks rather than task count. Intermediate checkpoints use narrow green unit targets. Tests must establish repository-owned observable behavior rather than mock setup, framework/library behavior, or incidental implementation details; Review judges that semantic value from the tests and diff without deliberately breaking production code. Broad regression and integration/e2e checks run at final whole-feature verification before handoff. Existing assertions are never weakened to reach green.
 
 ## Second opinion
 
@@ -40,7 +41,7 @@ Both strategies share one positive, risk-based Test Charter. For each changed be
 ## Strategy invariants
 
 - One Ready Brief, one selected Build strategy per feature.
-- One durable planned methodology (`standard` or `tdd`) when the selected strategy is planned.
+- One durable planned methodology (`standard` or `delegated`) when the selected strategy is planned.
 - No silent mid-feature strategy switching.
 - Same immutable intent baseline and amendment rules.
 - Same whole-feature Review and Ship gates.
