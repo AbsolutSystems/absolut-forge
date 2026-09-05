@@ -26,8 +26,8 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 
 ## Active frontier
 - Plan revision: 3
-- Next task: T-005
-- Ready tasks: T-005
+- Next task: none
+- Ready tasks: none
 - Blocked tasks: none
 
 ### Relevant dependency facts
@@ -91,7 +91,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: read-only CLI resume/capsule and pinned artifact-derived benchmark, documented commands/limitations; 16 focused tests pass for canonical/legacy shapes, no-ID intent, amendments, duplicate/unknown IDs, active/global constraints, per-dependency evidence, unchanged input bytes, 300-task history isolation and measured string lengths. Worker result was corrected and escalated under PC-002; orchestrator finished ambiguity/intent projection and equal-evidence benchmark packaging. Actual feature-plan resume/capsule exercised locally. `rtk git diff --check` pass. New fact: helper is optional and fails closed on unsupported ambiguity; Git durability/semantic sufficiency remain orchestrator checks. Checkpoint: commit introducing this completed entry.
 
 ### T-005 — Cross-contract and delivery regression proof
-- Status: in-progress
+- Status: complete
 - Capability: high
 - Goal: verify distributed workflow contracts, preserved lifecycle gates, runtime escalation and feature primary path across the integrated change.
 - Depends on: T-001
@@ -99,7 +99,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Invariants: INV-001 through INV-005; verify observable workflow artifacts and dispatch semantics, not incidental wording or snapshots.
 - Test obligations: links/distribution; two builder surfaces; legacy resume and tdd handling; compact entrypoints; exact unchanged final evidence field set; review isolation/write limits; startup-to-frontier-to-capsule-to-final-review context scenario; pinned benchmark baseline.
 - Verification: `rtk python3 -m unittest discover -s tests -p test_runtime_contract.py -v`.
-- Completion evidence: pending
+- Completion evidence: ten focused tests pass: separate-process resume-to-capsule with immutable inputs and no completed history; missing frontier refusal; linked runtime packaging; two build command surfaces; exact baseline final evidence template and doctrine charter preserved; legacy ownership/tdd restrictions unchanged; Review boundary and PC-001 section regression; host startup packages; 0.7 JSON distribution. This proves local artifact/context behavior and instruction contracts, not live model adherence. Checkpoint: commit introducing this completed entry.
 
 ### T-006 — Preserve canonical section boundaries for targeted readers
 - Status: complete
