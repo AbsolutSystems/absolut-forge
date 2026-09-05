@@ -129,6 +129,55 @@ None.
         self.assertIn("Never delete data.", result["Must preserve"])
         self.assertEqual(result["Implement"], "legacy path")
 
+    def test_modern_covers_resolve_legacy_outcome_heading_and_text(self):
+        brief = BRIEF.replace(
+            "### EO-001 — Bounded\nOnly send bounded work.",
+            "### Bounded capsule, legacy\nRetain the complete accepted outcome clause.",
+        )
+        by_heading = build_capsule(
+            PLAN.replace("- Covers: EO-001", "- Covers: Bounded capsule, legacy"),
+            brief,
+            "T-002",
+        )
+        by_text = build_capsule(
+            PLAN.replace(
+                "- Covers: EO-001",
+                "- Covers: Retain the complete accepted outcome clause.",
+            ),
+            brief,
+            "T-002",
+        )
+        expected = "### Bounded capsule, legacy\nRetain the complete accepted outcome clause."
+        self.assertEqual(by_heading["Outcome"], [expected])
+        self.assertEqual(by_text["Outcome"], [expected])
+
+    def test_modern_covers_reject_unaccepted_or_ambiguous_references(self):
+        with self.assertRaisesRegex(ContextError, "cannot resolve accepted outcome"):
+            build_capsule(
+                PLAN.replace("- Covers: EO-001", "- Covers: Invented behavior"),
+                BRIEF,
+                "T-002",
+            )
+        with self.assertRaises(ContextError):
+            build_capsule(
+                PLAN.replace(
+                    "- Covers: EO-001", "- Covers: EO-001, Invented behavior"
+                ),
+                BRIEF,
+                "T-002",
+            )
+        ambiguous = BRIEF.replace(
+            "### EO-001 — Bounded\nOnly send bounded work.",
+            "### First legacy outcome\nShared outcome text.\n"
+            "### Second legacy outcome\nShared outcome text.",
+        )
+        with self.assertRaisesRegex(ContextError, "ambiguous accepted outcome"):
+            build_capsule(
+                PLAN.replace("- Covers: EO-001", "- Covers: Shared outcome text."),
+                ambiguous,
+                "T-002",
+            )
+
     def test_legacy_coverage_does_not_send_unrelated_outcomes(self):
         legacy = PLAN.replace(
             "- Covers: EO-001", "- Goal: use accepted behavior"

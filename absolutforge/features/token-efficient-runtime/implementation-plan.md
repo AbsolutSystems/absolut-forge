@@ -26,12 +26,12 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 
 ## Active frontier
 - Plan revision: 4
-- Next task: T-007
-- Ready tasks: T-007
+- Next task: none
+- Ready tasks: none
 - Blocked tasks: none
 
 ### Relevant dependency facts
-- T-004: read-only context helper and focused unittest fixtures are committed; correction preserves its existing consumers.
+- T-007: modern Covers resolves exact accepted heading/text before ID parsing and refuses unknown/ambiguous references; final verification remains pending.
 
 ### Active invariants
 - INV-001: accepted intent and selected methodology remain authoritative.
@@ -112,7 +112,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: moved runtime escalation to its own end section, preserving Review severity/write boundary in its canonical section; documentation-only exemption, targeted inspection and `rtk git diff --check` pass. No schema or behavior change. Checkpoint: commit introducing this completed entry.
 
 ### T-007 — Resolve modern Covers against accepted legacy outcomes
-- Status: pending
+- Status: complete
 - Capability: standard
 - Covers: EO-003, EO-004
 - Depends on: T-004
@@ -122,7 +122,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Test obligations: preserve full accepted clause for modern tasks with no-ID Briefs by heading/text; reject unknown and ambiguous references; preserve EO-ID and legacy Goal consumers and input immutability.
 - Return boundary: return if correction requires changing public task contracts, unrelated parser behavior or expanding the write surface.
 - Verification: `rtk python3 -m unittest discover -s tests -p test_context_package.py -v`; `rtk git diff --check`.
-- Completion evidence: pending
+- Completion evidence: `tools/context_package.py` resolves modern Covers to full accepted heading/text clauses, including comma-containing headings, or valid EO IDs; unknown/ambiguous and mixed ID-plus-invented references refuse dispatch. `tests/test_context_package.py` adds heading/text preservation and unknown/mixed/ambiguous refusal regressions. Fresh bounded standard worker implemented only the two owned files; orchestrator independently inspected the diff, unchanged legacy consumers and semantic assertions. Focused `rtk python3 -m unittest discover -s tests -p test_context_package.py -v` passed all 18 tests; `rtk git diff --check` passed. Review F-001 correction is ready for final verification and independent re-review. Checkpoint: this checkpoint.
 
 ## Final verification
 - Run `rtk python3 -m unittest discover -s tests -v` once for the final attempt; integration/context scenario is included in that suite.

@@ -289,7 +289,44 @@ def _accepted(brief):
     return out
 
 
-def _resolve(value, prefix, catalog, legacy):
+def _clauses(text):
+    sections = _sections(text, 3)
+    if sections:
+        return [
+            (title, body, "### " + title + "\n" + body)
+            for title, body in sections.items()
+        ]
+    return [("", clause, clause) for clause in re.split(r"\n\s*\n", text) if clause]
+
+
+def _match_clause(value, clauses, label):
+    matches = [
+        clause
+        for title, body, clause in clauses
+        if value in (title, body, clause)
+    ]
+    if len(matches) > 1:
+        raise ContextError("ambiguous accepted " + label + " reference: " + value)
+    return matches
+
+
+def _resolve(value, prefix, catalog, legacy, clauses=None, strict=False):
+    if strict:
+        # Exact legacy headings/text take precedence over comma-separated IDs:
+        # an old heading may itself contain a comma.
+        matches = _match_clause(value, clauses or [], "outcome")
+        if matches:
+            return matches
+        try:
+            refs = _ids(value, prefix)
+        except ContextError as error:
+            raise ContextError("Brief cannot resolve accepted outcome: " + value) from error
+        if not refs:
+            raise ContextError("Brief cannot resolve accepted outcome: " + value)
+        missing = [ref for ref in refs if ref not in catalog]
+        if missing:
+            raise ContextError("Brief cannot resolve: " + ", ".join(missing))
+        return [catalog[ref] for ref in refs]
     prose = []
     try:
         refs = _ids(value, prefix)
@@ -338,7 +375,15 @@ def build_capsule(plan_text, brief_text, task_id):
     constraint_text = _require(top, "Constraints and invariants")
     outcomes = _catalog(outcome_text, "EO")
     invariants = _catalog(constraint_text, "INV")
-    outcome = _resolve(shape["covers"], "EO", outcomes, shape["covers"])
+    outcome_text_clauses = _clauses(outcome_text)
+    outcome = _resolve(
+        shape["covers"],
+        "EO",
+        outcomes,
+        shape["covers"],
+        outcome_text_clauses,
+        strict=not shape["legacy"],
+    )
     if not outcome:
         raise ContextError("task must cover an accepted outcome")
     preserve = _resolve(shape["preserves"], "INV", invariants, shape["preserves"])
