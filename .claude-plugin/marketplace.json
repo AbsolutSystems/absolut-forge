@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "absolutforge",
-  "description": "AbsolutForge — intent-driven delivery with autonomous and planned builds",
+  "description": "AbsolutForge — intent-driven delivery with autonomous and standard planned builds",
   "owner": {
     "name": "Absolut Systems"
   },
   "plugins": [
     {
       "name": "absolutforge",
-      "description": "Intent-driven delivery with autonomous and planned/delegated build strategies",
+      "description": "Intent-driven delivery with autonomous and standard planned build strategies",
       "source": ".",
       "category": "development"
     }

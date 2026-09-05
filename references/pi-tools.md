@@ -22,9 +22,9 @@ Use `/reload` after local skill changes, or start a new session. Skill descripti
 
 Pi core has no native subagent primitive. Keep the invoking high-capability context as orchestrator and execute tasks directly unless the user has installed a trusted extension that exposes genuinely fresh bounded workers. Never pretend delegation occurred.
 
-When such a worker primitive exists, apply the same capability tiers, minimum-context package, write boundaries, and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation.
+When such a worker primitive exists, send one Task Capsule with relevant accepted clauses, direct dependency facts and source/tests, never the whole Brief/plan/history or inherited orchestrator dialogue. Apply the same capability tiers, write boundaries, fresh-context isolation and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation.
 
-`build-planned-delegated` requires a trusted extension that can request one explicitly configured fixed executor and reasoning profile. Without it, refuse the methodology before Build start. With it, dispatch one fresh bounded task at a time and keep every production/test edit in that executor; never fall back to direct primary-context implementation.
+New delegated starts are unavailable. A feature that records legacy delegated methodology resumes through `build-planned` only when a trusted extension can still request its explicitly configured fixed executor and reasoning profile. Dispatch one fresh bounded task at a time and keep every production/test edit in that executor; otherwise stop at the clean boundary and never fall back to direct primary-context implementation.
 
 ## Clean-context Review
 
@@ -35,6 +35,6 @@ Pi's normal Review handoff uses a fresh top-level session rather than an unavail
 /skill:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
 
-The post-`/new` context is the fresh read-only reviewer context and may record Review mode `fresh`. It must rehydrate only from the Brief, completed execution artifact, Git range, source, and tests; it must not receive implementation conversation or conclusions.
+The post-`/new` context is the fresh read-only reviewer context and may record Review mode `fresh`. Its startup package is only the Brief and accepted amendments, final Build Evidence, `base_commit..HEAD` diff, and changed/new tests. Load plan or history lazily only for a concrete coverage, lifecycle, or legacy-ownership question; never preload implementation conversation or conclusions.
 
-If a trusted extension provides a fresh reviewer primitive, dispatch exactly one generic read-only reviewer instead. If Review is run in the Build session without either `/new` or a fresh worker, use the shared inline fallback and label it `advisory (not fully isolated)`.
+If a trusted extension provides a fresh reviewer primitive, dispatch exactly one generic read-only reviewer with the same bounded startup package instead. If Review is run in the Build session without either `/new` or a fresh worker, use that same bounded package inline and label it `advisory (not fully isolated)`.

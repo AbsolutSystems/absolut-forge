@@ -2,7 +2,7 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.6.0.** This release replaces experimental planned TDD with a strong-planner/fixed-executor methodology while retaining the same two first-class Build strategies.
+**Current release: 0.7.0.** New features have exactly two commands: autonomous `build` and standard `build-planned`. Recorded legacy delegated features resume safely through `build-planned` with their original fixed-executor rules.
 
 ## Dual Build
 
@@ -12,8 +12,7 @@ The core workflow is:
                  ┌─ build ─────────────────────┐
 discuss -> Ready ┤                             ├-> review -> ship
                  └─ planned strategy ──────────┘
-                    ├─ build-planned
-                    └─ build-planned-delegated
+                    └─ build-planned
 ```
 
 Both strategies consume the same committed Ready Feature Brief. After the developer explicitly accepts the complete proposal, `discuss` commits only the canonical Brief path locally and reports the baseline revision; it never includes unrelated staged or dirty changes.
@@ -24,30 +23,27 @@ Use a high-capability coding model as the direct owner of implementation. It cho
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
 
-### `build-planned` — planner/orchestrator + workers
+### `build-planned` — planner/orchestrator + capability-routed workers
 
 Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. Broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
 
 The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-The active orchestrator context is disposable. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build-planned` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
+The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build-planned` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
-### `build-planned-delegated` — strong planner + fixed executor
+### Legacy delegated resumes
 
-This explicit alternative selects the same first-class `planned` strategy but makes methodology durable as `delegated`. A high-capability orchestrator reads the Brief and repository, settles architecture, and writes bounded tasks for an early-mid executor. Each task explains responsibilities, integration approach, relevant symbols, invariants, traps, decision boundaries, Test Obligations, and verification in precise prose without implementation code, pseudocode, or pseudo-diffs.
-
-Every source/test edit and correction is dispatched to one fixed host-mapped executor profile. The orchestrator owns the plan, supervision, verification, plan changes, integration, and checkpoint commits, but never implements or repairs the code itself. Codex passes Luna with high reasoning effort directly when spawning each worker. Claude dispatches the plugin agent `absolutforge:delegated-executor`, whose descriptor sets Opus 5 with low reasoning effort; preflight rejects environment overrides that would change the effective profile. If the exact executor cannot be guaranteed or the work cannot be decomposed safely for it, Build stops instead of silently changing model or methodology.
+New delegated Build is no longer offered. A feature that already recorded `planned` / `delegated` resumes through `build-planned`, retaining its fixed host executor profile and the rule that only that executor edits source and tests. If the exact legacy profile is unavailable, work stops at the last clean boundary; the orchestrator neither substitutes a worker nor takes over implementation.
 
 ## Strategy selection
 
-After `discuss`, explicitly choose one of two first-class strategies. Prefer `build` by default; choose planned Build when the feature is large or separable enough to repay planning and delegation overhead. Within planned Build, use `build-planned` for flexible capability routing or `build-planned-delegated` when the strong planner/fixed-executor boundary is desired. Strategy and planned methodology cannot change after Build start.
+After `discuss`, explicitly choose one of two first-class strategies. Prefer `build` by default; choose `build-planned` when the feature is large or separable enough to repay planning and delegation overhead. Strategy and planned methodology cannot change after Build start.
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/my-feature/feature-brief.md
 /absolutforge:build-planned absolutforge/features/my-feature/feature-brief.md
-/absolutforge:build-planned-delegated absolutforge/features/my-feature/feature-brief.md
 ```
 
 Codex:
@@ -55,7 +51,6 @@ Codex:
 ```text
 $absolutforge build absolutforge/features/my-feature/feature-brief.md
 $absolutforge build-planned absolutforge/features/my-feature/feature-brief.md
-$absolutforge build-planned-delegated absolutforge/features/my-feature/feature-brief.md
 ```
 
 opencode:
@@ -63,7 +58,6 @@ opencode:
 ```text
 /absolutforge-build absolutforge/features/my-feature/feature-brief.md
 /absolutforge-build-planned absolutforge/features/my-feature/feature-brief.md
-/absolutforge-build-planned-delegated absolutforge/features/my-feature/feature-brief.md
 ```
 
 Pi:
@@ -71,7 +65,6 @@ Pi:
 ```text
 /skill:build absolutforge/features/my-feature/feature-brief.md
 /skill:build-planned absolutforge/features/my-feature/feature-brief.md
-/skill:build-planned-delegated absolutforge/features/my-feature/feature-brief.md
 ```
 
 The selected strategy and planned methodology are recorded in Build start evidence. A Building feature resumes through the matching builder, and Review blockers return to that builder. Do not silently switch strategy or methodology mid-feature.
@@ -113,8 +106,7 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 - `discuss` — inspect evidence, create and accept one Feature Brief, then commit its Ready baseline locally.
 - `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
 - `build` — autonomous high-capability implementation.
-- `build-planned` — high-capability planning/orchestration with bounded worker delegation.
-- `build-planned-delegated` — high-capability planning with all implementation forced through one fixed host-mapped executor profile.
+- `build-planned` — high-capability planning/orchestration with bounded, capability-routed worker delegation.
 - `save` / `load` — durable cross-session context without hidden state.
 - `review` — one fresh read-only whole-feature review.
 - `ship` — archive durable context and create one local closeout commit.
@@ -143,12 +135,7 @@ absolutforge/archives/{slug}/feature-record.md
 
 Workflow contracts use semantic tiers rather than model names. See `references/model-routing.md`.
 
-A practical current mapping is:
-
-- OpenAI/Codex: Sol high/orchestrator, Terra standard worker, Luna low worker; delegated methodology fixes Luna at high reasoning effort.
-- Claude: Opus high/orchestrator/reviewer, Sonnet standard worker; delegated methodology uses the plugin agent `absolutforge:delegated-executor`, fixed to Opus 5 at low reasoning effort.
-
-This mapping is deployment guidance, not a contract. Cross-family Review is preferable when available.
+Deployment-specific mappings live only in the active host reference. This keeps workflow artifacts portable while allowing each installation to use its available worker profiles. Cross-family Review is preferable when available.
 
 ## Safety and boundaries
 
@@ -164,7 +151,7 @@ This mapping is deployment guidance, not a contract. Cross-family Review is pref
 
 ## Host installation
 
-Claude Code and Codex install the repository as a local plugin through their normal local-plugin flow. The repository root is the plugin root. Claude installation must include the plugin's `agents/delegated-executor.md`; copying only `skills/` does not provide the fixed Opus 5 low executor and therefore cannot run `build-planned-delegated`.
+Claude Code and Codex install the repository as a local plugin through their normal local-plugin flow. The repository root is the plugin root; installation must ship the shared `skills/`, `references/`, and `runtime/` directories together. Claude installations that must resume a legacy delegated feature also need `agents/delegated-executor.md`; copying only `skills/` cannot preserve that legacy executor contract.
 
 Pi consumes the repository as a Pi Package declared by the root `package.json`:
 
@@ -191,6 +178,8 @@ opencode has no plugin format that packages skills, but it reads the same `SKILL
 ```
 
 opencode also auto-loads `~/.agents/skills/<name>/` and `~/.claude/skills/<name>/`, so symlinking the skill directories there registers the same tree without config.
+
+Keep the repository's `references/` and `runtime/` directories beside the registered `skills/` tree: the skills link to them for the executable workflow contract.
 
 Explicit invocation on opencode uses the command wrappers in `.opencode/command/`. Make them global by symlinking them into `~/.config/opencode/command/`:
 

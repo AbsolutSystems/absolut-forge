@@ -1,7 +1,7 @@
 {
   "name": "absolutforge",
-  "version": "0.6.0+codex.20260904191252",
-  "description": "Intent-driven development workflow with autonomous and planned/delegated build strategies.",
+  "version": "0.7.0",
+  "description": "Intent-driven development workflow with autonomous and standard planned build strategies.",
   "author": {
     "name": "Absolut Systems"
   },
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "AbsolutForge",
     "shortDescription": "Intent-driven delivery with two build strategies",
-    "longDescription": "Discuss intent once, then choose autonomous build or strong-planner/delegated build, followed by one independent review and local ship closeout.",
+    "longDescription": "Discuss intent once, then choose autonomous or standard planned build, followed by one independent review and local ship closeout.",
     "developerName": "Absolut Systems",
     "category": "Coding",
     "capabilities": [

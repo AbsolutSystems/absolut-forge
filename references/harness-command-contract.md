@@ -11,7 +11,6 @@ Claude Code:
 /absolutforge:consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
-/absolutforge:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 /absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 /absolutforge:save absolutforge/features/{slug}/feature-brief.md
 /absolutforge:load absolutforge/features/{slug}/save-{slug}.md
@@ -26,7 +25,6 @@ $absolutforge discuss "Feature name" "absolutforge/features/{slug}/feature-brief
 $absolutforge consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
-$absolutforge build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 $absolutforge review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 $absolutforge save absolutforge/features/{slug}/feature-brief.md
 $absolutforge load absolutforge/features/{slug}/save-{slug}.md
@@ -41,7 +39,6 @@ opencode:
 /absolutforge-consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /absolutforge-build absolutforge/features/{slug}/feature-brief.md
 /absolutforge-build-planned absolutforge/features/{slug}/feature-brief.md
-/absolutforge-build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 /absolutforge-review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 /absolutforge-save absolutforge/features/{slug}/feature-brief.md
 /absolutforge-load absolutforge/features/{slug}/save-{slug}.md
@@ -58,7 +55,6 @@ Pi:
 /skill:consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /skill:build absolutforge/features/{slug}/feature-brief.md
 /skill:build-planned absolutforge/features/{slug}/feature-brief.md
-/skill:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 /skill:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 /skill:save absolutforge/features/{slug}/feature-brief.md
 /skill:load absolutforge/features/{slug}/save-{slug}.md
@@ -86,18 +82,17 @@ For Pi's Build -> Review handoff, the single copy-ready block contains two lines
 
 ## Build strategy choice
 
-After explicit acceptance, `discuss` creates and verifies a local path-scoped commit containing only the Ready Brief. The developer then chooses one of two strategies and, for planned Build, one methodology:
+After explicit acceptance, `discuss` creates and verifies a local path-scoped commit containing only the Ready Brief. The developer then chooses one of two strategies:
 
 - `build`: default; a high-capability model owns implementation directly.
-- `build-planned`: use the standard methodology when durable decomposition, meaningful bounded delegation, or cross-session resume justifies a task graph.
-- `build-planned-delegated`: use when a high-capability planner should resolve design for a fixed lower-cost executor that owns every source and test edit.
+- `build-planned`: standard planned Build; use it when durable decomposition, meaningful bounded delegation, or cross-session resume justifies a task graph.
 
-Invocation selects the strategy and, for planned Build, its methodology. The selected builder records `Build strategy: autonomous | planned` and `Planned methodology: not applicable | standard | delegated` in Build start evidence. A Building Brief resumes only through the matching skill. Review blockers return to the recorded builder. Do not silently switch strategy or planned methodology mid-feature. Legacy `tdd` state requires a compatible older release or explicit abandonment and restart.
+New invocation selects the strategy and records `Build strategy: autonomous | planned` plus `Planned methodology: not applicable | standard` in Build start evidence. A Building Brief resumes through its recorded builder; a legacy `delegated` planned feature resumes through `build-planned` while retaining its fixed executor ownership and host profile. Review blockers return through the same entrypoint. Do not silently switch strategy or methodology mid-feature. Legacy `tdd` state requires a compatible older release or explicit abandonment and restart.
 
 The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after meaningful behavior tests pass their fast unit-test gate. Broad regression and integration/e2e checks run at final verification before the `In Review` handoff commit.
 
 ## Resume invariant
 
-The selected strategy and planned methodology are durable execution state. Any resume, correction after Review, or saved-context handoff returns to the matching builder recorded in Build start evidence.
+The selected strategy and planned methodology are durable execution state. Any resume, correction after Review, or saved-context handoff returns to the matching builder recorded in Build start evidence; delegated legacy state uses `build-planned`, never a separate new command.
 
-For planned Build, a clean completed-task checkpoint is also a context-rotation boundary. A fresh session resumes by invoking `build-planned` for `standard` or `build-planned-delegated` for `delegated` with the canonical Brief and rehydrating from the Brief, plan and Git. No `save` artifact is required at that boundary; `save/load` covers mid-task or otherwise unresolved interruption.
+For planned Build, a clean completed-task checkpoint is also a context-rotation boundary. A fresh session resumes by invoking `build-planned` with the canonical Brief and rehydrating from the Brief status and accepted amendments, plan header plus Active Frontier, current task, and sufficient direct dependency facts from Git. Load plan history only for a concrete correction, ownership, lifecycle, or legacy-ownership question. Standard work routes by capability; delegated legacy work preserves its fixed executor profile and primary-context ownership boundary. No `save` artifact is required at that boundary; `save/load` covers mid-task or otherwise unresolved interruption.

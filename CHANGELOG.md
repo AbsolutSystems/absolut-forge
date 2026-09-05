@@ -5,6 +5,21 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-09-05
+
+### Changed
+
+- New features now expose exactly two Build commands: `build` and standard
+  `build-planned`. The separate delegated command is retired from every host.
+- Existing delegated planned features resume through `build-planned` without
+  converting methodology, changing their fixed executor profile, or allowing
+  orchestrator implementation takeover.
+- Host mappings now make fresh bounded worker context explicit where the host
+  supports it. Codex documents its current low, standard, and high deployment
+  routing in its host-specific mapping only.
+- Local installation guidance now requires the shared `skills/`, `references/`,
+  and `runtime/` directories to ship together.
+
 ## [0.6.0] - 2026-09-04
 
 ### Added

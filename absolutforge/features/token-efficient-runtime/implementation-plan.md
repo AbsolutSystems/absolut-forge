@@ -26,8 +26,8 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 
 ## Active frontier
 - Plan revision: 2
-- Next task: T-003
-- Ready tasks: T-003, T-004, T-005
+- Next task: T-004
+- Ready tasks: T-004, T-005
 - Blocked tasks: none
 
 ### Relevant dependency facts
@@ -69,7 +69,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: compact runtime-linked Build/Review entrypoints; Discuss EO/INV IDs and two choices; Save/Load/Debug legacy routing; delegated skill and UI metadata removed (recoverable in Git). Orchestrator checked start/compile/final canonical triggers, acceptance commit and targeted Load behavior; worker corrected omitted triggers before acceptance. Seven changed skill descriptors passed isolated uv/pyyaml quick_validate; `rtk git diff --check` pass. Documentation-only exemption. Checkpoint: commit introducing this completed entry.
 
 ### T-003 — Host dispatch, distribution and user documentation
-- Status: in-progress
+- Status: complete
 - Capability: standard
 - Goal: bounded host capsules, legacy executor routing and 0.7 public distribution with only two Build commands.
 - Depends on: T-001
@@ -77,7 +77,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Invariants: INV-001 through INV-005; retain required legacy executor descriptor; model identities only host deployment mechanics; no publishing/reinstalling.
 - Test obligations: documentation/configuration-only exemption; validate changed JSON and inspect host-specific invocation/legacy profile consistency. T-005 covers distribution regression checks.
 - Verification: changed JSON parses; `rtk git diff --check`.
-- Completion evidence: pending
+- Completion evidence: all four host mappings and handoff routing use compact packages and legacy resume; removed delegated opencode command (Git-recoverable), retained legacy executor descriptor; manifests/docs now 0.7.0. Worker parsed five JSON descriptors; orchestrator inspected host docs and corrected residual Pi preload/capsule wording before acceptance. `rtk git diff --check` and nine focused runtime-contract tests pass. Documentation/configuration-only exemption. Checkpoint: commit introducing this completed entry.
 
 ### T-004 — Reproducible context projection and benchmark harness
 - Status: in-progress

@@ -1,6 +1,6 @@
 ---
 name: delegated-executor
-description: Execute one bounded source-and-test task or correction dispatched by AbsolutForge build-planned-delegated; do not use for planning, lifecycle work, commits, or unrelated delegation.
+description: Legacy fixed executor for a recorded delegated planned Build resumed through AbsolutForge build-planned; do not use for new plans, planning, lifecycle work, commits, or unrelated delegation.
 model: claude-opus-5
 effort: low
 tools: Read, Edit, Write, Bash, Glob, Grep
