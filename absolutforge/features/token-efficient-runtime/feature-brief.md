@@ -1,7 +1,7 @@
 # Feature: AbsolutForge 0.7 — Token-Efficient Runtime Contract
 
 ## Status
-Building
+In Review
 
 ## Change type
 Feature
@@ -160,3 +160,19 @@ None.
 - Build strategy: planned
 - Planned methodology: standard
 - Execution artifact: `absolutforge/features/token-efficient-runtime/implementation-plan.md`
+
+### Build evidence — 2026-09-05
+- Base revision / review diff: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb..HEAD`
+- Build strategy: planned
+- Planned methodology: standard
+- Changed areas: `runtime/`, canonical `references/`, Build/Review/Discuss/Save/Load/Debug skills, host command mappings and descriptors, 0.7 package metadata, user documentation/ADR, optional `tools/context_package.py`, and `tests/`.
+- Tests added/updated: `tests/test_context_package.py` — 16 cases covering modern/legacy/no-ID clauses, accepted-only amendments, multiline frontier/capsules, per-dependency evidence, active/global invariants, duplicate/unknown identifiers, stale or missing frontier, incomplete dependency proof, read-only inputs, 300-task history isolation and actual benchmark string lengths; `tests/test_runtime_contract.py` — 10 cases covering separate-process resume-to-capsule, missing-frontier refusal, runtime links/distribution, two builder commands, host context packages, unchanged final schema/test charter, legacy ownership/tdd policy, Review write/severity boundaries and 0.7 descriptors.
+- Verification commands and results: `rtk python3 -m unittest discover -s tests -v` -> pass, 26 tests in the final attempt; `rtk python3 tools/context_package.py benchmark` -> pass, three reproducible static scenarios against pinned 0.6, live metrics explicitly unavailable; `rtk git diff f47dfbc..HEAD --check` -> pass; `claude plugin validate --strict .` -> pass, marketplace manifest validated; changed skill descriptors passed `UV_CACHE_DIR=/private/tmp/absolutforge-uv-cache rtk uv run --with pyyaml python /Users/kamil/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/<skill>` for build, build-planned, review, discuss, save, load and debug. Distribution JSON parsing and local runtime-reference link checks are included in the authoritative suite.
+- Whole-feature path exercised: separate fresh Python processes loaded a representative large-feature plan, produced frontier-only resume context and a capsule retaining accepted outcome/invariants, excluded unrelated completed history and preserved input bytes; missing frontier refused dispatch. The same suite checked distributed runtime/host commands and preserved final delivery gates. Pass. Live model execution/benchmark measurements remain deferred by accepted scope; these checks prove local artifact packaging and instruction contracts, not model adherence.
+- Execution state: plan revision 3; T-001 through T-006 complete with orchestrator-owned checkpoints (`fd7e301`, `929d20a`, `d9102f6`, `9c85573`, `1ac189e`, `b59a319`); accepted EO-001 through EO-008 coverage and complete implementation diff inspected; final handoff commit contains only lifecycle/final evidence updates.
+- Material implementation decisions: four compact runtime projections retain canonical escalation; legacy delegated resumes through build-planned with fixed ownership; optional read-only helper refuses unsupported ambiguity and leaves semantic sufficiency/Git durability to the orchestrator. T-004 escalated from standard to high after worker validation exposed intent-projection and benchmark-comparability defects; orchestrator completed its corrections under the selected standard methodology.
+- Deviations from accepted baseline: none.
+- Plan changes: PC-001 — preserve Review rules under targeted canonical section loading and allow independent contract-test authoring; PC-002 — evidence-based capability escalation of T-004 without changing its write surface or accepted intent.
+- Scout disposition: none.
+- Documentation maintenance: added runtime projections, compatibility/loading contract updates, 0.7 host/user documentation, `docs/adr/2026-09-05-token-efficient-runtime.md` and reproducible helper/benchmark instructions in `docs/runtime-benchmark.md`; removed separate delegated skill/UI metadata and opencode command, recoverable from Git history. No publication or plugin reinstall performed.
+- Durable memory lesson: none.

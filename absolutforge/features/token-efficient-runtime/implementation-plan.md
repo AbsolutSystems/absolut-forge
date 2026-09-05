@@ -1,7 +1,7 @@
 # Implementation Plan: Token-Efficient Runtime Contract
 
 ## Status
-Executing
+Complete
 
 ## Context
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
@@ -31,7 +31,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Blocked tasks: none
 
 ### Relevant dependency facts
-- T-001: `runtime/` projects canonical references; new starts use standard planned, legacy delegated resumes through build-planned retaining fixed ownership. Final evidence schema is unchanged.
+- None; no pending execution frontier.
 
 ### Active invariants
 - INV-001: accepted intent and selected methodology remain authoritative.
@@ -41,8 +41,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - INV-005: shared behavior and schema ownership remain canonical; host mechanics stay local.
 
 ### Pending final-verification obligations
-- Context workflow: canonical artifact -> frontier resume -> task capsule -> complete final gate -> diff-first Review.
-- Full unittest suite, synthetic benchmark, distribution checks and full implementation diff.
+- None; authoritative 26-test suite, separate-process context workflow, synthetic benchmark, distribution checks and full implementation diff inspection passed on 2026-09-05. Final Build Evidence is recorded in the Brief.
 
 ## Task graph
 
