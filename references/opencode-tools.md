@@ -19,12 +19,9 @@ opencode reads the shared `skills/` tree directly; no host-specific fork exists.
 
 opencode has no per-skill implicit-invocation switch. It exposes every loaded skill to the model and offers no equivalent of Claude Code's `disable-model-invocation` or Codex's `policy.allow_implicit_invocation`.
 
-Explicit-only activation therefore rests on two mechanisms:
-
-- `.opencode/command/absolutforge-{skill}.md` wrappers, which only a human can invoke. These are the authoritative entry points on this host.
-- Skill descriptions that gate on explicit invocation, which is the pattern opencode's own guidance recommends for skills that must stay quiet on adjacent topics.
-
-Treat the second as soft. When explicit-only matters, use the command.
+This repository no longer ships opencode command wrappers. Explicit invocation
+must be provided by the host installation; skill descriptions remain the soft
+fallback for skills that should stay quiet on adjacent topics.
 
 `debug` is the single exception, as on every other host: it may auto-trigger for a concrete failure, and auto-triggering authorizes diagnosis rather than a source change.
 
@@ -34,7 +31,7 @@ Follow [autonomous outcome routing](model-routing.md#autonomous-outcome-routing)
 
 ## Planned Build and Review dispatch
 
-When `build` selects or resumes planned execution, keep the invoking high-capability context as orchestrator. Delegate a task only when a bounded fresh worker with no inherited full orchestrator conversation is available and delegation meaningfully reduces expensive primary-model work. A fully disjoint dependency-ready wave may run in parallel. opencode subagents (`mode: subagent`, defined in `.opencode/agent/<name>.md` or inline under `agent`) are the native worker primitive; route by `references/model-routing.md` and do not hardcode provider names into task contracts.
+When `build` selects or resumes planned execution, keep the invoking high-capability context as orchestrator. Delegate a task only when a bounded fresh worker with no inherited full orchestrator conversation is available and delegation meaningfully reduces expensive primary-model work. A fully disjoint dependency-ready wave may run in parallel. opencode subagents (`mode: subagent`, defined by the host installation or inline under `agent`) are the native worker primitive; route by `references/model-routing.md` and do not hardcode provider names into task contracts.
 
 Workers receive one Task Capsule only: Outcome, Own, Must preserve, Implement, Prove, Verify, and Return. Add only applicable accepted clauses, dependency facts, relevant source/tests, and verification commands; never preload the full Brief, plan, history, or orchestrator dialogue. Dependency-ready tasks may run as one parallel wave only when write surfaces are fully disjoint. Workers do not own planning, lifecycle artifacts, commits, review, or release state; the orchestrator validates and checkpoint-commits each task separately. If an ordinary standard worker cannot be dispatched, the orchestrator executes that task itself and does not claim delegation.
 

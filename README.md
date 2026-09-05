@@ -1,6 +1,6 @@
 # AbsolutForge
 
-AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
+AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
 **Current release: 0.7.0.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
 
@@ -80,12 +80,6 @@ Codex:
 $absolutforge build absolutforge/features/my-feature/feature-brief.md
 ```
 
-opencode:
-
-```text
-/absolutforge-build absolutforge/features/my-feature/feature-brief.md
-```
-
 Pi:
 
 ```text
@@ -123,12 +117,6 @@ Codex:
 
 ```text
 $absolutforge consult absolutforge/features/my-feature/implementation-plan.md
-```
-
-opencode:
-
-```text
-/absolutforge-consult absolutforge/features/my-feature/implementation-plan.md
 ```
 
 Pi:
@@ -207,28 +195,10 @@ Invoke stages as `/skill:{name}`. Pi core has no native subagents, so a clean-co
 
 Use `/reload` after local changes. See [`references/pi-tools.md`](references/pi-tools.md) for planned-worker behavior and Review isolation.
 
-opencode has no plugin format that packages skills, but it reads the same `SKILL.md` tree natively. Register it once in `opencode.json`:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "skills": { "paths": ["/absolute/path/to/absolut-forge/skills"] }
-}
-```
-
-opencode also auto-loads `~/.agents/skills/<name>/` and `~/.claude/skills/<name>/`, so symlinking the skill directories there registers the same tree without config.
-
-Keep the repository's `references/` and `runtime/` directories beside the registered `skills/` tree: the skills link to them for the executable workflow contract.
-
-Explicit invocation on opencode uses the command wrappers in `.opencode/command/`. Make them global by symlinking them into `~/.config/opencode/command/`:
-
-```bash
-for f in /absolute/path/to/absolut-forge/.opencode/command/absolutforge-*.md; do
-  ln -sf "$f" ~/.config/opencode/command/
-done
-```
-
-opencode reads config once at startup and does not hot-reload it. Restart opencode after registering skills or commands. See [`references/opencode-tools.md`](references/opencode-tools.md) for the full mapping, including the fact that opencode has no per-skill implicit-invocation switch.
+opencode is no longer packaged as a supported host by this repository. The
+shared `skills/`, `references/`, and `runtime/` trees remain host-agnostic, so
+an installation may still consume them through its own configuration. This
+repository does not ship opencode command wrappers or installation commands.
 
 ## Validation
 

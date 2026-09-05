@@ -30,21 +30,6 @@ $absolutforge ship absolutforge/features/{slug}/feature-brief.md absolutforge/fe
 $absolutforge tech-debt [repository-relative-path]
 ```
 
-opencode:
-
-```text
-/absolutforge-discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
-/absolutforge-consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
-/absolutforge-build absolutforge/features/{slug}/feature-brief.md
-/absolutforge-review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
-/absolutforge-save absolutforge/features/{slug}/feature-brief.md
-/absolutforge-load absolutforge/features/{slug}/save-{slug}.md
-/absolutforge-ship absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
-/absolutforge-tech-debt [repository-relative-path]
-```
-
-opencode exposes no per-skill implicit-invocation switch, so these command wrappers are the authoritative explicit entry points on that host. See [`opencode-tools.md`](opencode-tools.md).
-
 Pi:
 
 ```text

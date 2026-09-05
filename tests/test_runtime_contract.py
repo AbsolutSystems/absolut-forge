@@ -111,12 +111,9 @@ class RuntimeContractTests(unittest.TestCase):
             if (p / "SKILL.md").exists()
         }
         self.assertEqual(builders, {"build"})
-        self.assertEqual(
-            {p.name for p in (ROOT / ".opencode/command").glob("absolutforge-build*.md")},
-            {"absolutforge-build.md"},
-        )
+        self.assertFalse((ROOT / ".opencode").exists())
         commands = read("references/harness-command-contract.md")
-        for prefix in ("/absolutforge:", "$absolutforge ", "/absolutforge-", "/skill:"):
+        for prefix in ("/absolutforge:", "$absolutforge ", "/skill:"):
             self.assertIn(prefix + "build absolutforge/features/", commands)
             self.assertNotRegex(commands, re.escape(prefix) + r"build-planned(?:-delegated)? ")
         # The descriptor is still needed for already-recorded Claude ownership.
@@ -127,7 +124,7 @@ class RuntimeContractTests(unittest.TestCase):
         selection = section(read("references/artifact-contracts.md"), "Build strategy selection")
         for option in ("--strategy=autonomous", "--strategy=planned"):
             for path in ("skills/build/SKILL.md", "references/harness-command-contract.md",
-                         ".opencode/command/absolutforge-build.md", "README.md"):
+                         "README.md"):
                 with self.subTest(option=option, path=path):
                     self.assertIn(option, read(path))
         for obligation in (

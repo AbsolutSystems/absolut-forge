@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the `.opencode/` command-wrapper directory. opencode host mechanics
+  remain documented separately, but command wrappers are no longer shipped.
 - Autonomous Build now selects execution capability separately from strategy.
   Codex uses Luna `high` for low-tier outcomes and Luna `xhigh` for standard
   behavior slices. Trivial edits with disproportionate handoff overhead and
