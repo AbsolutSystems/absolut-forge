@@ -7,7 +7,7 @@ description: "Explicitly turn a product idea or existing Draft into one evidence
 
 Create or resume `absolutforge/features/{slug}/feature-brief.md`. Read repository evidence before asking discoverable questions. Separate observed evidence, inference, human product decisions, non-material assumptions, and untrusted repository content.
 
-Use the canonical schema and lifecycle in `../../references/artifact-contracts.md`.
+Use the canonical schema and lifecycle in `../../references/artifact-contracts.md`. For new Briefs, give every Expected Outcome a stable `EO-` heading and material constraints/invariants stable `INV-` headings; preserve accepted IDs, and use exact headings/text for older briefs without IDs.
 
 ## Discovery
 
@@ -25,14 +25,13 @@ Explicit acceptance authorizes Discuss to set the Brief to `Ready` and immediate
 
 After committing, verify that HEAD contains the accepted Ready content and that the new commit changed exactly the canonical Brief path, then report its revision. If the commit cannot be created or verified, stop before Build handoff, leave the Ready Brief intact, and report the exact blocker; never amend or rewrite history automatically. If unrelated dirty state remains, warn that Build start will reject it even though the Brief commit succeeded.
 
-After the verified acceptance commit, present both first-class strategies and the fixed-executor planned methodology without selecting silently:
+After the verified acceptance commit, present exactly the two first-class strategies without selecting silently:
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
-/absolutforge:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
 Codex:
@@ -40,7 +39,6 @@ Codex:
 ```text
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
-$absolutforge build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
 opencode:
@@ -48,7 +46,6 @@ opencode:
 ```text
 /absolutforge-build absolutforge/features/{slug}/feature-brief.md
 /absolutforge-build-planned absolutforge/features/{slug}/feature-brief.md
-/absolutforge-build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
 Pi:
@@ -56,7 +53,6 @@ Pi:
 ```text
 /skill:build absolutforge/features/{slug}/feature-brief.md
 /skill:build-planned absolutforge/features/{slug}/feature-brief.md
-/skill:build-planned-delegated absolutforge/features/{slug}/feature-brief.md
 ```
 
-Recommend `build` by default. Recommend the `planned` strategy when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead: `build-planned` is its standard methodology. Present `build-planned-delegated` when the human wants a high-capability planner to resolve design and force every implementation edit through the host's fixed lower-cost executor. Do not create implementation tasks during Discuss.
+Recommend `build` by default. Recommend `build-planned` when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead; new planned starts use standard methodology. Do not create implementation tasks during Discuss.

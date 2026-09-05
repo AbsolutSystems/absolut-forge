@@ -1,60 +1,12 @@
 ---
 name: build-planned
-description: "Explicitly implement an accepted Ready Feature Brief through a durable task graph, bounded worker delegation, and fresh-context rotation when that overhead is justified. The high-capability orchestrator owns tests, checkpoint commits, plan changes, and integration. Use only when the user invokes AbsolutForge build-planned."
+description: "Explicitly implement an accepted Ready Feature Brief through a durable task graph, bounded workers, and verified Review handoff. New starts use standard methodology; legacy delegated builds resume with fixed-executor restrictions. Use only when the user invokes AbsolutForge build-planned."
 ---
 
 # Build — Planned Strategy
 
-Use this higher-overhead strategy when durable decomposition, meaningful bounded delegation, or cross-session resume is expected to pay for the plan. Otherwise prefer autonomous `build`.
+Use this entrypoint only with the canonical Feature Brief path. Read [runtime common](../../runtime/common.md), then the [planned runtime](../../runtime/planned.md), and the matching active-host mechanics in `../../references/`. Those documents own compilation, task capsules, worker boundaries, start/resume checks, verification, evidence, and handoff.
 
-Read `../../references/planned-build-contract.md`, `../../references/artifact-contracts.md`, `../../references/verification-doctrine.md`, `../../references/model-routing.md`, `../../references/harness-command-contract.md`, and the active host mapping.
+`Ready` starts planned Build with standard methodology only. A `Building` Brief resumes here only when its recorded strategy is planned. For recorded `delegated`, lazily load `../../references/planned-delegated-contract.md` and the active host's fixed-executor mechanics before implementation; preserve every restriction and never convert it. Recorded legacy `tdd` requires a compatible older release or an explicit clean Ready restart. Route autonomous state to `build`.
 
-## Start or resume
-
-Accept only the canonical Feature Brief path.
-
-For `Ready`, require a non-detached feature branch, clean worktree, empty index, and committed Brief. The permitted uncommitted consultation report is the only exception. Reject an existing `execution-map.md` or `implementation-plan.md`; a new Build never adopts or overwrites stale execution state.
-
-Record HEAD as `base_commit`, append Build start evidence with strategy `planned` and planned methodology `standard`, set the Brief to `Building`, and create a local Build-start checkpoint commit before source edits. Include the consultation report when present.
-
-For `Building`, require strategy `planned` and methodology `standard`; absence of methodology in legacy evidence means `standard`. An autonomous strategy hands off to `build`, while methodology `delegated` hands off to `build-planned-delegated`. Legacy methodology `tdd` requires a compatible older release or explicit abandonment and restart from a clean committed Ready baseline; never convert it in place. Load the existing plan rather than recreating it. If no plan exists, compile it before source edits. When the sibling `review.md` contains open blockers, read it as required correction input without editing it. A completed plan returned by Review appends a `PC-` entry that adds one corrective task and increments the revision, then returns to `Executing`; completed task history remains unchanged.
-
-## Compile the plan
-
-Inspect the accepted Brief, amendments, linked project authority, and relevant current code/tests. Create the smallest useful acyclic graph using `planned-build-contract.md`.
-
-Every Expected Outcome maps to tasks or final verification. Record `Planned methodology: standard`. Each behavior-changing task names applicable risk-based Test Obligations, not merely a test count. Bound production and test write surfaces, order shared contracts before consumers, assign a capability tier, and define each task's fast unit-test gate separately from final broad and integration verification.
-
-Validate outcome coverage, dependency order, write ownership, test obligations, final integration checks, and absence of new product intent. Mark the plan `Ready` and create a local plan checkpoint commit before any source edit.
-
-Build never automatically offers or waits for consultation. If the human supplies a consultation report, treat it as evidence: accept only findings that still apply, record plan changes in a `PC-` entry, and leave the report unchanged. Intent findings require a Brief amendment.
-
-## Execute and validate
-
-Mark the plan `Executing` when work begins. Select one dependency-ready task or a parallel wave whose write surfaces are fully disjoint, as allowed by the planned-build contract.
-
-Delegate only when useful. A worker receives one bounded task, minimum relevant context, its write boundary, Test Obligations, and fast verification commands. It owns local implementation choices but no lifecycle, plan, commits, remote state, or broader redesign.
-
-The orchestrator independently inspects every task diff and its tests, confirms the write boundary and that tests assert meaningful repository-owned behavior rather than mock configuration, framework internals, or incidental implementation details, and reruns the task's fast unit-test gate when evidence is incomplete. Do not run the full changeset, integration suite, or end-to-end suite at a task checkpoint; map integration-only obligations to final verification. Validate and checkpoint-commit one task at a time, staging only its paths when a parallel wave returned multiple results. A task is complete only when its obligations are meaningfully covered and its fast gate is green or its exemption is recorded.
-
-After each task, reduce the result to concise Completion Evidence, including any new dependency or invariant fact. Leave a clean committed boundary from which a fresh orchestrator can resume using the Brief, plan, Git, and relevant code/tests without the earlier conversation. Do not retain raw worker dialogue or logs as durable plan content.
-
-When evidence invalidates pending execution details, append one `PC-` entry and revise only the affected pending frontier. When it changes accepted intent, stop for an amendment. Never weaken or skip an existing test to reach green.
-
-Rotate to a fresh session when context pressure threatens intent or causal reasoning, particularly after a large wave, a `PC-` change, or a long diagnosis, and before a substantial `high` task or final integration when practical. At a clean task boundary, resume by invoking this skill again with the canonical Brief; no `save` artifact is needed. Use `save` only for a mid-task or otherwise unresolved stop, remembering that it does not preserve dirty source.
-
-## Finish
-
-After every task has a checkpoint commit, rehydrate from durable artifacts rather than conversational memory; for a long Build, prefer a fresh orchestrator context for this pass:
-
-1. validate Expected Outcome coverage again;
-2. run the authoritative full suite for the affected project or changeset once per final-verification attempt, without separately rerunning integration/e2e suites already included, and exercise the primary accepted path;
-3. inspect `base_commit..HEAD` against the immutable Brief and detect cross-task inconsistencies or diff garbage;
-4. append final Build Evidence with planned methodology `standard`, every current-schema field, named tests/cases and results or valid exemptions, whole-feature path evidence, plan revision, task IDs, plan changes, and material routing escalations;
-5. mark the plan `Complete`, set the Brief to `In Review`, and create a final local handoff commit.
-
-Before the transition, verify that the final entry describes the implementation state being handed off and satisfies the delivery gate in `artifact-contracts.md`. Any later source or test change invalidates it: return to `Building`, append one `PC-` corrective task when work is required, repeat affected final verification, and append a new complete final entry before another Review handoff. Compilation, bundling, packaging, or artifact production alone is not a whole-feature exercise unless it is the accepted behavior.
-
-If final verification fails, preserve completed task history, append one `PC-` entry that adds a bounded corrective task, execute and checkpoint it with the same green fast-verification rules, then repeat final verification. Do not move a failing feature to Review.
-
-Handoff to `review` by reporting the canonical Brief and Review paths, then end with the copy-ready active-host `review` invocation required by `harness-command-contract.md`. Resolve the real paths; do not merely name the skill or show multiple host variants. Do not invoke Review unless the human explicitly invoked it or authorized this request through Review. Never push, create a PR, merge, deploy, or rewrite history.
+When compiling a new plan, read the planned contract and verification doctrine as required by the planned runtime; also read the relevant artifact-contract sections at Build start and final delivery-gate verification. Follow the runtime's full remaining triggers, including the planned contract for frontier reconstruction, PC changes, ownership, or completion ambiguity; doctrine for uncertain obligations or exemptions; and the harness contract when producing the final Review continuation. The runtime specifies the required resolved Brief/Review paths and copy-ready final handoff.

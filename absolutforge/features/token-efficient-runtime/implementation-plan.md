@@ -26,8 +26,8 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 
 ## Active frontier
 - Plan revision: 2
-- Next task: T-002
-- Ready tasks: T-002, T-003, T-004, T-005
+- Next task: T-003
+- Ready tasks: T-003, T-004, T-005
 - Blocked tasks: none
 
 ### Relevant dependency facts
@@ -58,7 +58,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: canonical contracts plus four runtime projections and ADR updated; documentation-only exemption with direct comparison of lifecycle, legacy routing, unchanged final schema and doctrine test charter; `rtk git diff --check` pass. Runtime uses targeted escalation; legacy delegated retains fixed ownership. Checkpoint: commit introducing this completed entry.
 
 ### T-002 — Skill entrypoints and lifecycle routing
-- Status: in-progress
+- Status: complete
 - Capability: standard
 - Goal: compact Build/Review entrypoints and coherent Discuss/Save/Load/Ship routing; remove separate delegated skill.
 - Depends on: T-001
@@ -66,7 +66,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Invariants: INV-001 through INV-005; two new-start builders; no implicit Review; preserve explicit acceptance and path-only commit; binding guidance is not discarded.
 - Test obligations: documentation-only exemption; inspect normal start/resume, legacy delegated/tdd, final gate and Review restrictions. T-005 covers cross-workflow checks.
 - Verification: `rtk git diff --check`; targeted skill routing inspection.
-- Completion evidence: pending
+- Completion evidence: compact runtime-linked Build/Review entrypoints; Discuss EO/INV IDs and two choices; Save/Load/Debug legacy routing; delegated skill and UI metadata removed (recoverable in Git). Orchestrator checked start/compile/final canonical triggers, acceptance commit and targeted Load behavior; worker corrected omitted triggers before acceptance. Seven changed skill descriptors passed isolated uv/pyyaml quick_validate; `rtk git diff --check` pass. Documentation-only exemption. Checkpoint: commit introducing this completed entry.
 
 ### T-003 — Host dispatch, distribution and user documentation
 - Status: in-progress

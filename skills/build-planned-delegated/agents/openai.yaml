@@ -1,4 +1,0 @@
-interface:
-  display_name: "AbsolutForge Build Planned Delegated"
-  short_description: "Plan strongly, then delegate every implementation edit"
-  default_prompt: "Use $absolutforge build-planned-delegated to plan this accepted Feature Brief for the fixed delegated executor and deliver it."
