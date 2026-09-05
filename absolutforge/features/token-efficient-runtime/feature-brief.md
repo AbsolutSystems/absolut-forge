@@ -1,7 +1,7 @@
 # Feature: AbsolutForge 0.7 — Token-Efficient Runtime Contract
 
 ## Status
-Building
+In Review
 
 ## Change type
 Feature
@@ -175,4 +175,20 @@ None.
 - Plan changes: PC-001 — preserve Review rules under targeted canonical section loading and allow independent contract-test authoring; PC-002 — evidence-based capability escalation of T-004 without changing its write surface or accepted intent.
 - Scout disposition: none.
 - Documentation maintenance: added runtime projections, compatibility/loading contract updates, 0.7 host/user documentation, `docs/adr/2026-09-05-token-efficient-runtime.md` and reproducible helper/benchmark instructions in `docs/runtime-benchmark.md`; removed separate delegated skill/UI metadata and opencode command, recoverable from Git history. No publication or plugin reinstall performed.
+- Durable memory lesson: none.
+
+### Build evidence — 2026-09-05 (Review correction)
+- Base revision / review diff: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb..HEAD`
+- Build strategy: planned
+- Planned methodology: standard
+- Changed areas: complete feature spans `runtime/`, canonical `references/`, affected skills and host/distribution descriptors, 0.7 documentation, `tools/context_package.py` and tests; this correction changes only the context helper, its focused tests and workflow evidence.
+- Tests added/updated: `tests/test_context_package.py` adds `test_modern_covers_resolve_legacy_outcome_heading_and_text` (full accepted clause by exact heading/text, including a comma-containing heading) and `test_modern_covers_reject_unaccepted_or_ambiguous_references` (unknown, mixed ID-plus-invented and ambiguous references). Existing legacy Goal, EO-ID, invariant, amendment, immutability and history-bound tests remain unchanged. `tests/test_runtime_contract.py` continues to cover distributed contracts and fresh-process recovery.
+- Verification commands and results: `rtk python3 -m unittest discover -s tests -v` -> pass, all 28 tests; `rtk python3 tools/context_package.py benchmark` -> pass, small/medium/large scenarios against pinned 0.6; `rtk proxy git diff f47dfbc..HEAD --check` -> pass. Full-suite distribution JSON/local-link checks passed. Accepted intent compared with the committed Ready baseline and T-001 through T-006 compared with the prior handoff -> unchanged; recorded base remains an ancestor of HEAD.
+- Whole-feature path exercised: authoritative suite uses separate fresh Python processes to resume a representative large plan and create its bounded capsule, retaining accepted outcomes/invariants, excluding unrelated history, preserving input bytes and refusing absent frontier. Pass. Modern tasks using no-ID Briefs additionally preserve exact accepted clauses and reject invalid references through the public capsule function. Live model comparisons remain deferred by accepted scope; the benchmark measures static serialized characters and labels token estimates, not measured model savings or adherence.
+- Execution state: plan revision 4; T-001 through T-007 complete. Prior task checkpoints remain unchanged; PC-003/reopen checkpoint `857bca2`, T-007 correction checkpoint `b317784`. Complete accepted EO-001 through EO-008 coverage and base-to-HEAD implementation diff inspected, including runtime/canonical consistency, legacy routing, final gates and the corrected compatibility seam. This handoff changes lifecycle/final evidence only.
+- Material implementation decisions: exact accepted legacy heading/text matching precedes EO-ID-list parsing so headings containing commas resolve without inventing list semantics; modern Covers refuses unresolved prose while legacy Goal and task-local invariant behavior remain unchanged. T-007 used a fresh bounded standard worker; orchestrator validated its two-file write boundary, semantic tests and full integration. Earlier T-004 escalation remains recorded under PC-002.
+- Deviations from accepted baseline: none.
+- Plan changes: PC-001 and PC-002 preserved; PC-003 reopens the Complete plan for bounded Review F-001 correction without rewriting completed tasks or accepted intent.
+- Scout disposition: none.
+- Documentation maintenance: existing 0.7 runtime, host, compatibility, ADR and benchmark documentation remains current; plan/evidence records the correction. Review report remains unchanged for independent reassessment of F-001.
 - Durable memory lesson: none.
