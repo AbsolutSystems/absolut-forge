@@ -7,7 +7,7 @@ Executing
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
 - Feature branch: `feature/0.7-token-efficient-runtime`
 - Base revision: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb`
-- Plan revision: 2
+- Plan revision: 3
 - Build strategy: planned
 - Planned methodology: standard
 
@@ -25,9 +25,9 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - EO-008: T-004, T-005 and final verification
 
 ## Active frontier
-- Plan revision: 2
-- Next task: T-004
-- Ready tasks: T-004, T-005
+- Plan revision: 3
+- Next task: T-005
+- Ready tasks: T-005
 - Blocked tasks: none
 
 ### Relevant dependency facts
@@ -80,15 +80,15 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: all four host mappings and handoff routing use compact packages and legacy resume; removed delegated opencode command (Git-recoverable), retained legacy executor descriptor; manifests/docs now 0.7.0. Worker parsed five JSON descriptors; orchestrator inspected host docs and corrected residual Pi preload/capsule wording before acceptance. `rtk git diff --check` and nine focused runtime-contract tests pass. Documentation/configuration-only exemption. Checkpoint: commit introducing this completed entry.
 
 ### T-004 — Reproducible context projection and benchmark harness
-- Status: in-progress
-- Capability: standard
+- Status: complete
+- Capability: high
 - Goal: small read-only standard-library tool and tests proving bounded section extraction for new/legacy task capsules and frontier resume; benchmark three synthetic sizes against pinned 0.6 without claiming live savings.
 - Depends on: none
 - Change surface: `tools/context_package.py`; `tests/test_context_package.py`; `docs/runtime-benchmark.md`
 - Invariants: INV-001, INV-002, INV-005; never execute artifact commands or mutate feature files; reject missing/ambiguous required data; no tokenizer/API dependency; preserve material invariant text.
 - Test obligations: new and legacy task shapes; direct dependency fallback; long-history bounded package; missing/stale frontier refusal; invalid IDs/ambiguous input; no plan-wide worker payload; deterministic benchmark estimates distinct from measurements.
 - Verification: `rtk python3 -m unittest discover -s tests -p test_context_package.py -v`.
-- Completion evidence: pending
+- Completion evidence: read-only CLI resume/capsule and pinned artifact-derived benchmark, documented commands/limitations; 16 focused tests pass for canonical/legacy shapes, no-ID intent, amendments, duplicate/unknown IDs, active/global constraints, per-dependency evidence, unchanged input bytes, 300-task history isolation and measured string lengths. Worker result was corrected and escalated under PC-002; orchestrator finished ambiguity/intent projection and equal-evidence benchmark packaging. Actual feature-plan resume/capsule exercised locally. `rtk git diff --check` pass. New fact: helper is optional and fails closed on unsupported ambiguity; Git durability/semantic sufficiency remain orchestrator checks. Checkpoint: commit introducing this completed entry.
 
 ### T-005 — Cross-contract and delivery regression proof
 - Status: in-progress
@@ -131,3 +131,14 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Dependency changes: T-005 depends on T-001; T-006 depends on T-001. Final verification still requires every task complete.
 - Plan revision: 1 -> 2
 - Validation: outcomes covered; dependencies acyclic; correction ownership sequential; test obligations complete; no intent expansion.
+
+### PC-002 — 2026-09-05
+- Evidence: T-004 worker correction still accepts duplicate Brief IDs, can omit applicable active invariants, and lacks long-history regression proof; benchmark compares unequal contract/source packages.
+- Reason: intent-preserving projection and faithful measurement require shared-contract judgment beyond the initial bounded parser estimate. Orchestrator takes over correction under standard methodology.
+- Preserved completed tasks: T-001, T-002, T-003, T-006
+- Revised pending tasks: T-004 capability standard -> high; retain its existing write surface and obligations, add explicit ambiguity/global-invariant and equal-package benchmark checks.
+- Removed pending tasks: none
+- Added tasks: none
+- Dependency changes: none
+- Plan revision: 2 -> 3
+- Validation: outcomes covered; dependencies acyclic; write surfaces unchanged; test obligations complete; no intent expansion.
