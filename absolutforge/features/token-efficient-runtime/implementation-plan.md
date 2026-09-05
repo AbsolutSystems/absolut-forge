@@ -1,13 +1,13 @@
 # Implementation Plan: Token-Efficient Runtime Contract
 
 ## Status
-Complete
+Executing
 
 ## Context
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
 - Feature branch: `feature/0.7-token-efficient-runtime`
 - Base revision: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb`
-- Plan revision: 3
+- Plan revision: 4
 - Build strategy: planned
 - Planned methodology: standard
 
@@ -17,21 +17,21 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 ## Coverage
 - EO-001: T-001, T-002, T-005
 - EO-002: T-001, T-002, T-004, T-005
-- EO-003: T-001, T-002, T-003, T-004, T-005
-- EO-004: T-001, T-002, T-005
+- EO-003: T-001, T-002, T-003, T-004, T-005, T-007
+- EO-004: T-001, T-002, T-005, T-007
 - EO-005: T-001, T-002, T-003, T-005
 - EO-006: T-001, T-002, T-003, T-005
 - EO-007: T-001, T-002, T-005 and final verification
 - EO-008: T-004, T-005 and final verification
 
 ## Active frontier
-- Plan revision: 3
-- Next task: none
-- Ready tasks: none
+- Plan revision: 4
+- Next task: T-007
+- Ready tasks: T-007
 - Blocked tasks: none
 
 ### Relevant dependency facts
-- None; no pending execution frontier.
+- T-004: read-only context helper and focused unittest fixtures are committed; correction preserves its existing consumers.
 
 ### Active invariants
 - INV-001: accepted intent and selected methodology remain authoritative.
@@ -41,7 +41,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - INV-005: shared behavior and schema ownership remain canonical; host mechanics stay local.
 
 ### Pending final-verification obligations
-- None; authoritative 26-test suite, separate-process context workflow, synthetic benchmark, distribution checks and full implementation diff inspection passed on 2026-09-05. Final Build Evidence is recorded in the Brief.
+- Repeat authoritative suite, synthetic benchmark, primary context workflow and full diff/accepted coverage review after F-001 correction; append current complete final evidence.
 
 ## Task graph
 
@@ -111,6 +111,19 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Verification: `rtk git diff --check`; targeted Review section inspection.
 - Completion evidence: moved runtime escalation to its own end section, preserving Review severity/write boundary in its canonical section; documentation-only exemption, targeted inspection and `rtk git diff --check` pass. No schema or behavior change. Checkpoint: commit introducing this completed entry.
 
+### T-007 — Resolve modern Covers against accepted legacy outcomes
+- Status: pending
+- Capability: standard
+- Covers: EO-003, EO-004
+- Depends on: T-004
+- Change surface: `tools/context_package.py`; `tests/test_context_package.py`
+- Preserves: INV-001 through INV-005; read-only inputs, existing EO-ID and legacy Goal compatibility, bounded context and accepted-only intent.
+- Implementation intent: resolve modern Covers references to unambiguous accepted outcome headings/text; refuse unknown or ambiguous references rather than emitting unaccepted prose.
+- Test obligations: preserve full accepted clause for modern tasks with no-ID Briefs by heading/text; reject unknown and ambiguous references; preserve EO-ID and legacy Goal consumers and input immutability.
+- Return boundary: return if correction requires changing public task contracts, unrelated parser behavior or expanding the write surface.
+- Verification: `rtk python3 -m unittest discover -s tests -p test_context_package.py -v`; `rtk git diff --check`.
+- Completion evidence: pending
+
 ## Final verification
 - Run `rtk python3 -m unittest discover -s tests -v` once for the final attempt; integration/context scenario is included in that suite.
 - Run the documented synthetic benchmark for all three sizes and report estimates, not live measurements.
@@ -141,3 +154,14 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Dependency changes: none
 - Plan revision: 2 -> 3
 - Validation: outcomes covered; dependencies acyclic; write surfaces unchanged; test obligations complete; no intent expansion.
+
+### PC-003 — 2026-09-05
+- Evidence: Review F-001 reproduces unresolved modern Covers for a no-ID Brief and successful projection of invented intent in `tools/context_package.py`.
+- Reason: reopen the completed plan for the bounded accepted-intent compatibility correction requested by Review.
+- Preserved completed tasks: T-001 through T-006
+- Revised pending tasks: none
+- Removed pending tasks: none
+- Added tasks: T-007 — resolve accepted legacy outcomes and reject unknown/ambiguous references.
+- Dependency changes: T-007 depends on completed T-004; sequential reuse of its two-file write surface.
+- Plan revision: 3 -> 4
+- Validation: outcomes covered; dependencies acyclic; write surfaces valid and sequential; test obligations complete; no intent expansion.

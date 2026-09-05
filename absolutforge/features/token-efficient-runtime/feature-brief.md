@@ -1,7 +1,7 @@
 # Feature: AbsolutForge 0.7 — Token-Efficient Runtime Contract
 
 ## Status
-In Review
+Building
 
 ## Change type
 Feature
