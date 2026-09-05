@@ -1,0 +1,35 @@
+# Planned Build Runtime
+
+Use with [common](common.md) and the active host mapping. The [planned contract](../references/planned-build-contract.md) owns schemas and completion semantics.
+
+## Start and resume
+
+Accept only the canonical Brief path. At Ready, read accepted intent/amendments and artifact Build-start requirements. Require a non-detached feature branch, committed Ready Brief, clean worktree and empty index; only the permitted consultation report is excepted. Reject stale plan/map artifacts. Record base HEAD, planned strategy, standard methodology and plan path; set Building and checkpoint before source edits, including the allowed consultation report when present.
+
+At Building, validate branch/base and recorded strategy/methodology against Git. Autonomous returns to build. Missing methodology means standard. Recorded delegated loads the [legacy contract](../references/planned-delegated-contract.md) and effective fixed host profile before implementation: never convert, substitute or take over. Legacy tdd cannot resume here. Resume the existing plan; if Build started without a plan, compile before source edits. Dirty/mid-task state requires targeted reconciliation with recorded current work, preserving unrelated changes; never claim a clean resume or recreate completed work.
+
+At a clean boundary, read Brief status and accepted intent/amendments, plan header plus Active Frontier, current task and relevant code/tests. Confirm frontier revision, task status and direct dependency completion from committed state. Read direct-dependency evidence only when its facts are insufficient. Missing/stale frontier requires canonical reconstruction and persistence before dispatch, preserving completed definitions/evidence. Do not preload all completed tasks, PC history, schemas, doctrine, unrelated host mappings or full implementation diff.
+
+Open sibling Review blockers are required correction input. A Complete plan returned by Review reopens only through a canonical PC entry adding bounded corrective work; preserve completed tasks. New intent requires an accepted amendment.
+
+## Compile
+
+At compilation read the planned contract and verification doctrine, complete accepted outcomes/constraints and relevant repository evidence. Create the smallest useful DAG: outcome coverage, bounded production/test ownership, shared contracts before consumers, concrete test obligations/exemptions, capability, fast gates and final integration mapping. Initialize the frontier. Validate coverage, acyclicity, write ownership and no intent expansion; checkpoint the Ready plan before source edits. Consultation is optional evidence, never an automatic pause or requirement.
+
+## Execute and validate
+
+Mark Executing. Select dependency-ready tasks. Parallelize only fully disjoint write surfaces; shared writable paths execute sequentially. Use the lowest safe tier: low for mechanical/local explicit contracts and fast gates; standard for bounded ordinary multi-file coordination; high for architecture, migration, security/data boundaries, concurrency/state or material ambiguity. Prefer safe decomposition for cheaper workers. Evidence of underestimated complexity requires canonical PC escalation or decomposition. Standard methodology permits direct high-task orchestrator implementation; legacy delegated does not.
+
+Generate one Task Capsule from current durable state: Outcome, Own, Must preserve, Implement, Prove, Verify, Return instead of guessing if. Resolve accepted EO/INV text, relevant amendments and applicable global constraints. Preserve legacy guidance, watch points and boundaries. Include exact fast commands and necessary dependency facts. Workers receive only the capsule, relevant clauses and source/tests; never the full plan, unrelated Brief, full doctrine or prior dialogue. Use fresh workers without inherited orchestrator conversation when supported by the host.
+
+Workers may inspect relevant neighboring code but edit only assigned paths. Return evidence instead of broadening scope or redesigning dependencies. They never mutate plan, Brief, review, lifecycle, commits or remote state. Independently inspect every returned diff, write boundary and semantic test value. Rerun the fast gate when evidence is incomplete or stale. Assertions must establish repository-owned behavior rather than mocks, framework internals or incidental structure. Complete only with meaningful obligations covered and green fast gates or valid exemptions. Broad integration/e2e suites belong at final verification.
+
+Reduce accepted results to concise completion evidence and new dependency/invariant facts. Refresh Active Frontier after completion, blocking, readiness changes or accepted PC changes. Checkpoint each accepted task and workflow state separately, isolating its paths when a parallel wave returned multiple results; leave a clean boundary when the wave finishes. Do not retain raw dialogue/logs. Save is unnecessary at clean boundaries; it covers unresolved stops and does not preserve dirty source. Rotate context when reasoning quality is at risk.
+
+## Escalate and finish
+
+Load canonical PC grammar only when pending execution details change. Accepted intent, public/security/data contracts, migration or material cost changes require amendments. Load doctrine when materially revising obligations or classifying ambiguity.
+
+At final verification deliberately load complete plan coverage, accepted intent and `base_commit..HEAD`. Require every task checkpoint; recheck outcomes, run the authoritative affected-project/changeset suite once per attempt and exercise the primary accepted path. Do not rerun included integration suites separately. Inspect cross-task inconsistency and full diff. Failures add canonical PC corrective work, preserve completed history, and repeat final verification.
+
+Read artifact final-evidence schema and completion rules. Append every required field, valid whole-feature-path evidence, task IDs/revision, PC IDs and material escalations. Mark plan Complete and Brief In Review and checkpoint the handoff. Later source/test changes invalidate final evidence: repeat affected final verification and append a new complete entry. Never deliver failing/stale proof. Read harness syntax and end with the resolved Review prompt; do not invoke Review without explicit authorization.

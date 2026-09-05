@@ -1,6 +1,8 @@
-# Planned Delegated Build Contract
+# Legacy Planned Delegated Build Contract
 
 ## Purpose
+
+Only already-started `delegated` builds use this contract. Resume and Review corrections now invoke `build-planned`, preserving every fixed-executor restriction below. The separate `build-planned-delegated` skill is removed; new starts cannot choose this methodology. Validate the effective fixed host profile before resuming implementation, not merely at the original Build start.
 
 `build-planned-delegated` is a methodology of the first-class `planned` Build strategy. A high-capability orchestrator resolves design and compiles a durable implementation plan for one fixed, lower-cost host-mapped executor profile. The executor owns every production and test edit; the orchestrator owns the plan, lifecycle, supervision, verification, plan changes, commits, and whole-feature integration.
 
@@ -39,7 +41,7 @@ Before Build start, the host must be able to guarantee the effective delegated m
 
 Execute one dependency-ready task at a time. Use a fresh bounded executor context for each task unless the host can prove equivalent isolation. The executor receives:
 
-- its complete task contract;
+- a compact Task Capsule derived from its complete task contract, preserving ownership, guidance, watch points and decision boundaries;
 - only the relevant accepted Brief, amendment, ADR, rule, and dependency facts;
 - the relevant source and tests or permission to inspect them;
 - its exact write boundary and verification commands.

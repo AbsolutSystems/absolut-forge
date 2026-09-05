@@ -1,7 +1,7 @@
 # Implementation Plan: Token-Efficient Runtime Contract
 
 ## Status
-Ready
+Executing
 
 ## Context
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
@@ -27,7 +27,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 ## Task graph
 
 ### T-001 — Canonical contracts and runtime projections
-- Status: pending
+- Status: complete
 - Capability: high
 - Goal: establish four compact runtime projections, frontier/capsule schemas, compatible task fields, IDs, compact autonomous checkpoints and preserved final gates.
 - Depends on: none
@@ -35,7 +35,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Invariants: INV-001 through INV-005; legacy delegated stays fixed-owner via build-planned; tdd unchanged; final evidence schema unchanged.
 - Test obligations: documentation-only exemption for task-local automation; inspect escalation, schema ownership, normal versus legacy resume, unchanged final evidence and test charter. Automated cross-contract proof belongs to T-005.
 - Verification: `rtk git diff --check`; targeted canonical/runtime comparison.
-- Completion evidence: pending
+- Completion evidence: canonical contracts plus four runtime projections and ADR updated; documentation-only exemption with direct comparison of lifecycle, legacy routing, unchanged final schema and doctrine test charter; `rtk git diff --check` pass. Runtime uses targeted escalation; legacy delegated retains fixed ownership. Checkpoint: commit introducing this completed entry.
 
 ### T-002 — Skill entrypoints and lifecycle routing
 - Status: pending
@@ -60,7 +60,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: pending
 
 ### T-004 — Reproducible context projection and benchmark harness
-- Status: pending
+- Status: in-progress
 - Capability: standard
 - Goal: small read-only standard-library tool and tests proving bounded section extraction for new/legacy task capsules and frontier resume; benchmark three synthetic sizes against pinned 0.6 without claiming live savings.
 - Depends on: none

@@ -30,7 +30,7 @@ absolutforge/archives/{slug}/
 Draft -> Ready -> Building -> In Review -> Shipped
 ```
 
-`Ready` is the immutable intent baseline. Explicit invocation selects one of two first-class Build strategies: `build` selects `autonomous`; `build-planned` and `build-planned-delegated` both select `planned`, with methodology `standard` or `delegated`. `Building` resumes only through the selected strategy and planned methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
+`Ready` is the immutable intent baseline. Exactly two new-start commands exist: `build` selects `autonomous`; `build-planned` selects `planned` with methodology `standard`. The separate `build-planned-delegated` entrypoint is removed. Existing `delegated` builds resume through `build-planned` under the unchanged fixed-executor restrictions in `planned-delegated-contract.md`; this routing change does not convert their methodology. `Building` resumes only through the recorded strategy and methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
 
 ## Feature Brief
 
@@ -86,6 +86,8 @@ Feature | Fix | Refactor
 
 The immutable Ready baseline is `## Problem and goal` through `## Expected outcomes`, plus accepted amendments. Build may change lifecycle status and append Build Evidence only.
 
+New Discuss briefs give Expected Outcomes stable `### EO-001 — {title}` headings and material Constraints and invariants stable `### INV-001 — {title}` headings. IDs are unique within their category and remain stable after acceptance; amendments introduce new IDs rather than reassigning existing ones. Do not ID every paragraph. Older briefs without IDs remain valid unchanged: use headings and exact text matching. A task's `Covers` and `Preserves` references resolve to accepted text, including applicable amendments; an ID alone is not sufficient executor context. Ambiguous references require targeted inspection or clarification, never guessed intent.
+
 ## Ready acceptance checkpoint
 
 Explicit human acceptance authorizes `discuss` to set the complete Brief to `Ready` and create its local acceptance commit. The commit contains exactly `absolutforge/features/{slug}/feature-brief.md`; unrelated staged or dirty paths and an optional consultation report remain outside it. Discuss verifies the committed Ready content and changed path before handing off to Build, and reports the revision. An identical Ready Brief already committed at HEAD is reused without an empty commit.
@@ -134,7 +136,17 @@ Autonomous Build appends evidence after coherent verified outcomes and after fin
 - Durable memory lesson: none | {candidate}
 ```
 
-The `(final entry only)` marker is not part of the recorded value: autonomous intermediate entries omit that line and the final entry writes the field without the marker. Every other field appears in each applicable entry.
+The `(final entry only)` marker is not part of the recorded value. The final entry writes that field without the marker and includes every other field above. New autonomous intermediate entries use this compact schema instead:
+
+```markdown
+### Outcome checkpoint — O-003
+- Commit: {checkpoint revision or this checkpoint, resolved through Git}
+- Result: {verified accepted outcome}
+- Tests: {named cases; commands and results} | none — {reason and observable check}
+- New durable facts: none | {facts needed by later work}
+```
+
+An entry included in its own checkpoint uses `this checkpoint`; resolve it from the commit introducing the entry, avoiding an impossible self-referential hash. Existing full intermediate entries remain valid append-only history. Compact intermediate evidence never substitutes for the complete final delivery gate.
 
 Legacy Build Evidence and completed planned-task evidence may retain `Test binding proofs` fields created under the previous mutation-proof policy. Do not rewrite append-only history, but omit that field from new evidence; its presence or absence is no longer a delivery gate.
 
@@ -170,7 +182,7 @@ pending | in-progress | complete
 
 ## Planned Implementation Plan
 
-The exact planned schema, task contract, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). Fixed-executor behavioral deltas are owned by [`planned-delegated-contract.md`](planned-delegated-contract.md). A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
+The exact planned schema, Active Frontier, Task Capsule, and `PC-` change log are owned by [`planned-build-contract.md`](planned-build-contract.md). Legacy fixed-executor behavioral deltas are owned by [`planned-delegated-contract.md`](planned-delegated-contract.md) and loaded only for recorded `delegated` state. A planned feature must have a committed `implementation-plan.md` before the first source edit. The high-capability orchestrator owns all plan mutations and task checkpoint commits.
 
 ## Consultation report
 
@@ -265,6 +277,12 @@ Fixes required | Ready for ship
 ```
 
 Review treats the Brief as intent authority, source/tests and `base_commit..HEAD` as implementation truth, and execution artifacts only as supporting evidence. It never excuses a Brief violation because the plan/map said otherwise.
+
+Review starts with accepted Brief/amendments, final Build Evidence, the complete implementation diff and changed/new tests. Do not preload the plan, map, consultation, all completion evidence or checkpoint diffs. Read targeted supporting sections only for a concrete decision: a referenced PC change, material decision ambiguity, cross-task inconsistency, lifecycle evidence, or a finding. Recorded `delegated` methodology is itself a concrete ownership question requiring the relevant plan/commit evidence and legacy contract. A planned final gate still requires a completed plan; inspect its header/status to validate this without loading task history. Any missing proof remains BLOCKING.
+
+## Runtime projections and escalation
+
+`runtime/common.md` and the active stage runtime are compact executable projections, not alternative specifications. Canonical references win on disagreement. Load this contract's relevant sections for a lifecycle transition, Build Evidence schema validation, amendments, Review/Ship eligibility, or legacy artifact ambiguity. Load the planned contract for compilation, frontier repair, PC changes, write ownership or final completion semantics; load the verification doctrine for planning, materially revised test obligations, or uncertain test/exemption classification. Normal task execution uses concrete projected obligations. Final verification deliberately reloads complete coverage and implementation diff.
 
 Review finding severity is deterministic:
 

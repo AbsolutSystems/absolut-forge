@@ -1,6 +1,6 @@
 # Verification Doctrine
 
-Binding for `build`, `build-planned`, `build-planned-delegated`, `review`, and a `debug` fix made inside an active feature.
+Binding for `build`, `build-planned` (including legacy delegated resume), `review`, and a `debug` fix made inside an active feature. Planners read this doctrine at compilation, materially revised obligations or coverage ambiguity. Executors receive concrete projected obligations; reviewers use the runtime checklist and escalate uncertain classifications here. This changes loading policy only.
 
 ## Test charter
 
@@ -50,4 +50,4 @@ A compile, bundle, package, or artifact-production command is not by itself an e
 
 ## Delegated methodology
 
-`build-planned-delegated` applies this charter through `planned-delegated-contract.md`. The fixed executor writes and runs focused tests; the orchestrator independently judges their semantic value and reruns required gates. A missing or weak guard returns as a bounded correction to the same executor profile rather than being repaired in the orchestrator context.
+Legacy delegated resume through `build-planned` applies this charter through `planned-delegated-contract.md`. The fixed executor writes and runs focused tests; the orchestrator independently judges their semantic value and reruns required gates. A missing or weak guard returns as a bounded correction to the same executor profile rather than being repaired in the orchestrator context.
