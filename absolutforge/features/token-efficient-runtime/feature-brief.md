@@ -1,7 +1,7 @@
 # Feature: AbsolutForge 0.7 — Token-Efficient Runtime Contract
 
 ## Status
-Ready
+Building
 
 ## Change type
 Feature
@@ -152,3 +152,11 @@ None.
 ---
 
 ## Build Evidence
+
+### Build start — 2026-09-05
+- Feature branch: `feature/0.7-token-efficient-runtime`
+- Base revision: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb`
+- Worktree: clean
+- Build strategy: planned
+- Planned methodology: standard
+- Execution artifact: `absolutforge/features/token-efficient-runtime/implementation-plan.md`
