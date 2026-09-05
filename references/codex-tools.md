@@ -2,6 +2,10 @@
 
 Use native Codex file and shell primitives for repository inspection, edits and verification. Explicit skill invocation uses `$absolutforge {skill} ...`.
 
+## Autonomous Build
+
+Follow [autonomous outcome routing](model-routing.md#autonomous-outcome-routing). Keep the invoking model and reasoning profile as owner. Reuse the low/standard profiles in the Planned Build table below: explicit `gpt-5.6-luna` with `high` for low outcomes and `xhigh` for standard outcomes. Dispatch one fresh worker with `fork_turns="none"` and only the bounded outcome package; do not load the planned contract or create a task graph for this handoff. High-risk work remains in the main session. If the exact profile or dispatch is unavailable, report it and use the main-session fallback defined by autonomous routing.
+
 ## Planned Build
 
 The orchestrator is the model and reasoning profile of the main session that invoked `build`; the skill does not switch it automatically. That session owns planning, difficult decisions, validation and integration, and must be capable of high-tier work.

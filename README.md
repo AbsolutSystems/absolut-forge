@@ -9,7 +9,7 @@ AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, openc
 Build and Review load compact runtime instructions and consult canonical
 references when a decision needs more detail. A clean planned resume uses the
 Active Frontier, current task, relevant dependency facts, accepted intent, and
-source/tests. Workers receive a bounded Task Capsule containing the outcome,
+source/tests. Planned workers receive a bounded Task Capsule containing the outcome,
 owned files, invariants, implementation intent, proof obligations, verification
 commands, and return boundary.
 
@@ -42,13 +42,17 @@ Both strategies consume the same committed Ready Feature Brief. After the develo
 
 ### Autonomous execution
 
-Use a high-capability coding model as the direct owner of implementation. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
+Use a high-capability coding model as the owner of the feature. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
+
+The owner may delegate one bounded low/standard outcome at a time, including implementation and focused tests, when the handoff is worthwhile. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. This requires no implementation plan or strategy change.
+
+In Codex, local low-tier work uses Luna `high` and standard behavior slices use Luna `xhigh`. Trivial edits stay inline when dispatch would cost more than completing them; high-risk decisions remain with the main session. Newly discovered ambiguity or risk returns to the owner, who can clarify the scope or take over. The owner checks the diff and tests and alone updates lifecycle evidence and commits. If the requested worker is unavailable, the owner reports the limitation and continues inline when capable of handling the work. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
 
 ### Planned execution — orchestrator and capability-routed workers
 
-Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. Broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
+Use this higher-overhead strategy when durable decomposition, coordination of multiple delegated tasks, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. Broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
 
 New standard plans favor complete behavior slices: implementation, wiring and focused tests can belong to one bounded task across several files. Split at meaningful dependency, acceptance, ownership or risk boundaries, rather than making a task per file or separating code from its tests. Larger tasks still require settled shared contracts and explicit return boundaries; unrelated outcomes stay separate.
 
@@ -62,7 +66,7 @@ New delegated Build is no longer offered. A feature that already recorded `plann
 
 ## Strategy selection
 
-After `discuss`, invoke `build` with the canonical Brief. It defaults to autonomous execution. Planned execution needs a concrete benefit from independent work, dependency coordination, bounded delegation, or durable progress across sessions; file count or generic complexity alone is insufficient. Build announces its choice and reason, records them before implementation, and continues without another confirmation.
+After `discuss`, invoke `build` with the canonical Brief. It defaults to autonomous execution. Planned execution needs a concrete benefit from independent work, dependency coordination, coordinating multiple delegated tasks, or durable progress across sessions; file count or generic complexity alone is insufficient. Delegating one autonomous outcome needs no task graph and does not change strategy. Build announces its choice and reason, records them before implementation, and continues without another confirmation.
 
 Claude Code:
 

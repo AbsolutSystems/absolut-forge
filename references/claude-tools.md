@@ -2,6 +2,10 @@
 
 Use native Claude Code file/shell primitives for repository inspection, edits and verification.
 
+## Autonomous Build
+
+Follow [autonomous outcome routing](model-routing.md#autonomous-outcome-routing). Keep the invoking model and reasoning profile as owner. Reuse the low/standard profiles in the Planned Build table and the `absolutforge:planned-worker` agent with one fresh call containing only the bounded outcome package. Validate its effective profile under Effective executor profile before dispatch. The agent name does not require a planned artifact: label this an autonomous outcome, without loading the planned contract. High-risk work remains in the main session. If the agent or exact profile is unavailable, report it and use the main-session fallback defined by autonomous routing.
+
 ## Planned Build
 
 The orchestrator is the model and reasoning profile of the main session that invoked `build`; the skill does not switch it automatically. That session owns planning, difficult decisions, validation and integration, and must be capable of high-tier work.

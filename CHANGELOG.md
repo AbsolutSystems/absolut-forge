@@ -5,6 +5,30 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Optional delegation of one bounded low/standard outcome at a time in
+  autonomous Build, including implementation and focused tests. Workers receive
+  fresh, minimal context; no implementation plan or new artifact is required.
+
+### Changed
+
+- Autonomous Build now selects execution capability separately from strategy.
+  Codex uses Luna `high` for low-tier outcomes and Luna `xhigh` for standard
+  behavior slices. Trivial edits with disproportionate handoff overhead and
+  high-risk decisions stay with the main session.
+- The autonomous owner retains diff/test validation, lifecycle evidence,
+  checkpoint commits and final whole-feature verification. Workers return
+  unclear contracts or newly discovered risks for clarification or inline
+  takeover; unavailable profiles trigger an explicit main-session fallback.
+- Claude Code reuses its bounded planned worker for autonomous outcomes;
+  opencode uses an explicit installed capability mapping when available.
+- Delegating a single outcome no longer requires planned execution. Strategy
+  and methodology remain unchanged, including legacy delegated restrictions.
+  Cost savings remain unmeasured.
+
 ## [0.7.0] - 2026-09-05
 
 ### Added

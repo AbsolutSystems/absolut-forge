@@ -28,6 +28,10 @@ Treat the second as soft. When explicit-only matters, use the command.
 
 `debug` is the single exception, as on every other host: it may auto-trigger for a concrete failure, and auto-triggering authorizes diagnosis rather than a source change.
 
+## Autonomous Build dispatch
+
+Follow [autonomous outcome routing](model-routing.md#autonomous-outcome-routing). Keep the invoking context as owner and use a native subagent (`mode: subagent`) only when the installation provides an explicit low/standard capability mapping and fresh bounded context. Send only the outcome package, one worker at a time, without a planned artifact or inherited conversation. High-risk work stays with the owner. If the profile or dispatch is unavailable, report it and continue inline under autonomous routing; do not guess a provider equivalent.
+
 ## Planned Build and Review dispatch
 
 When `build` selects or resumes planned execution, keep the invoking high-capability context as orchestrator. Delegate a task only when a bounded fresh worker with no inherited full orchestrator conversation is available and delegation meaningfully reduces expensive primary-model work. A fully disjoint dependency-ready wave may run in parallel. opencode subagents (`mode: subagent`, defined in `.opencode/agent/<name>.md` or inline under `agent`) are the native worker primitive; route by `references/model-routing.md` and do not hardcode provider names into task contracts.
