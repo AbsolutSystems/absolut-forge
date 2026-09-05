@@ -16,6 +16,8 @@ Read artifact eligibility/evidence sections to validate structure and freshness.
 
 A `not available` path record is valid only with a credible reason and closest whole-feature check performed. Missing, stale or incomplete delivery proof is BLOCKING even when logs or future documentation could reconstruct it. Review never backfills Build Evidence or repairs source/tests.
 
+Treat current, complete green Build Evidence as confirmation that Build already ran the required tests successfully. Do not rerun tests as a startup step or merely to establish reviewer independence. Inspect test coverage and assertions using those recorded results. Rerun only the smallest relevant target when a concrete suspected defect or contradiction in the evidence needs execution to resolve; state the reason before running it and record the result in Review. A full-suite rerun requires a concrete concern that targeted checks cannot resolve. Review reruns never substitute for missing or stale Build Evidence.
+
 ## Inspect behavior and tests
 
 Map the complete diff to accepted Expected Outcomes. Inspect changed behavior, security/data integrity, applicable edges, compatibility, scope, critical documentation and diff garbage. Apply this test-value checklist:
