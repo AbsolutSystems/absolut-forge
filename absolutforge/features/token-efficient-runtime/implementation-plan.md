@@ -7,7 +7,7 @@ Executing
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
 - Feature branch: `feature/0.7-token-efficient-runtime`
 - Base revision: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb`
-- Plan revision: 1
+- Plan revision: 2
 - Build strategy: planned
 - Planned methodology: standard
 
@@ -24,6 +24,26 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - EO-007: T-001, T-002, T-005 and final verification
 - EO-008: T-004, T-005 and final verification
 
+## Active frontier
+- Plan revision: 2
+- Next task: T-002
+- Ready tasks: T-002, T-003, T-004, T-005
+- Blocked tasks: none
+
+### Relevant dependency facts
+- T-001: `runtime/` projects canonical references; new starts use standard planned, legacy delegated resumes through build-planned retaining fixed ownership. Final evidence schema is unchanged.
+
+### Active invariants
+- INV-001: accepted intent and selected methodology remain authoritative.
+- INV-002: preserve recovery from artifacts and Git without conversation.
+- INV-003: preserve risk-based gates, final evidence and independent Review.
+- INV-004: workers own bounded source surfaces; orchestrator owns checkpoints.
+- INV-005: shared behavior and schema ownership remain canonical; host mechanics stay local.
+
+### Pending final-verification obligations
+- Context workflow: canonical artifact -> frontier resume -> task capsule -> complete final gate -> diff-first Review.
+- Full unittest suite, synthetic benchmark, distribution checks and full implementation diff.
+
 ## Task graph
 
 ### T-001 — Canonical contracts and runtime projections
@@ -38,7 +58,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: canonical contracts plus four runtime projections and ADR updated; documentation-only exemption with direct comparison of lifecycle, legacy routing, unchanged final schema and doctrine test charter; `rtk git diff --check` pass. Runtime uses targeted escalation; legacy delegated retains fixed ownership. Checkpoint: commit introducing this completed entry.
 
 ### T-002 — Skill entrypoints and lifecycle routing
-- Status: pending
+- Status: in-progress
 - Capability: standard
 - Goal: compact Build/Review entrypoints and coherent Discuss/Save/Load/Ship routing; remove separate delegated skill.
 - Depends on: T-001
@@ -49,7 +69,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: pending
 
 ### T-003 — Host dispatch, distribution and user documentation
-- Status: pending
+- Status: in-progress
 - Capability: standard
 - Goal: bounded host capsules, legacy executor routing and 0.7 public distribution with only two Build commands.
 - Depends on: T-001
@@ -71,15 +91,26 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Completion evidence: pending
 
 ### T-005 — Cross-contract and delivery regression proof
-- Status: pending
+- Status: in-progress
 - Capability: high
 - Goal: verify distributed workflow contracts, preserved lifecycle gates, runtime escalation and feature primary path across the integrated change.
-- Depends on: T-001, T-002, T-003, T-004
+- Depends on: T-001
 - Change surface: `tests/test_runtime_contract.py`
 - Invariants: INV-001 through INV-005; verify observable workflow artifacts and dispatch semantics, not incidental wording or snapshots.
 - Test obligations: links/distribution; two builder surfaces; legacy resume and tdd handling; compact entrypoints; exact unchanged final evidence field set; review isolation/write limits; startup-to-frontier-to-capsule-to-final-review context scenario; pinned benchmark baseline.
 - Verification: `rtk python3 -m unittest discover -s tests -p test_runtime_contract.py -v`.
 - Completion evidence: pending
+
+### T-006 — Preserve canonical section boundaries for targeted readers
+- Status: complete
+- Capability: low
+- Goal: keep Review severity/write rules within the Review section when adding runtime escalation documentation.
+- Depends on: T-001
+- Change surface: `references/artifact-contracts.md`
+- Invariants: INV-003, INV-005; wording and final schema unchanged; sequential corrective ownership after T-001 completion.
+- Test obligations: documentation-only exemption; inspect section boundary and confirm Review contains its severity/write rules. T-005 regression checks cover the integrated contract.
+- Verification: `rtk git diff --check`; targeted Review section inspection.
+- Completion evidence: moved runtime escalation to its own end section, preserving Review severity/write boundary in its canonical section; documentation-only exemption, targeted inspection and `rtk git diff --check` pass. No schema or behavior change. Checkpoint: commit introducing this completed entry.
 
 ## Final verification
 - Run `rtk python3 -m unittest discover -s tests -v` once for the final attempt; integration/context scenario is included in that suite.
@@ -89,4 +120,14 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Whole-feature path is the local context workflow exercised with representative feature artifacts plus distributed instruction checks; paid live multi-model execution is explicitly outside scope.
 
 ## Plan changes
-None yet.
+
+### PC-001 — 2026-09-05
+- Evidence: `references/artifact-contracts.md` inserted Runtime projections heading before Review severity/write rules; targeted section reads would omit those Review rules. T-005 tests depend on already-set canonical contracts and can be authored while independent entrypoint edits finish.
+- Reason: preserve targeted canonical loading; allow bounded test authoring independently of distribution completion, keeping integration acceptance at final verification.
+- Preserved completed tasks: T-001
+- Revised pending tasks: T-005 may be authored after T-001; completion validation uses integrated T-002/T-003 results and final verification covers T-004.
+- Removed pending tasks: none
+- Added tasks: T-006, sequential bounded canonical-section correction after T-001.
+- Dependency changes: T-005 depends on T-001; T-006 depends on T-001. Final verification still requires every task complete.
+- Plan revision: 1 -> 2
+- Validation: outcomes covered; dependencies acyclic; correction ownership sequential; test obligations complete; no intent expansion.

@@ -280,10 +280,6 @@ Review treats the Brief as intent authority, source/tests and `base_commit..HEAD
 
 Review starts with accepted Brief/amendments, final Build Evidence, the complete implementation diff and changed/new tests. Do not preload the plan, map, consultation, all completion evidence or checkpoint diffs. Read targeted supporting sections only for a concrete decision: a referenced PC change, material decision ambiguity, cross-task inconsistency, lifecycle evidence, or a finding. Recorded `delegated` methodology is itself a concrete ownership question requiring the relevant plan/commit evidence and legacy contract. A planned final gate still requires a completed plan; inspect its header/status to validate this without loading task history. Any missing proof remains BLOCKING.
 
-## Runtime projections and escalation
-
-`runtime/common.md` and the active stage runtime are compact executable projections, not alternative specifications. Canonical references win on disagreement. Load this contract's relevant sections for a lifecycle transition, Build Evidence schema validation, amendments, Review/Ship eligibility, or legacy artifact ambiguity. Load the planned contract for compilation, frontier repair, PC changes, write ownership or final completion semantics; load the verification doctrine for planning, materially revised test obligations, or uncertain test/exemption classification. Normal task execution uses concrete projected obligations. Final verification deliberately reloads complete coverage and implementation diff.
-
 Review finding severity is deterministic:
 
 - `BLOCKING` means a correction or missing delivery proof is required before Ship. This includes stale or structurally incomplete final Build Evidence, an invalid or missing whole-feature-path record, or tests that fail to meaningfully cover an applicable accepted behavior or risk without a valid exemption.
@@ -300,3 +296,7 @@ Ship archives one record containing original intent, accepted amendments, as-bui
 Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 
 Verification in the record names the tests and cases that cover the delivered behavior, their commands and green results, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.
+
+## Runtime projections and escalation
+
+`runtime/common.md` and the active stage runtime are compact executable projections, not alternative specifications. Canonical references win on disagreement. Load this contract's relevant sections for a lifecycle transition, Build Evidence schema validation, amendments, Review/Ship eligibility, or legacy artifact ambiguity. Load the planned contract for compilation, frontier repair, PC changes, write ownership or final completion semantics; load the verification doctrine for planning, materially revised test obligations, or uncertain test/exemption classification. Normal task execution uses concrete projected obligations. Final verification deliberately reloads complete coverage and implementation diff.
