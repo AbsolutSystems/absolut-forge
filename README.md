@@ -2,72 +2,106 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex, opencode and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.7.0.** New features have exactly two commands: autonomous `build` and standard `build-planned`. Recorded legacy delegated features resume safely through `build-planned` with their original fixed-executor rules.
+**Current release: 0.7.0.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
 
-## Dual Build
+## Runtime context in 0.7.0
+
+Build and Review load compact runtime instructions and consult canonical
+references when a decision needs more detail. A clean planned resume uses the
+Active Frontier, current task, relevant dependency facts, accepted intent, and
+source/tests. Workers receive a bounded Task Capsule containing the outcome,
+owned files, invariants, implementation intent, proof obligations, verification
+commands, and return boundary.
+
+Older Briefs and task schemas remain supported. Modern `Covers` references can
+resolve an accepted outcome by EO identifier or exact legacy heading/text;
+unknown or ambiguous references stop capsule generation for inspection.
+
+Review starts from accepted intent, final Build Evidence, the complete
+implementation diff, and changed tests. Plans and history are conditional
+supporting evidence. Both builders still perform complete final verification
+and exercise the accepted primary path before Review.
+
+The optional [context helper and benchmark](docs/runtime-benchmark.md) provide
+read-only artifact projections and reproducible comparisons against a pinned
+0.6 baseline. Static sizes and token estimates do not establish measured model
+savings; live comparisons remain deferred. See the [changelog](CHANGELOG.md)
+for the full release notes.
+
+## One Build, two execution strategies
 
 The core workflow is:
 
 ```text
-                 ┌─ build ─────────────────────┐
-discuss -> Ready ┤                             ├-> review -> ship
-                 └─ planned strategy ──────────┘
-                    └─ build-planned
+discuss -> Ready -> build -> review -> ship
+                     ├─ autonomous
+                     └─ planned
 ```
 
 Both strategies consume the same committed Ready Feature Brief. After the developer explicitly accepts the complete proposal, `discuss` commits only the canonical Brief path locally and reports the baseline revision; it never includes unrelated staged or dirty changes.
 
-### `build` — autonomous
+### Autonomous execution
 
 Use a high-capability coding model as the direct owner of implementation. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
 
-### `build-planned` — planner/orchestrator + capability-routed workers
+### Planned execution — orchestrator and capability-routed workers
 
 Use this higher-overhead strategy when durable decomposition, bounded delegation, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. Broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
 
+New standard plans favor complete behavior slices: implementation, wiring and focused tests can belong to one bounded task across several files. Split at meaningful dependency, acceptance, ownership or risk boundaries, rather than making a task per file or separating code from its tests. Larger tasks still require settled shared contracts and explicit return boundaries; unrelated outcomes stay separate.
+
 The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build-planned` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
+The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
 ### Legacy delegated resumes
 
-New delegated Build is no longer offered. A feature that already recorded `planned` / `delegated` resumes through `build-planned`, retaining its fixed host executor profile and the rule that only that executor edits source and tests. If the exact legacy profile is unavailable, work stops at the last clean boundary; the orchestrator neither substitutes a worker nor takes over implementation.
+New delegated Build is no longer offered. A feature that already recorded `planned` / `delegated` resumes through `build`, retaining its fixed host executor profile and the rule that only that executor edits source and tests. If the exact legacy profile is unavailable, work stops at the last clean boundary; the orchestrator neither substitutes a worker nor takes over implementation.
 
 ## Strategy selection
 
-After `discuss`, explicitly choose one of two first-class strategies. Prefer `build` by default; choose `build-planned` when the feature is large or separable enough to repay planning and delegation overhead. Strategy and planned methodology cannot change after Build start.
+After `discuss`, invoke `build` with the canonical Brief. It defaults to autonomous execution. Planned execution needs a concrete benefit from independent work, dependency coordination, bounded delegation, or durable progress across sessions; file count or generic complexity alone is insufficient. Build announces its choice and reason, records them before implementation, and continues without another confirmation.
 
 Claude Code:
 
 ```text
 /absolutforge:build absolutforge/features/my-feature/feature-brief.md
-/absolutforge:build-planned absolutforge/features/my-feature/feature-brief.md
 ```
 
 Codex:
 
 ```text
 $absolutforge build absolutforge/features/my-feature/feature-brief.md
-$absolutforge build-planned absolutforge/features/my-feature/feature-brief.md
 ```
 
 opencode:
 
 ```text
 /absolutforge-build absolutforge/features/my-feature/feature-brief.md
-/absolutforge-build-planned absolutforge/features/my-feature/feature-brief.md
 ```
 
 Pi:
 
 ```text
 /skill:build absolutforge/features/my-feature/feature-brief.md
-/skill:build-planned absolutforge/features/my-feature/feature-brief.md
 ```
 
-The selected strategy and planned methodology are recorded in Build start evidence. A Building feature resumes through the matching builder, and Review blockers return to that builder. Do not silently switch strategy or methodology mid-feature.
+To force a strategy before Build starts, append `--strategy=autonomous` or
+`--strategy=planned` on any host. For example:
+
+```text
+$absolutforge build absolutforge/features/my-feature/feature-brief.md --strategy=planned
+```
+
+At Building, `build` reads the recorded strategy and methodology instead of
+selecting again. A conflicting override is refused; changing strategy requires
+explicit abandonment and a restart from a clean committed Ready baseline.
+Review corrections and Load handoffs also use `build` with the same Brief.
+Existing planned artifacts need no migration: replace old `build-planned`
+invocations with `build`. Legacy delegated ownership and unsupported legacy
+`tdd` eligibility remain unchanged.
 
 At each Build/Review boundary, AbsolutForge ends with one copy-ready continuation prompt for the active host, using the feature's resolved canonical paths. Build points to Review; Review points back to the recorded builder when blockers remain, or to Ship when the feature is ready. Printing that prompt does not run or authorize the next explicit stage.
 
@@ -105,8 +139,7 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 
 - `discuss` — inspect evidence, create and accept one Feature Brief, then commit its Ready baseline locally.
 - `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
-- `build` — autonomous high-capability implementation.
-- `build-planned` — high-capability planning/orchestration with bounded, capability-routed worker delegation.
+- `build` — select autonomous or planned execution once, then implement and resume the recorded strategy with verified checkpoints.
 - `save` / `load` — durable cross-session context without hidden state.
 - `review` — one fresh read-only whole-feature review.
 - `ship` — archive durable context and create one local closeout commit.
@@ -135,7 +168,9 @@ absolutforge/archives/{slug}/feature-record.md
 
 Workflow contracts use semantic tiers rather than model names. See `references/model-routing.md`.
 
-Deployment-specific mappings live only in the active host reference. This keeps workflow artifacts portable while allowing each installation to use its available worker profiles. Cross-family Review is preferable when available.
+Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#planned-build) and [Claude Code mapping](references/claude-tools.md#planned-build) specify worker models and reasoning profiles by task capability. The orchestrator remains the model of the session that invoked `build`; the skill does not automatically replace it. High tasks stay in that session, while bounded standard tasks may include a complete behavior slice and its tests. Missing worker profiles use an explicitly reported main-session fallback only under standard methodology. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
+
+Assess this policy by the cost of an accepted task, including preparation, validation and corrections. Higher worker reasoning effort and fewer handoffs are not measured token savings by themselves.
 
 ## Safety and boundaries
 
@@ -151,7 +186,7 @@ Deployment-specific mappings live only in the active host reference. This keeps 
 
 ## Host installation
 
-Claude Code and Codex install the repository as a local plugin through their normal local-plugin flow. The repository root is the plugin root; installation must ship the shared `skills/`, `references/`, and `runtime/` directories together. Claude installations that must resume a legacy delegated feature also need `agents/delegated-executor.md`; copying only `skills/` cannot preserve that legacy executor contract.
+Claude Code and Codex install the repository as a local plugin through their normal local-plugin flow. The repository root is the plugin root; installation must ship the shared `skills/`, `references/`, and `runtime/` directories together. Claude installations also ship `agents/planned-worker.md` for standard task dispatch and retain `agents/delegated-executor.md` for legacy delegated resume. These descriptors have distinct ownership rules; copying only `skills/` cannot provide either named worker.
 
 Pi consumes the repository as a Pi Package declared by the root `package.json`:
 
@@ -192,6 +227,20 @@ done
 opencode reads config once at startup and does not hot-reload it. Restart opencode after registering skills or commands. See [`references/opencode-tools.md`](references/opencode-tools.md) for the full mapping, including the fact that opencode has no per-skill implicit-invocation switch.
 
 ## Validation
+
+Run the contract and context regression suite, including fresh-process resume
+and capsule checks:
+
+```bash
+rtk python3 -m unittest discover -s tests -v
+```
+
+Generate the small, medium, and large static benchmark report (requires the
+pinned baseline revision in local Git history):
+
+```bash
+rtk python3 tools/context_package.py benchmark
+```
 
 Validate JSON descriptors:
 

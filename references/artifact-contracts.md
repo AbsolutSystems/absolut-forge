@@ -30,7 +30,7 @@ absolutforge/archives/{slug}/
 Draft -> Ready -> Building -> In Review -> Shipped
 ```
 
-`Ready` is the immutable intent baseline. Exactly two new-start commands exist: `build` selects `autonomous`; `build-planned` selects `planned` with methodology `standard`. The separate `build-planned-delegated` entrypoint is removed. Existing `delegated` builds resume through `build-planned` under the unchanged fixed-executor restrictions in `planned-delegated-contract.md`; this routing change does not convert their methodology. `Building` resumes only through the recorded strategy and methodology. A Review blocker returns to the matching builder. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
+`Ready` is the immutable intent baseline. One public `build` command selects either `autonomous` or `planned` under Build strategy selection below. New planned work uses `standard` methodology. Separate planned and delegated entrypoints are removed. Existing `delegated` builds resume through `build` under the unchanged fixed-executor restrictions in `planned-delegated-contract.md`; routing never converts methodology. `Building` resumes only through recorded strategy and methodology. Review blockers return to `build`. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
 
 ## Feature Brief
 
@@ -94,6 +94,16 @@ Explicit human acceptance authorizes `discuss` to set the complete Brief to `Rea
 
 Discuss requires a non-detached intended feature branch before requesting final acceptance. Commit failure leaves the Ready Brief intact but blocks Build handoff until resolved; Discuss never amends, rewrites history, pushes, or commits another path as part of acceptance.
 
+## Build strategy selection
+
+The public `build <brief-path>` chooses once at Ready, before the Build-start checkpoint or implementation. It accepts at most one optional `--strategy=autonomous` or `--strategy=planned`; reject unknown values/options or repeated overrides before mutation. An explicit valid override wins over automatic selection, but never bypasses lifecycle, verification or host ownership requirements.
+
+Without an override, inspect accepted intent/amendments and relevant repository evidence using targeted reads. Default to autonomous for a cohesive change with little independent work. Choose planned only when concrete independent write surfaces/dependencies, useful bounded delegation, or a durable multi-session task graph repay compilation and coordination overhead. File count or generic complexity alone is insufficient; security or architecture risk alone does not require a graph. Lack of workers removes delegation as a benefit, but standard planned execution may still be justified by durable recovery. If no concrete benefit is established, select autonomous. Do not compile a plan or load both execution runtimes merely to make this decision.
+
+Announce the chosen strategy and concise evidence-based reason without another confirmation. Record `Strategy selection` in the Build-start checkpoint alongside the strategy, methodology and artifact path. Then continue the chosen runtime within the same invocation. Automatic selection is implementation organization inside accepted intent, not authorization to change scope.
+
+At Building, read durable Build-start strategy and methodology before routing; never rerun automatic selection. A matching override is harmless; a conflicting override is rejected before mutation and requires explicit abandonment/restart to change strategy. Missing strategy, unknown values or inconsistent Brief/plan/Save evidence require reconciliation, never guessing from file count or an existing artifact. Missing historical methodology retains the established default; missing historical selection rationale is valid and must not be backfilled. Planned/delegated retains its fixed executor; legacy tdd remains unsupported. An override cannot convert methodology. Draft, In Review and Shipped are not new-start states.
+
 ## Build start evidence
 
 Append exactly once before the first source edit:
@@ -104,9 +114,12 @@ Append exactly once before the first source edit:
 - Base revision: `{base_commit}`
 - Worktree: clean
 - Build strategy: autonomous | planned
+- Strategy selection: automatic | explicit override — {concise repository/Brief-based reason or user choice}
 - Planned methodology: not applicable | standard | delegated
 - Execution artifact: none | `absolutforge/features/{slug}/execution-map.md` | `absolutforge/features/{slug}/implementation-plan.md`
 ```
+
+The Strategy selection field is required for new starts only; historical starts remain valid unchanged without it.
 
 Artifacts created before the methodology field was introduced remain valid: absence means `not applicable` for autonomous Build and `standard` for planned Build. Legacy value `tdd` remains valid historical evidence but cannot be selected or resumed by a current builder.
 

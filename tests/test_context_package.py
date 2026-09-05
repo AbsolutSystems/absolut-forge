@@ -99,6 +99,27 @@ class TestContextPackage(unittest.TestCase):
         )
         self.assertIn("Return instead of guessing if", result)
 
+    def test_behavior_slice_capsule_keeps_wiring_tests_and_return_boundary(self):
+        owned = "src/filter.py\nsrc/list.py\nsrc/routes.py\ntests/test_filter.py\ntests/test_list.py"
+        proof = "Reject invalid filters; preserve unfiltered results; return matching items."
+        boundary = "Return if the shared query contract or tenant boundary must change."
+        plan = PLAN.replace(
+            "- Change surface: b.py\n  tests/test_b.py",
+            "- Change surface: " + owned.replace("\n", "\n  "),
+        ).replace("- Test obligations: prove it", "- Test obligations: " + proof).replace(
+            "- Return boundary: return ambiguity", "- Return boundary: " + boundary
+        ).replace("do the thing\n  retaining continuation", "Implement and wire list filtering with validation.")
+        capsule = build_capsule(plan, BRIEF, "T-002")
+        self.assertEqual(capsule["Own"], owned)
+        self.assertEqual(capsule["Prove"], proof)
+        self.assertEqual(capsule["Return instead of guessing if"], boundary)
+        self.assertEqual(capsule["Verify"], "python -m unittest")
+        self.assertIn("Keep exact invariant text.", str(capsule["Must preserve"]))
+        self.assertIn("Only send bounded work.", str(capsule["Outcome"]))
+        self.assertEqual(capsule["Relevant dependency facts"], ["T-001: only this dependency fact"])
+        self.assertNotIn("x.py", str(capsule))
+        self.assertNotIn("Task graph", str(capsule))
+
     def test_resume_uses_section_frontier_and_blocked_left_side_only(self):
         result = build_resume(PLAN)
         self.assertEqual(result["active_frontier"]["blocked_tasks"], ["T-010"])

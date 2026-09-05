@@ -24,7 +24,7 @@ Pi core has no native subagent primitive. Keep the invoking high-capability cont
 
 When such a worker primitive exists, send one Task Capsule with relevant accepted clauses, direct dependency facts and source/tests, never the whole Brief/plan/history or inherited orchestrator dialogue. Apply the same capability tiers, write boundaries, fresh-context isolation and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation.
 
-New delegated starts are unavailable. A feature that records legacy delegated methodology resumes through `build-planned` only when a trusted extension can still request its explicitly configured fixed executor and reasoning profile. Dispatch one fresh bounded task at a time and keep every production/test edit in that executor; otherwise stop at the clean boundary and never fall back to direct primary-context implementation.
+New delegated starts are unavailable. A feature that records legacy delegated methodology resumes through `build` only when a trusted extension can still request its explicitly configured fixed executor and reasoning profile. Dispatch one fresh bounded task at a time and keep every production/test edit in that executor; otherwise stop at the clean boundary and never fall back to direct primary-context implementation.
 
 ## Clean-context Review
 

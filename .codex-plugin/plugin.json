@@ -1,15 +1,15 @@
 {
   "name": "absolutforge",
   "version": "0.7.0",
-  "description": "Intent-driven development workflow with autonomous and standard planned build strategies.",
+  "description": "Intent-driven development workflow with one Build command and automatic strategy selection.",
   "author": {
     "name": "Absolut Systems"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "AbsolutForge",
-    "shortDescription": "Intent-driven delivery with two build strategies",
-    "longDescription": "Discuss intent once, then choose autonomous or standard planned build, followed by one independent review and local ship closeout.",
+    "shortDescription": "One Build command with automatic strategy selection",
+    "longDescription": "Discuss intent once; Build selects and preserves an execution strategy, followed by one independent review and local ship closeout.",
     "developerName": "Absolut Systems",
     "category": "Coding",
     "capabilities": [

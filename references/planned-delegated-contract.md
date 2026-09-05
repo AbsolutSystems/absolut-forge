@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Only already-started `delegated` builds use this contract. Resume and Review corrections now invoke `build-planned`, preserving every fixed-executor restriction below. The separate `build-planned-delegated` skill is removed; new starts cannot choose this methodology. Validate the effective fixed host profile before resuming implementation, not merely at the original Build start.
+Only already-started `delegated` builds use this contract. Resume and Review corrections now invoke `build`, preserving every fixed-executor restriction below. The separate `build-planned-delegated` skill is removed; new starts cannot choose this methodology. Validate the effective fixed host profile before resuming implementation, not merely at the original Build start.
 
 `build-planned-delegated` is a methodology of the first-class `planned` Build strategy. A high-capability orchestrator resolves design and compiles a durable implementation plan for one fixed, lower-cost host-mapped executor profile. The executor owns every production and test edit; the orchestrator owns the plan, lifecycle, supervision, verification, plan changes, commits, and whole-feature integration.
 

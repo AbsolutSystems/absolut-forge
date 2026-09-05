@@ -496,7 +496,7 @@ def benchmark_report(repo=None):
         *shared,
     ]
     current_paths = [
-        "skills/build-planned/SKILL.md",
+        "skills/build/SKILL.md",
         "runtime/common.md",
         "runtime/planned.md",
         "references/codex-tools.md",

@@ -1,4 +1,4 @@
 interface:
   display_name: "AbsolutForge Build"
-  short_description: "Autonomously implement one accepted Feature Brief"
+  short_description: "Select and execute a strategy for one accepted Brief"
   default_prompt: "Use $absolutforge build to implement this accepted Feature Brief as one verified delivery unit."

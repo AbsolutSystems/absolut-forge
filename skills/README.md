@@ -3,12 +3,12 @@
 Core delivery:
 
 ```text
-discuss -> (build | build-planned) -> review -> ship
+discuss -> build -> review -> ship
 ```
 
 Optional: `consult`, `save`, `load`, `debug`, `tech-debt`.
 
-`build` and planned Build consume the same committed Ready Feature Brief and converge on the same Review/Ship contract. Prefer autonomous `build`; use `build-planned` when durable decomposition, flexible capability routing, fresh-context rotation, or cross-session resume justifies its overhead. New plans use standard methodology. A recorded legacy delegated plan resumes through `build-planned` with its fixed-executor ownership unchanged; it cannot be converted or taken over by the orchestrator.
+`build` consumes the committed Ready Brief and selects autonomous or planned execution once. Autonomous is the default; planned needs concrete benefits from dependencies, bounded delegation or durable resume that repay its overhead. Optional `--strategy=autonomous` or `--strategy=planned` overrides this choice before Build start. The choice and reason are checkpointed without another confirmation. Resumes use recorded strategy and methodology; a conflicting override is refused. New planned work uses standard methodology; legacy delegated work keeps its fixed executor and cannot be converted or taken over by the orchestrator.
 
 In planned Build, every completed-task checkpoint must be sufficient for a fresh orchestrator to resume from the Brief, plan and Git without prior conversation. `save/load` is mainly for interruption before such a durable boundary.
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "AbsolutForge Build Planned"
-  short_description: "Build durable planned tasks; resume legacy delegated work safely"
-  default_prompt: "Use $absolutforge build-planned to compile this accepted Feature Brief into standard planned tasks and deliver it."

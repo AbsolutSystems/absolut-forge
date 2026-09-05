@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`build-planned` is the higher-overhead alternative to autonomous `build`. New plans use standard methodology with the lowest safe task capability. Existing delegated plans resume through this same entrypoint with the legacy fixed-executor contract in `planned-delegated-contract.md`; no new delegated start is allowed. Use planned Build when durable decomposition, bounded delegation, or cross-session resume repays its overhead. The high-capability orchestrator owns the complete feature and validates every result.
+Planned execution is the higher-overhead internal strategy of `build`, alongside autonomous execution. New plans use standard methodology with the lowest safe task capability. Existing delegated plans resume through this same entrypoint with the legacy fixed-executor contract in `planned-delegated-contract.md`; no new delegated start is allowed. Use planned Build when durable decomposition, bounded delegation, or cross-session resume repays its overhead. The high-capability orchestrator owns the complete feature and validates every result.
 
 ## Active artifact and lifecycle
 
@@ -87,6 +87,12 @@ Existing tasks with `Goal`, `Invariants`, `Implementation guidance`, `Watch poin
 
 Use the smallest useful acyclic graph. Map every accepted Expected Outcome to tasks or final verification. Put shared contracts before consumers and give each task one bounded production write surface.
 
+For new standard plans, prefer one coherent behavior slice per task, including implementation, wiring and focused tests across the necessary files. For example, filtering a list with input validation and regression tests is one task when its contracts are settled; separate function, caller and test tasks only add handoffs without independent value. Split for a real dependency, independently verifiable result, ownership conflict, or material risk/context boundary. Do not split solely by file, layer or code-versus-test work, and do not merge unrelated outcomes just to reduce task count. No fixed file/task count sets the boundary.
+
+A broader standard task still needs settled shared contracts, explicit production/test ownership, sufficient relevant context, concrete test obligations, a meaningful fast gate and a return boundary. If those do not fit one bounded capsule, split coherently or escalate; higher worker reasoning effort does not authorize wider scope. Keep unresolved architecture, migration, security/data and concurrency decisions high. Grouping never removes final integration checks or permits overlapping parallel writes.
+
+Apply this granularity policy when compiling new standard plans. Existing completed tasks and recorded execution commitments remain unchanged; revising pending tasks requires a canonical PC entry. Legacy delegated ownership and decomposition rules remain authoritative.
+
 A task states WHAT result must change, WHERE responsibility lives, WHY its invariants matter, and HOW correctness will be demonstrated. It does not prescribe method bodies, helper decomposition, naming, pseudo-patches, or ordered edit scripts. Under standard methodology, if safe delegation would require describing most of the patch, mark the task `high` and keep it with the orchestrator. Delegated methodology instead decomposes or stops under `planned-delegated-contract.md`; the orchestrator never implements the task.
 
 Every behavior-changing task carries concrete `Test obligations` derived from `verification-doctrine.md`. Name the applicable risks and observable behavior, not a test count or implementation recipe. Test paths belong to the task's change surface. Keep unit tests in the fast task gate and require green results; map risks observable only across a real integration boundary to final verification.
@@ -116,7 +122,7 @@ Durable state has one owner:
 
 Do not copy raw worker conversations, full logs, or facts already recoverable from Git into the plan. After a task is validated, reduce its result to concise durable evidence and let the raw interaction leave active context.
 
-At a clean task boundary, resume through `build-planned` with the canonical Brief for both standard and legacy delegated state, preserving recorded methodology. `save` is unnecessary because the plan and Git are the resume record. Use `save` when stopping mid-task or while unresolved context exists that has not reached a durable task or `PC-` boundary. Save still does not preserve dirty source by itself.
+At a clean task boundary, resume through `build` with the canonical Brief for both standard and legacy delegated state, preserving recorded methodology. `save` is unnecessary because the plan and Git are the resume record. Use `save` when stopping mid-task or while unresolved context exists that has not reached a durable task or `PC-` boundary. Save still does not preserve dirty source by itself.
 
 Rotate to a fresh session when context pressure risks losing intent or causal reasoning, especially after a large standard-methodology wave, a `PC-` change, or a long diagnosis, and before a substantial standard `high` task or final integration when practical. Use no fixed task count. Normal resume reads runtime, Brief status and accepted intent/amendments, plan header and Active Frontier, current task, and relevant code/tests. Load completion evidence only for direct dependencies whose necessary facts are absent or uncertain. Do not preload all completed bodies, plan-change history, full schemas/doctrine, unrelated host mappings or the base-to-HEAD diff. Use current code as implementation truth; individual checkpoint diffs need a concrete regression, ownership or history question.
 
@@ -152,7 +158,7 @@ Include enough exact clauses to preserve meaning: unresolved EO/INV IDs are insu
 
 ## Capability routing
 
-Use the lowest capability tier that can safely execute the task. Prefer low for mechanical/local work with explicit contracts and fast gates, standard for bounded ordinary multi-file coordination, and high for shared architecture, migration, security/data boundaries, concurrency/state complexity or material ambiguity. Bias decomposition toward safe low/standard work without forcing complexity downward. Evidence of underestimated complexity requires a PC revision escalating the pending task or decomposing it. Standard methodology permits direct high-task implementation and correction by the orchestrator; legacy delegated restrictions remain in force. Model names and unavailable-dispatch mechanics belong in the active host mapping.
+Use the lowest capability tier that can safely execute the coherent task under Task design. Low covers mechanical/local work with explicit contracts and fast gates; standard covers bounded multi-file behavior with settled contracts, implementation/wiring and focused tests; high covers shared architecture, migration, security/data boundaries, concurrency/state complexity or material ambiguity. Do not fragment standard work merely to lower its tier, or downgrade risk because a worker has more reasoning effort. Evidence of underestimated complexity requires a PC revision escalating the pending task or splitting it at a real boundary. For new standard plans, high tasks and high-risk corrections stay with the main-session orchestrator; legacy delegated restrictions remain in force. Model names, reasoning profiles and unavailable-dispatch mechanics belong in the active host mapping.
 
 ## Plan changes
 

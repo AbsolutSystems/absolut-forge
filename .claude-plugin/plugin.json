@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
   "version": "0.7.0",
-  "description": "Intent-driven delivery with autonomous and standard planned build strategies.",
+  "description": "Intent-driven delivery with one Build command and automatic strategy selection.",
   "author": {"name": "Absolut Systems"}
 }

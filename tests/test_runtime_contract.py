@@ -104,32 +104,81 @@ class RuntimeContractTests(unittest.TestCase):
                     with self.subTest(path=str(path.relative_to(ROOT)), target=target):
                         self.assertTrue((path.parent / target.split("#")[0]).exists())
 
-    def test_two_build_entrypoints_and_explicit_host_commands(self):
+    def test_one_build_entrypoint_and_explicit_host_commands(self):
         builders = {
             p.name
             for p in (ROOT / "skills").glob("build*")
             if (p / "SKILL.md").exists()
         }
-        self.assertEqual(builders, {"build", "build-planned"})
-        self.assertFalse(
-            (
-                ROOT / ".opencode/command/absolutforge-build-planned-delegated.md"
-            ).exists()
+        self.assertEqual(builders, {"build"})
+        self.assertEqual(
+            {p.name for p in (ROOT / ".opencode/command").glob("absolutforge-build*.md")},
+            {"absolutforge-build.md"},
         )
         commands = read("references/harness-command-contract.md")
         for prefix in ("/absolutforge:", "$absolutforge ", "/absolutforge-", "/skill:"):
             self.assertIn(prefix + "build absolutforge/features/", commands)
-            self.assertIn(prefix + "build-planned absolutforge/features/", commands)
-            self.assertNotIn(
-                prefix + "build-planned-delegated absolutforge/features/", commands
-            )
+            self.assertNotRegex(commands, re.escape(prefix) + r"build-planned(?:-delegated)? ")
         # The descriptor is still needed for already-recorded Claude ownership.
         self.assertTrue((ROOT / "agents/delegated-executor.md").exists())
+
+    def test_build_selection_and_resume_contract(self):
+        entry = read("skills/build/SKILL.md")
+        selection = section(read("references/artifact-contracts.md"), "Build strategy selection")
+        for option in ("--strategy=autonomous", "--strategy=planned"):
+            for path in ("skills/build/SKILL.md", "references/harness-command-contract.md",
+                         ".opencode/command/absolutforge-build.md", "README.md"):
+                with self.subTest(option=option, path=path):
+                    self.assertIn(option, read(path))
+        for obligation in (
+            "Default to autonomous", "repay compilation and coordination overhead",
+            "File count or generic complexity alone is insufficient",
+            "An explicit valid override wins", "repeated overrides before mutation",
+            "without another confirmation", "At Building", "never rerun automatic selection",
+            "conflicting override is rejected before mutation", "matching override is harmless",
+            "Missing strategy", "must not be backfilled", "legacy tdd remains unsupported",
+            "An override cannot convert methodology",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, selection)
+        self.assertIn("Load only the selected", entry)
+        self.assertIn("within this invocation", entry)
+        self.assertIn("Draft requires accepted Ready intent", entry)
+        self.assertIn("Shipped is closed", entry)
+        self.assertIn("never convert, substitute or take over", entry)
+
+    def test_selection_evidence_is_start_only_and_legacy_compatible(self):
+        artifacts = read("references/artifact-contracts.md")
+        start = section(artifacts, "Build start evidence")
+        self.assertIn("- Strategy selection: automatic | explicit override", start)
+        self.assertIn("required for new starts only", start)
+        self.assertIn("historical starts remain valid unchanged without it", start)
+        self.assertNotIn("- Strategy selection:", section(artifacts, "Build evidence"))
+        for runtime in ("autonomous", "planned"):
+            text = read(f"runtime/{runtime}.md")
+            self.assertIn("selection reason", text)
+            self.assertIn("checkpoint before source edits", text)
+
+    def test_lifecycle_handoffs_use_build_without_reselection(self):
+        discuss = read("skills/discuss/SKILL.md")
+        self.assertIn("single public `build`", discuss)
+        self.assertIn("do not select a strategy", discuss)
+        self.assertIn("Printing the continuation does not invoke Build", discuss)
+        self.assertIn("without selecting again", read("skills/load/SKILL.md"))
+        self.assertIn("without selecting again", read("runtime/review.md"))
+        for path in ("skills/save/SKILL.md", "skills/debug/SKILL.md",
+                     "references/planned-build-contract.md"):
+            self.assertIn("`build`", read(path))
+            self.assertNotIn("`build-planned`", read(path))
+        for host in ("codex", "claude", "opencode", "pi"):
+            text = read(f"references/{host}-tools.md")
+            self.assertIn("`build`", text)
+            self.assertNotIn("`build-planned`", text)
 
     def test_entrypoints_select_runtime_instead_of_full_reference_preload(self):
         for skill, runtime in (
             ("build", "autonomous"),
-            ("build-planned", "planned"),
+            ("build", "planned"),
             ("review", "review"),
         ):
             text = read(f"skills/{skill}/SKILL.md")
@@ -172,7 +221,7 @@ class RuntimeContractTests(unittest.TestCase):
 
     def test_legacy_policy_preserves_ownership_and_tdd_rejection(self):
         legacy = read("references/planned-delegated-contract.md")
-        self.assertIn("`build-planned`", legacy)
+        self.assertIn("`build`", legacy)
         for name in (
             "Orchestrator ownership",
             "Durable methodology and legacy TDD state",
@@ -251,6 +300,114 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("base_commit..HEAD", runtime)
         self.assertIn("primary accepted path", runtime)
         self.assertIn("PC", runtime)
+
+    def test_codex_new_standard_profiles_and_explicit_dispatch(self):
+        mapping = section(read("references/codex-tools.md"), "Planned Build")
+        current = mapping.split("### Legacy delegated resume", 1)[0]
+        rows = re.findall(
+            r"^\| `(low|standard|high)` \| (.*?) \| (.*?) \|$",
+            current, re.M,
+        )
+        self.assertEqual(rows, [
+            ("low", "`gpt-5.6-luna`", "`high`"),
+            ("standard", "`gpt-5.6-luna`", "`xhigh`"),
+            ("high", "Main-session orchestrator", "Current session setting"),
+        ])
+        for obligation in (
+            "For new standard planned builds",
+            "does not switch it automatically",
+            "explicit model and reasoning-effort overrides",
+            'fork_turns="none"',
+            "exact requested worker profile is unavailable",
+            "never silently substitute another worker model/effort",
+            "This fallback never applies to legacy delegated state",
+            "any explicitly recorded execution commitments",
+        ):
+            self.assertIn(obligation, current)
+        legacy = mapping.split("### Legacy delegated resume", 1)[1]
+        # The pinned 0.6 layout predates this heading. Its exact dispatch rule
+        # is still compared directly, preserving fixed model/effort ownership.
+        dispatch = 'Dispatch every implementation task and correction with model `gpt-5.6-luna` and reasoning effort `high`.'
+        self.assertIn(dispatch, legacy)
+        self.assertIn(dispatch, baseline("references/codex-tools.md"))
+        self.assertNotIn("xhigh", legacy)
+        self.assertIn("stop without substituting another model or taking over implementation", legacy)
+
+    def test_claude_standard_worker_profile_and_methodology_boundary(self):
+        mapping = section(read("references/claude-tools.md"), "Planned Build")
+        current, legacy = mapping.split("### Legacy delegated resume", 1)
+        rows = re.findall(
+            r"^\| `(low|standard|high)` \| (.*?) \| (.*?) \|$", current, re.M
+        )
+        self.assertEqual(rows, [
+            ("low", "`claude-opus-5`", "`low`"),
+            ("standard", "`claude-opus-5`", "`low`"),
+            ("high", "Main-session orchestrator", "Current session setting"),
+        ])
+        self.assertIn('subagent_type: "absolutforge:planned-worker"', current)
+        self.assertIn("one fresh call per task", current)
+        self.assertIn("This fallback never applies to legacy delegated state", current)
+        self.assertIn("does not switch it automatically", current)
+        self.assertIn("High tasks and high-risk corrections stay with the main-session", current)
+        self.assertIn('subagent_type: "absolutforge:delegated-executor"', legacy)
+        self.assertIn("never edits production code or tests", legacy)
+        self.assertIn("stop without starting or continuing implementation", legacy)
+        for name in ("planned-worker", "delegated-executor"):
+            descriptor = read(f"agents/{name}.md")
+            frontmatter = descriptor.split("---", 2)[1]
+            for field, expected in (
+                ("name", name), ("model", "claude-opus-5"), ("effort", "low"),
+                ("tools", "Read, Edit, Write, Bash, Glob, Grep"),
+            ):
+                self.assertEqual(re.search(rf"^{field}: (.+)$", frontmatter, re.M).group(1), expected)
+        worker = read("agents/planned-worker.md")
+        self.assertIn("implementation, wiring and focused tests", worker)
+        self.assertIn("Write only inside Own", worker)
+        self.assertIn("Never accept legacy delegated work or high-tier responsibilities", worker)
+        self.assertIn("do not compensate by broad redesign", worker)
+        self.assertIn("do not use for new plans", read("agents/delegated-executor.md"))
+
+    def test_claude_effective_profile_overrides_and_fallback_are_explicit(self):
+        mapping = read("references/claude-tools.md")
+        profile = section(mapping, "Effective executor profile")
+        for obligation in (
+            "before dispatching either named executor",
+            "CLAUDE_CODE_EFFORT_LEVEL` must be unset or `low`",
+            "CLAUDE_CODE_SUBAGENT_MODEL_FORCE` is unset",
+            "CLAUDE_CODE_SUBAGENT_MODEL_FORCE` is exactly `1`",
+            "CLAUDE_CODE_SUBAGENT_MODEL` to be exactly `claude-opus-5`",
+            "any other non-empty force value as unsupported",
+            "Do not unset or rewrite the user's environment automatically",
+            "new standard work uses the reported main-session fallback",
+            "legacy delegated work stops before implementation",
+        ):
+            self.assertIn(obligation, profile)
+        self.assertIn("validate its effective profile below", mapping)
+        self.assertIn("validate the effective profile below", mapping)
+
+    def test_coherent_task_design_preserves_boundaries_and_verification(self):
+        design = section(read("references/planned-build-contract.md"), "Task design")
+        for obligation in (
+            "For new standard plans", "implementation, wiring and focused tests",
+            "settled shared contracts", "explicit production/test ownership",
+            "meaningful fast gate and a return boundary",
+            "Do not split solely by file, layer or code-versus-test work",
+            "do not merge unrelated outcomes", "No fixed file/task count",
+            "split coherently or escalate", "Grouping never removes final integration checks",
+            "revising pending tasks requires a canonical PC entry",
+            "Legacy delegated ownership and decomposition rules remain authoritative",
+        ):
+            self.assertIn(obligation, design)
+        routing = section(read("references/planned-build-contract.md"), "Capability routing")
+        self.assertIn("high-risk corrections stay with the main-session orchestrator", routing)
+        runtime = read("runtime/planned.md")
+        self.assertIn("group implementation, wiring and focused tests", runtime)
+        self.assertIn("higher reasoning effort does not lower task risk", runtime)
+        self.assertIn("shared writable paths execute sequentially", runtime)
+        # Provider-specific policy must stay in the active host mapping.
+        for path in ("references/planned-build-contract.md", "references/model-routing.md",
+                     "runtime/planned.md", "skills/build/SKILL.md"):
+            self.assertNotRegex(read(path), r"gpt-5\.6|Luna|Terra|Sol|xhigh")
 
     def test_distribution_json_release_and_skill_roots(self):
         descriptors = [

@@ -7,18 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.0] - 2026-09-05
 
+### Added
+
+- Four compact runtime projections for common rules, autonomous Build, planned
+  Build, and Review, with targeted escalation to canonical references.
+- Active Frontier summaries for planned resume and bounded Task Capsules for
+  workers, retaining accepted outcomes, invariants, and dependency facts.
+- An optional read-only context projection helper and reproducible benchmark
+  against a pinned 0.6 baseline, with small, medium, and large scenarios.
+  Static character counts and token estimates are distinguished from live
+  model measurements, which remain deferred.
+
 ### Changed
 
-- New features now expose exactly two Build commands: `build` and standard
-  `build-planned`. The separate delegated command is retired from every host.
-- Existing delegated planned features resume through `build-planned` without
+- One public `build` command now selects autonomous or standard planned
+  execution from accepted intent and repository evidence. Autonomous is the
+  default; planned execution needs concrete benefits that repay its overhead.
+- Optional `--strategy=autonomous` and `--strategy=planned` overrides apply
+  before Build start. Selection and its reason are checkpointed once; resumes
+  preserve recorded strategy/methodology and refuse conflicting overrides.
+- Discuss, Review corrections, and Load now hand off to `build`. Separate
+  planned and delegated commands are retired from every host.
+- Existing delegated planned features resume through `build` without
   converting methodology, changing their fixed executor profile, or allowing
   orchestrator implementation takeover.
-- Host mappings now make fresh bounded worker context explicit where the host
-  supports it. Codex documents its current low, standard, and high deployment
-  routing in its host-specific mapping only.
+- New standard plans group implementation, wiring and focused tests into
+  coherent bounded behavior slices instead of per-file tasks. Split at real
+  dependency, acceptance, ownership or risk boundaries; preserve final gates.
+- Codex now uses explicit model/effort dispatch by task capability for new
+  standard builds, with higher reasoning effort for broader standard work.
+  The main-session model retains high tasks; exact profiles and unavailable
+  worker fallback live in the Codex mapping. Legacy delegated profiles remain
+  unchanged. No measured savings are claimed from these defaults.
+- Claude Code now dispatches low/standard tasks in new standard builds through
+  a dedicated planned worker with the profile specified in its host mapping.
+  It supports complete bounded behavior slices and leaves high tasks to the
+  main session. Effective model/effort checks prevent silent substitution;
+  the separate legacy executor retains its fixed ownership restrictions.
 - Local installation guidance now requires the shared `skills/`, `references/`,
   and `runtime/` directories to ship together.
+- Clean planned resumes load the active frontier and relevant task/dependency
+  context; completed history is read only for a concrete question or final
+  whole-feature verification.
+- Review starts from accepted intent, final Build Evidence, the complete diff,
+  and changed tests; plan and execution history are loaded only when needed.
+- New Briefs use stable EO/INV identifiers, while older Briefs and task fields
+  remain supported. Autonomous intermediate checkpoints use compact evidence;
+  complete final delivery evidence and verification gates remain mandatory.
+
+### Fixed
+
+- Modern task `Covers` references now resolve exact accepted outcome headings
+  or text in older Briefs without EO identifiers, including headings containing
+  commas. Unknown, mixed ID-plus-invented, and ambiguous references are rejected
+  instead of becoming worker intent.
 
 ## [0.6.0] - 2026-09-04
 

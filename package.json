@@ -1,7 +1,7 @@
 {
   "name": "absolutforge",
   "version": "0.7.0",
-  "description": "Intent-driven delivery with autonomous and standard planned execution.",
+  "description": "Intent-driven delivery with automatic Build strategy selection.",
   "private": true,
   "keywords": [
     "pi-package",

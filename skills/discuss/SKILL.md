@@ -25,34 +25,4 @@ Explicit acceptance authorizes Discuss to set the Brief to `Ready` and immediate
 
 After committing, verify that HEAD contains the accepted Ready content and that the new commit changed exactly the canonical Brief path, then report its revision. If the commit cannot be created or verified, stop before Build handoff, leave the Ready Brief intact, and report the exact blocker; never amend or rewrite history automatically. If unrelated dirty state remains, warn that Build start will reject it even though the Brief commit succeeded.
 
-After the verified acceptance commit, present exactly the two first-class strategies without selecting silently:
-
-Claude Code:
-
-```text
-/absolutforge:build absolutforge/features/{slug}/feature-brief.md
-/absolutforge:build-planned absolutforge/features/{slug}/feature-brief.md
-```
-
-Codex:
-
-```text
-$absolutforge build absolutforge/features/{slug}/feature-brief.md
-$absolutforge build-planned absolutforge/features/{slug}/feature-brief.md
-```
-
-opencode:
-
-```text
-/absolutforge-build absolutforge/features/{slug}/feature-brief.md
-/absolutforge-build-planned absolutforge/features/{slug}/feature-brief.md
-```
-
-Pi:
-
-```text
-/skill:build absolutforge/features/{slug}/feature-brief.md
-/skill:build-planned absolutforge/features/{slug}/feature-brief.md
-```
-
-Recommend `build` by default. Recommend `build-planned` when durable decomposition, several bounded write surfaces, useful worker delegation, or cross-session resume justify its overhead; new planned starts use standard methodology. Do not create implementation tasks during Discuss.
+After the verified acceptance commit, hand off to the single public `build` command using the active-host syntax in `../../references/harness-command-contract.md`. Explain briefly that Build selects autonomous or planned execution from accepted intent and repository evidence, or accepts an explicit strategy override. Emit one resolved copy-ready Build continuation; do not select a strategy, ask for a strategy choice, or create implementation tasks during Discuss. Printing the continuation does not invoke Build.
