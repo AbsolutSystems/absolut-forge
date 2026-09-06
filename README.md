@@ -2,10 +2,23 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.8.0.** `discuss` accepts one bounded Feature Brief or first
-plans oversized product intent as independently discussable phases. One `build`
-command still selects autonomous or planned execution only from an accepted
-Ready Brief and preserves that strategy on resume.
+**Current release: 0.8.1.** `discuss` can recover an idea from the active
+conversation, accept one bounded Feature Brief, or first plan oversized product
+intent as independently discussable phases. One `build` command still selects
+autonomous or planned execution only from an accepted Ready Brief and preserves
+that strategy on resume.
+
+## Conversation-derived Discuss in 0.8.1
+
+If the idea has already been explored in the active conversation, invoke
+`discuss` without arguments. It recovers the latest coherent change intent,
+including user corrections, and derives a provisional slug and artifact path.
+Assistant suggestions remain proposals unless the user explicitly accepted
+them, and all normal questions and acceptance checkpoints still apply.
+
+```text
+$absolutforge discuss
+```
 
 ## Feature-family planning in 0.8.0
 

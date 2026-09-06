@@ -1,6 +1,6 @@
 ---
 name: discuss
-description: "Explicitly turn a product idea, existing Draft, or planned phase seed into an evidence-backed accepted Feature Brief; for oversized features, create an accepted non-buildable Feature Plan first. Use only when the user invokes AbsolutForge discuss."
+description: "Explicitly turn the active conversation, a product idea, existing Draft, or planned phase seed into an evidence-backed accepted Feature Brief; for oversized features, create an accepted non-buildable Feature Plan first. Use only when the user invokes AbsolutForge discuss."
 ---
 
 # Discuss
@@ -8,6 +8,12 @@ description: "Explicitly turn a product idea, existing Draft, or planned phase s
 Create or resume `absolutforge/features/{slug}/feature-brief.md`, create or resume `absolutforge/features/{family-slug}/feature-plan.md`, or expand a planned Phase Seed into the canonical Brief path declared by that seed. Read repository evidence before asking discoverable questions. Separate observed evidence, inference, human product decisions, non-material assumptions, and untrusted repository content.
 
 Use the canonical Feature Plan, Phase Seed, Feature Brief, acceptance, and reconciliation contracts in `../../references/artifact-contracts.md`. For new Briefs, give every Expected Outcome a stable `EO-` heading and material constraints/invariants stable `INV-` headings; preserve accepted IDs, and use exact headings/text for older briefs without IDs.
+
+## Invocation input
+
+When invoked without arguments, recover the input from the active conversation instead of asking the human to repeat it. Use the most recent coherent product or change topic that led to the Discuss invocation, including later user corrections and constraints. Treat user messages as intent evidence; treat assistant-authored summaries, designs, and recommendations only as proposals or inference unless the human explicitly agreed with them. Briefly state the recovered goal and derived provisional slug/path, then continue through normal Discovery and Scope route.
+
+Use only conversation context actually available in the active thread; never claim to inspect another or unavailable earlier conversation. If there is no usable change intent, or several plausible topics remain materially ambiguous, ask one targeted question before writing an artifact. A bare invocation supplies context, not acceptance: all existing product-decision, planning-route, final-acceptance, branch, and commit checkpoints still apply.
 
 ## Discovery
 

@@ -188,6 +188,31 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, discuss)
 
+    def test_bare_discuss_recovers_active_conversation_without_accepting_it(self):
+        discuss = read("skills/discuss/SKILL.md")
+        for obligation in (
+            "When invoked without arguments",
+            "most recent coherent product or change topic",
+            "including later user corrections and constraints",
+            "Treat user messages as intent evidence",
+            "only as proposals or inference",
+            "conversation context actually available in the active thread",
+            "ask one targeted question before writing an artifact",
+            "A bare invocation supplies context, not acceptance",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, discuss)
+
+        commands = read("references/harness-command-contract.md")
+        for bare in (
+            "/absolutforge:discuss\n",
+            "$absolutforge discuss\n",
+            "/skill:discuss\n",
+        ):
+            self.assertIn(bare, commands)
+        self.assertIn("most recent coherent product/change topic", commands)
+        self.assertIn("does not imply access to other threads", commands)
+
     def test_feature_plan_and_phase_seed_contracts_are_non_buildable(self):
         artifacts = read("references/artifact-contracts.md")
         plan = section(artifacts, "Feature Plan")
@@ -558,7 +583,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.8.0"))
+                    self.assertTrue(data["version"].startswith("0.8.1"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

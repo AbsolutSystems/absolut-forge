@@ -7,6 +7,7 @@ AbsolutForge stages are explicit unless `debug` is auto-triggered by a concrete 
 Claude Code:
 
 ```text
+/absolutforge:discuss
 /absolutforge:discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
 /absolutforge:discuss absolutforge/features/{family-slug}/feature-plan.md
 /absolutforge:discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
@@ -22,6 +23,7 @@ Claude Code:
 Codex:
 
 ```text
+$absolutforge discuss
 $absolutforge discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
 $absolutforge discuss absolutforge/features/{family-slug}/feature-plan.md
 $absolutforge discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
@@ -37,6 +39,7 @@ $absolutforge tech-debt [repository-relative-path]
 Pi:
 
 ```text
+/skill:discuss
 /skill:discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
 /skill:discuss absolutforge/features/{family-slug}/feature-plan.md
 /skill:discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
@@ -50,6 +53,10 @@ Pi:
 ```
 
 Pi exposes loaded skills through `/skill:{name}`. Because Pi core has no native subagents, the normal clean Review handoff is `/new` followed by `/skill:review ...`; see [`pi-tools.md`](pi-tools.md).
+
+The bare `discuss` form uses the most recent coherent product/change topic in
+the active conversation. It does not imply access to other threads and does not
+skip any explicit acceptance or commit checkpoint.
 
 ## Copy-ready continuation prompts
 

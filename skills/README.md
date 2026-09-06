@@ -14,6 +14,10 @@ Seeds. A later `discuss <phase-seed>` produces one ordinary self-contained
 Feature Brief. Only that Ready Brief may enter `build`; planning artifacts never
 do.
 
+A bare `discuss` invocation recovers the most recent coherent change idea from
+the active conversation. User statements supply intent evidence; assistant
+proposals are not treated as accepted decisions without explicit agreement.
+
 `build` consumes the committed Ready Brief and selects autonomous or planned execution once. Autonomous is the default; planned needs concrete benefits from dependencies, bounded delegation or durable resume that repay its overhead. Optional `--strategy=autonomous` or `--strategy=planned` overrides this choice before Build start. The choice and reason are checkpointed without another confirmation. Resumes use recorded strategy and methodology; a conflicting override is refused. New planned work uses standard methodology; legacy delegated work keeps its fixed executor and cannot be converted or taken over by the orchestrator.
 
 On Codex, the invoking context launches a fresh GPT-5.6 Sol `medium` Build owner before repository inspection. Clean implementation/test checkpoints return a compact `ROTATE` envelope so the launcher can replace it with a fresh sibling owner; the launcher never reads or judges Build state. Bounded low/standard outcomes and local corrections default to fresh Luna workers. See [`../references/codex-tools.md`](../references/codex-tools.md).
