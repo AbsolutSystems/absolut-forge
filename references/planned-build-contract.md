@@ -73,7 +73,7 @@ Concise implementation architecture, ordering rationale, and integration approac
 - Completion evidence: pending | {changed paths; tests and cases; commands/green results; local decisions; new dependency or invariant facts; delegated return and orchestrator validation when applicable}
 
 ## Final verification
-- Integration checks, the authoritative full suite for the affected project or changeset, and the primary accepted path.
+- Changed/new tests, focused affected regression targets, targeted integration/e2e checks for changed boundaries, and the primary accepted path. Name any broad suite deferred to required PR CI; require canonical justification for a local full suite.
 
 ## Plan changes
 None yet, or append entries below.
@@ -89,7 +89,7 @@ Use the smallest useful acyclic graph. Map every accepted Expected Outcome to ta
 
 For new standard plans, prefer one coherent behavior slice per task, including implementation, wiring and focused tests across the necessary files. For example, filtering a list with input validation and regression tests is one task when its contracts are settled; separate function, caller and test tasks only add handoffs without independent value. Split for a real dependency, independently verifiable result, ownership conflict, or material risk/context boundary. Do not split solely by file, layer or code-versus-test work, and do not merge unrelated outcomes just to reduce task count. No fixed file/task count sets the boundary.
 
-A broader standard task still needs settled shared contracts, explicit production/test ownership, sufficient relevant context, concrete test obligations, a meaningful fast gate and a return boundary. If those do not fit one bounded capsule, split coherently or escalate; higher worker reasoning effort does not authorize wider scope. Keep unresolved architecture, migration, security/data and concurrency decisions high. Grouping never removes final integration checks or permits overlapping parallel writes.
+A broader standard task still needs settled shared contracts, explicit production/test ownership, sufficient relevant context, concrete test obligations, a meaningful fast gate and a return boundary. If those do not fit one bounded capsule, split coherently or escalate; higher worker reasoning effort does not authorize wider scope. Keep unresolved architecture, migration, security/data and concurrency decisions high. Grouping never removes targeted final integration checks or permits overlapping parallel writes.
 
 Apply this granularity policy when compiling new standard plans. Existing completed tasks and recorded execution commitments remain unchanged; revising pending tasks requires a canonical PC entry. Legacy delegated ownership and decomposition rules remain authoritative.
 
@@ -105,7 +105,7 @@ Under standard methodology, select only dependency-ready tasks. Execute one dire
 
 Give a worker one generated Task Capsule (below), exact relevant Brief/ADR/rule clauses and sufficient direct-dependency facts, plus relevant source/tests. Do not send the full plan, unrelated Brief sections, all ADRs, full verification doctrine, completed history or worker dialogue. Binding repository guidance still applies; omit unrelated guidance, never required instructions. The task is incomplete until its tests meaningfully cover the applicable repository-owned behavior and its fast gate is green. A worker may inspect neighboring code but may write only inside its surface. It never edits the Brief, plan, other tasks, review, branch history, remote state, or existing tests merely to reach green.
 
-After return, the orchestrator independently inspects the task diff and test value, confirms the write boundary, and reruns the fast task gate when evidence is incomplete or stale. It rejects tests that mainly validate mocks, framework behavior, or incidental implementation details instead of the task's observable contract. Only then does it fill Completion Evidence, mark the task complete, and create the task checkpoint commit. Under standard methodology, results from a parallel wave are validated and committed one task at a time by staging only that task's paths.
+After return, the orchestrator independently inspects the task diff and test value, confirms the write boundary and the inventory of exact test files/cases added or changed, and reruns the fast task gate when evidence is incomplete or stale. It rejects tests that mainly validate mocks, framework behavior, or incidental implementation details instead of the task's observable contract. Only then does it fill Completion Evidence, mark the task complete, and create the task checkpoint commit. Under standard methodology, results from a parallel wave are validated and committed one task at a time by staging only that task's paths.
 
 ## Context rotation
 
@@ -185,6 +185,6 @@ An optional consultation report is evidence, not plan state. The orchestrator de
 
 ## Completion
 
-Mark the plan `Complete` only when every task is complete, Expected Outcome coverage still holds, final whole-feature verification passes, the complete implementation diff has been inspected against the Brief, and the final Build Evidence satisfies the delivery gate in `artifact-contracts.md`. Any later source or test change invalidates that gate and requires a new final-verification attempt and final evidence entry before Review handoff. For a long Build, prefer performing this final integration pass from a fresh orchestrator context rehydrated from the durable artifacts.
+Mark the plan `Complete` only when every task is complete, Expected Outcome coverage still holds, final whole-feature verification passes, the complete implementation diff has been inspected against the Brief, and the final Build Evidence satisfies the delivery gate in `artifact-contracts.md`. Final verification uses the doctrine's affected test set and targeted integration policy; the mere fact that this is the final gate does not require a full suite. Any later source or test change invalidates that gate and requires a new final-verification attempt and final evidence entry before Review handoff. For a long Build, prefer performing this final integration pass from a fresh orchestrator context rehydrated from the durable artifacts.
 
 If final verification fails before completion, preserve completed tasks and append one `PC-` entry adding a bounded corrective task with a new plan revision. Execute and checkpoint it under the selected planned methodology, then repeat final verification.

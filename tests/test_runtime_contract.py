@@ -201,12 +201,35 @@ class RuntimeContractTests(unittest.TestCase):
             "Test charter",
             "Test value",
             "Recorded exemption",
-            "Fast and final verification",
         ):
             self.assertEqual(
                 section(read("references/verification-doctrine.md"), name),
                 section(baseline("references/verification-doctrine.md"), name),
             )
+        final_verification = section(
+            read("references/verification-doctrine.md"), "Fast and final verification"
+        )
+        for obligation in (
+            "inventory of test files and named cases added or changed",
+            "derive the affected test set",
+            "Reuse a worker's green result",
+            "targeted integration or end-to-end targets",
+            "A full project, workspace, integration, or end-to-end suite is not a default final gate",
+            "committed Ready baseline",
+            "configured required CI gate",
+        ):
+            self.assertIn(obligation, final_verification)
+        for runtime_name in ("autonomous", "planned"):
+            runtime = read(f"runtime/{runtime_name}.md")
+            with self.subTest(runtime=runtime_name):
+                self.assertIn("exact test files and named cases added or changed", runtime)
+                self.assertIn("Reuse current green worker results", runtime)
+                self.assertIn("targeted integration/e2e checks for changed boundaries", runtime)
+                self.assertIn("missing-CI justification", runtime)
+                self.assertNotIn("authoritative affected-project/changeset suite", runtime)
+        plan = read("references/planned-build-contract.md")
+        self.assertIn("Name any broad suite deferred to required PR CI", plan)
+        self.assertIn("mere fact that this is the final gate does not require a full suite", plan)
         artifacts = read("references/artifact-contracts.md")
         self.assertIn(
             "A later source or test change invalidates that final entry", artifacts
@@ -448,7 +471,7 @@ class RuntimeContractTests(unittest.TestCase):
             "meaningful fast gate and a return boundary",
             "Do not split solely by file, layer or code-versus-test work",
             "do not merge unrelated outcomes", "No fixed file/task count",
-            "split coherently or escalate", "Grouping never removes final integration checks",
+            "split coherently or escalate", "Grouping never removes targeted final integration checks",
             "revising pending tasks requires a canonical PC entry",
             "Legacy delegated ownership and decomposition rules remain authoritative",
         ):
@@ -474,7 +497,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.7.1"))
+                    self.assertTrue(data["version"].startswith("0.7.2"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

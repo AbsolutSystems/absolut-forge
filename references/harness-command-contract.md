@@ -75,7 +75,7 @@ $absolutforge build absolutforge/features/{slug}/feature-brief.md --strategy=pla
 
 Unknown/repeated options are refused before mutation. On resume an override must match the recorded strategy and cannot change methodology. Normal continuations omit the option because durable state already owns that choice. Old `build-planned` prompts must use `build` with the same Brief path; existing planned/standard and planned/delegated artifacts remain valid without rewriting history. Legacy `tdd` still requires a compatible older release or explicit abandonment/restart.
 
-The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after meaningful behavior tests pass their fast unit-test gate. Broad regression and integration/e2e checks run at final verification before the `In Review` handoff commit.
+The selected builder creates a local Build-start checkpoint commit before source edits. Autonomous outcomes and planned tasks receive orchestrator-owned checkpoint commits after meaningful behavior tests pass their fast unit-test gate. Final verification reuses current worker evidence, reruns stale or doubtful targets and focused affected regressions, adds targeted integration/e2e checks for changed boundaries, and leaves broad unrelated regression to required PR CI unless the verification doctrine justifies a local full suite.
 
 ## Resume invariant
 

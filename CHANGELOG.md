@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-09-06
+
+### Changed
+
+- Final Build verification now derives an affected test set from the complete
+  diff and worker-reported changed tests, reuses current green task evidence,
+  and reruns only stale or doubtful targets plus focused regressions and
+  targeted integration/e2e checks for changed boundaries. Full local suites
+  are reserved for cross-cutting or unselectable risk, repository mandates, or
+  the absence of a required CI gate that provides broad regression coverage.
+
 ## [0.7.1] - 2026-09-06
 
 ### Added

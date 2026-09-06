@@ -2,7 +2,15 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.7.1.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
+**Current release: 0.7.2.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
+
+## Targeted final verification in 0.7.2
+
+Build derives its final gate from the complete diff and worker-reported test
+inventories. It reuses current green evidence, reruns stale or doubtful targets,
+and adds focused regressions plus targeted integration/e2e checks for changed
+boundaries. Full local suites are reserved for cross-cutting or unselectable
+risk, repository mandates, or the absence of a required CI gate.
 
 ## Cost-aware Build ownership in 0.7.1
 
@@ -37,8 +45,9 @@ unknown or ambiguous references stop capsule generation for inspection.
 
 Review starts from accepted intent, final Build Evidence, the complete
 implementation diff, and changed tests. Plans and history are conditional
-supporting evidence. Both builders still perform complete final verification
-and exercise the accepted primary path before Review.
+supporting evidence. Both builders perform affected final verification and
+exercise the accepted primary path before Review; required PR CI can own broad
+unrelated regression coverage.
 
 The optional [context helper and benchmark](docs/runtime-benchmark.md) provide
 read-only artifact projections and reproducible comparisons against a pinned
@@ -66,11 +75,11 @@ The owner delegates one bounded low/standard outcome at a time by default, inclu
 
 In Codex, the Build owner is a fresh Sol `medium` agent; local low-tier work uses Luna `high` and standard behavior slices use Luna `xhigh`. Local test-gate corrections retain their low/standard tier and return to a fresh worker, while high-risk decisions remain with the Sol owner. Newly discovered ambiguity or risk returns to the owner, who can clarify the scope or take over. The owner checks the diff and tests and alone updates lifecycle evidence and commits. If the requested worker is unavailable, the owner reports the limitation and continues inline when capable of handling the work. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
 
-Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
+Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Workers inventory exact tests added or changed. Final verification reuses current green evidence, reruns stale or doubtful targets, and adds targeted integration/e2e checks; a full suite needs cross-cutting risk, unreliable target selection, a repository mandate, or no required CI fallback. The number of tests follows distinct risks, not the number of outcomes.
 
 ### Planned execution — orchestrator and capability-routed workers
 
-Use this higher-overhead strategy when durable decomposition, coordination of multiple delegated tasks, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. Broad regression and integration/e2e checks run only at final whole-feature verification. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
+Use this higher-overhead strategy when durable decomposition, coordination of multiple delegated tasks, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. The final gate is built from task test inventories, reusable current evidence, focused affected regressions, targeted integration/e2e checks, and the primary accepted path; broad unrelated coverage may be deferred to required PR CI. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
 
 New standard plans favor complete behavior slices: implementation, wiring and focused tests can belong to one bounded task across several files. Split at meaningful dependency, acceptance, ownership or risk boundaries, rather than making a task per file or separating code from its tests. Larger tasks still require settled shared contracts and explicit return boundaries; unrelated outcomes stay separate.
 
