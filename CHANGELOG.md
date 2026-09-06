@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-09-06
+
 ### Added
 
-- Optional delegation of one bounded low/standard outcome at a time in
+- Delegation of one bounded low/standard outcome at a time in
   autonomous Build, including implementation and focused tests. Workers receive
   fresh, minimal context; no implementation plan or new artifact is required.
+- A Codex-specific fresh Build-owner launcher using GPT-5.6 Sol with medium
+  reasoning, automatic successor-owner rotation after clean implementation or
+  test checkpoints, and one optional bounded read-only Astra advisor for
+  unresolved high-tier decisions.
 
 ### Changed
 
@@ -30,6 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delegating a single outcome no longer requires planned execution. Strategy
   and methodology remain unchanged, including legacy delegated restrictions.
   Cost savings remain unmeasured.
+- Low/standard autonomous outcomes now delegate by default unless inline work
+  demonstrably needs fewer owner interactions than handoff and validation.
+  Repetitive inventories become durable checkpoint evidence rather than being
+  reconstructed in later owner turns.
+- Failed gates are classified before editing. Local constructor, fixture,
+  assertion, type, formatting and settled API-usage corrections return to a
+  fresh bounded worker when found by owner validation or final verification.
+  Within its own task, the current worker fixes local failures and repeats the
+  focused gate until green without an intermediate Sol turn.
+- Codex launchers no longer preload Build evidence or supervise implementation.
+  They handle only compact rotation envelopes. Fresh Sol owners recover from
+  the Brief, execution artifact, Git and relevant tests; unavailable dispatch
+  falls back explicitly without claiming rotation.
 
 ## [0.7.0] - 2026-09-05
 

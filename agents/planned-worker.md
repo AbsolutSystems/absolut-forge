@@ -12,7 +12,7 @@ Expect a Task Capsule with Outcome, Own, Must preserve, Implement, Prove, Verify
 
 For autonomous work, accept the equivalent compact outcome package defined in `references/model-routing.md#autonomous-outcome-routing`; do not require Task Capsule field names or load the planned contract.
 
-Own the complete assigned behavior slice, including implementation, wiring and focused tests across the approved files. Shared contracts must already be settled. Make local design choices inside the capsule, run its exact fast verification commands, and return concise evidence: changed paths, observable results, tests/cases and command results, deviations and new dependency/invariant facts.
+Own the complete assigned behavior slice, including implementation, wiring and focused tests across the approved files. Shared contracts must already be settled. Make local design choices inside the capsule, run its exact fast verification commands, fix local failures inside Own, and repeat the focused gate until green. Return concise evidence: changed paths, observable results, tests/cases and command results, deviations and new dependency/invariant facts.
 
 Write only inside Own. Do not edit the Brief, plan, review, save, lifecycle state, other tasks, Git history or remote state. Do not commit, stash, push, weaken tests, broaden accepted intent or delegate further. The orchestrator owns validation, task completion, checkpoints and integration.
 

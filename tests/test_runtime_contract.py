@@ -308,17 +308,19 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(rows, [
             ("low", "`gpt-5.6-luna`", "`high`"),
             ("standard", "`gpt-5.6-luna`", "`xhigh`"),
-            ("high", "Main-session orchestrator", "Current session setting"),
+            ("high", "Build owner (`gpt-5.6-sol`)", "`medium`"),
         ])
         for obligation in (
             "For new standard planned builds",
-            "does not switch it automatically",
+            "designated Sol Build owner",
             "explicit model and reasoning-effort overrides",
             'fork_turns="none"',
             "exact requested worker profile is unavailable",
             "never silently substitute another worker model/effort",
             "This fallback never applies to legacy delegated state",
             "any explicitly recorded execution commitments",
+            "Each Luna worker fixes local failures and repeats its focused gate",
+            "corrections discovered later by Sol validation or final verification",
         ):
             self.assertIn(obligation, current)
         legacy = mapping.split("### Legacy delegated resume", 1)[1]
@@ -329,6 +331,60 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn(dispatch, baseline("references/codex-tools.md"))
         self.assertNotIn("xhigh", legacy)
         self.assertIn("stop without substituting another model or taking over implementation", legacy)
+
+    def test_codex_build_owner_rotation_and_bounded_astra_advice(self):
+        owner = section(read("references/codex-tools.md"), "Build owner")
+        for obligation in (
+            "`gpt-5.6-sol` agent with `medium` reasoning",
+            "`Role: Codex Build owner`",
+            'fork_turns="none"',
+            "Before reading the Brief, runtime or repository evidence",
+            "launcher waits and relays a completed result",
+            "handles only the `ROTATE` control envelope",
+            "After every clean checkpoint containing implementation or test changes",
+            "A Build-start-only checkpoint does not trigger rotation",
+            "returns only `ROTATE: {canonical Build command}`",
+            "never build a nested successor chain",
+            "before final verification",
+            "Pass no conversation or raw-log summary",
+            "`gpt-6-astra` advisor with `low` reasoning",
+            "read-only",
+            "Astra is never the Build owner",
+            "does not edit, commit, inherit the Build conversation or take over execution",
+            "recorded legacy delegated executor remains fixed",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, owner)
+        entry = read("skills/build/SKILL.md")
+        self.assertIn("Before loading runtime or repository evidence", entry)
+        self.assertIn("launcher that hands off ownership does not inspect artifacts", entry)
+
+    def test_cost_aware_routing_classifies_work_and_rotates_context(self):
+        routing = section(read("references/model-routing.md"), "Autonomous outcome routing")
+        for obligation in (
+            "to one fresh worker by default",
+            "fewer owner interactions than preparing and validating the handoff",
+            "repetitive inventories, matrices, report rows",
+            "treat it as durable evidence",
+            "worker owns the local implementation loop",
+            "repeat that gate until green",
+            "owner does not interleave validation turns into this local loop",
+            "When owner validation or final verification discovers a failure",
+            "settled API-usage corrections remain low/standard work",
+            "Never reload the full Brief, history or raw prior logs",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, routing)
+        common = read("runtime/common.md")
+        self.assertIn("At a substantial checkpoint and before final verification", common)
+        self.assertIn("fresh-owner continuation", common)
+        autonomous = read("runtime/autonomous.md")
+        self.assertIn("Delegate a bounded low/standard outcome", autonomous)
+        self.assertIn("verified checkpointed inventory or classification", autonomous)
+        planned = read("runtime/planned.md")
+        self.assertIn("Classify failures found during owner validation", planned)
+        self.assertIn("fix local low/standard failures and repeat until green", planned)
+        self.assertIn("fresh-owner continuation", planned)
 
     def test_claude_standard_worker_profile_and_methodology_boundary(self):
         mapping = section(read("references/claude-tools.md"), "Planned Build")
@@ -359,6 +415,8 @@ class RuntimeContractTests(unittest.TestCase):
                 self.assertEqual(re.search(rf"^{field}: (.+)$", frontmatter, re.M).group(1), expected)
         worker = read("agents/planned-worker.md")
         self.assertIn("implementation, wiring and focused tests", worker)
+        self.assertIn("fix local failures inside Own", worker)
+        self.assertIn("repeat the focused gate until green", worker)
         self.assertIn("Write only inside Own", worker)
         self.assertIn("Never accept legacy delegated work or high-tier responsibilities", worker)
         self.assertIn("do not compensate by broad redesign", worker)
@@ -396,7 +454,7 @@ class RuntimeContractTests(unittest.TestCase):
         ):
             self.assertIn(obligation, design)
         routing = section(read("references/planned-build-contract.md"), "Capability routing")
-        self.assertIn("high-risk corrections stay with the main-session orchestrator", routing)
+        self.assertIn("high-tier corrections owned by the orchestrator", routing)
         runtime = read("runtime/planned.md")
         self.assertIn("group implementation, wiring and focused tests", runtime)
         self.assertIn("higher reasoning effort does not lower task risk", runtime)
@@ -416,7 +474,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.7.0"))
+                    self.assertTrue(data["version"].startswith("0.7.1"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

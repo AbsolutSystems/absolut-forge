@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Intent-driven delivery with automatic Build strategy selection.",
   "private": true,
   "keywords": [

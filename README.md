@@ -2,7 +2,25 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.7.0.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
+**Current release: 0.7.1.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
+
+## Cost-aware Build ownership in 0.7.1
+
+On Codex, a Build invocation launches one fresh GPT-5.6 Sol owner with medium
+reasoning before repository inspection or mutation. The invoking context only
+handles compact rotation signals and relays the result. Every clean
+implementation/test checkpoint and the boundary before final verification
+rotate remaining work to another fresh Sol owner, rehydrated from durable
+artifacts and Git rather than accumulated dialogue.
+
+Settled low/standard outcomes and local corrections default to fresh bounded
+workers. The owner keeps intent, shared contracts, high-tier decisions,
+validation, checkpoints and final integration. Repetitive inventories and
+verified classifications become durable evidence instead of being rebuilt in
+later turns. Each worker runs and repairs its own focused gate until green;
+Sol reruns it only for missing, stale or doubtful evidence. One bounded
+read-only Astra advisor may be used for an exact unresolved high-tier decision;
+it never owns or inherits the Build.
 
 ## Runtime context in 0.7.0
 
@@ -44,9 +62,9 @@ Both strategies consume the same committed Ready Feature Brief. After the develo
 
 Use a high-capability coding model as the owner of the feature. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
 
-The owner may delegate one bounded low/standard outcome at a time, including implementation and focused tests, when the handoff is worthwhile. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. This requires no implementation plan or strategy change.
+The owner delegates one bounded low/standard outcome at a time by default, including implementation and focused tests. An inline exception is allowed only when completing the work requires fewer owner interactions than preparing and validating the handoff, and its reason is recorded. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. This requires no implementation plan or strategy change.
 
-In Codex, local low-tier work uses Luna `high` and standard behavior slices use Luna `xhigh`. Trivial edits stay inline when dispatch would cost more than completing them; high-risk decisions remain with the main session. Newly discovered ambiguity or risk returns to the owner, who can clarify the scope or take over. The owner checks the diff and tests and alone updates lifecycle evidence and commits. If the requested worker is unavailable, the owner reports the limitation and continues inline when capable of handling the work. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
+In Codex, the Build owner is a fresh Sol `medium` agent; local low-tier work uses Luna `high` and standard behavior slices use Luna `xhigh`. Local test-gate corrections retain their low/standard tier and return to a fresh worker, while high-risk decisions remain with the Sol owner. Newly discovered ambiguity or risk returns to the owner, who can clarify the scope or take over. The owner checks the diff and tests and alone updates lifecycle evidence and commits. If the requested worker is unavailable, the owner reports the limitation and continues inline when capable of handling the work. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Broad regression and integration/e2e checks run only at final whole-feature verification. The number of tests follows distinct risks, not the number of outcomes.
 
@@ -58,7 +76,7 @@ New standard plans favor complete behavior slices: implementation, wiring and fo
 
 The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. At a clean task boundary, invoke `build` again with the canonical Brief; use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
+The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. Codex rotates substantial standard Builds between fresh Sol owners automatically; on other hosts, invoke `build` again at a clean task boundary when a fresh-owner primitive is unavailable. Use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
 ### Legacy delegated resumes
 
@@ -160,7 +178,7 @@ absolutforge/archives/{slug}/feature-record.md
 
 Workflow contracts use semantic tiers rather than model names. See `references/model-routing.md`.
 
-Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#planned-build) and [Claude Code mapping](references/claude-tools.md#planned-build) specify worker models and reasoning profiles by task capability. The orchestrator remains the model of the session that invoked `build`; the skill does not automatically replace it. High tasks stay in that session, while bounded standard tasks may include a complete behavior slice and its tests. Missing worker profiles use an explicitly reported main-session fallback only under standard methodology. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
+Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#build-owner) uses a fresh Sol `medium` owner and specifies Luna worker profiles; the [Claude Code mapping](references/claude-tools.md#planned-build) specifies worker models and reasoning profiles by task capability while retaining its invoking orchestrator. High tasks stay with the owner, while bounded standard tasks may include a complete behavior slice and its tests. Missing worker profiles use an explicitly reported owner fallback only under standard methodology. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
 
 Assess this policy by the cost of an accepted task, including preparation, validation and corrections. Higher worker reasoning effort and fewer handoffs are not measured token savings by themselves.
 

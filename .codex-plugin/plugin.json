@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
-  "version": "0.7.0",
+  "version": "0.7.1+codex.20260906151749",
   "description": "Intent-driven development workflow with one Build command and automatic strategy selection.",
   "author": {
     "name": "Absolut Systems"
