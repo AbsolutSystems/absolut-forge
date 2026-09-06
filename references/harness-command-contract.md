@@ -8,6 +8,8 @@ Claude Code:
 
 ```text
 /absolutforge:discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
+/absolutforge:discuss absolutforge/features/{family-slug}/feature-plan.md
+/absolutforge:discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
 /absolutforge:consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /absolutforge:build absolutforge/features/{slug}/feature-brief.md
 /absolutforge:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -21,6 +23,8 @@ Codex:
 
 ```text
 $absolutforge discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
+$absolutforge discuss absolutforge/features/{family-slug}/feature-plan.md
+$absolutforge discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
 $absolutforge consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 $absolutforge build absolutforge/features/{slug}/feature-brief.md
 $absolutforge review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -34,6 +38,8 @@ Pi:
 
 ```text
 /skill:discuss "Feature name" "absolutforge/features/{slug}/feature-brief.md"
+/skill:discuss absolutforge/features/{family-slug}/feature-plan.md
+/skill:discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md
 /skill:consult <absolutforge/features/{slug}/feature-brief.md OR absolutforge/features/{slug}/implementation-plan.md> [extra-context-path ...]
 /skill:build absolutforge/features/{slug}/feature-brief.md
 /skill:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
@@ -51,7 +57,9 @@ Whenever a stage stops at an explicit workflow boundary, its final response must
 
 Use the native forms above for the one eligible continuation:
 
-- Discuss -> Build: invoke `build` with the canonical Feature Brief path after the verified acceptance checkpoint.
+- Feature Plan -> Discuss: after the verified planning-set acceptance checkpoint, invoke `discuss` with the resolved `Next eligible phase` seed path.
+- Phase Discuss -> Build: invoke `build` with the phase's canonical Feature Brief path after the verified Ready acceptance checkpoint.
+- Ordinary Discuss -> Build: invoke `build` with the canonical Feature Brief path after the verified Ready acceptance checkpoint.
 - Load -> Build: invoke `build` with the canonical Feature Brief path, preserving recorded strategy and methodology.
 - Build -> Review: invoke `review` with the canonical Feature Brief and `review.md` paths.
 - Review with blockers -> Build: invoke `build` with the canonical Feature Brief path; it resumes recorded strategy and methodology without selecting again. The builder derives and reads the sibling `review.md`; do not add it as an unsupported positional argument.
@@ -65,7 +73,7 @@ For Pi's Build -> Review handoff, the single copy-ready block contains two lines
 
 ## Build strategy choice
 
-After explicit acceptance, `discuss` creates and verifies a local path-scoped commit containing only the Ready Brief, then offers one `build` continuation. Build selects its internal strategy under [Build strategy selection](artifact-contracts.md#build-strategy-selection); autonomous is the default and planned needs concrete benefits that repay its overhead. The choice and reason are announced and checkpointed before implementation, without another confirmation.
+After explicit acceptance of an ordinary or phase Brief, `discuss` creates and verifies a local path-scoped commit containing only the Ready Brief, then offers one `build` continuation. After explicit acceptance of a Feature Plan, it instead commits exactly the plan and declared Phase Seeds and offers one `discuss` continuation for the resolved next eligible seed. A planning artifact never routes to Build. Build selects its internal strategy under [Build strategy selection](artifact-contracts.md#build-strategy-selection); autonomous is the default and planned needs concrete benefits that repay its overhead. The choice and reason are announced and checkpointed before implementation, without another confirmation.
 
 On every host, append at most one `--strategy=autonomous` or `--strategy=planned` after the Brief path to override automatic selection at Ready. For example on Codex:
 

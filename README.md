@@ -2,7 +2,24 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.7.2.** One `build` command selects autonomous or planned execution from the accepted Brief and repository evidence. Resumes preserve the recorded strategy, including fixed-executor rules for legacy delegated features.
+**Current release: 0.8.0.** `discuss` accepts one bounded Feature Brief or first
+plans oversized product intent as independently discussable phases. One `build`
+command still selects autonomous or planned execution only from an accepted
+Ready Brief and preserves that strategy on resume.
+
+## Feature-family planning in 0.8.0
+
+When an idea contains several independently valuable, cancellation-safe
+outcomes, `discuss` recommends a non-buildable Feature Plan instead of forcing
+the entire idea into one speculative Ready Brief. After explicit acceptance,
+the plan commits stable Phase Seeds with behavior custody, dependencies, shared
+invariants, uncertainties, and coherent stop states. Each eligible seed returns
+through `discuss` and becomes its own self-contained Ready Brief before Build.
+
+Planning is triggered by product and delivery boundaries, not document length,
+file count, or implementation complexity. Accepted reconciliation may adjust
+only unexpanded seeds; existing Ready and Shipped phases remain governed by
+their own immutable Briefs.
 
 ## Targeted final verification in 0.7.2
 
@@ -57,7 +74,7 @@ for the full release notes.
 
 ## One Build, two execution strategies
 
-The core workflow is:
+The ordinary bounded-feature workflow is:
 
 ```text
 discuss -> Ready -> build -> review -> ship
@@ -66,6 +83,24 @@ discuss -> Ready -> build -> review -> ship
 ```
 
 Both strategies consume the same committed Ready Feature Brief. After the developer explicitly accepts the complete proposal, `discuss` commits only the canonical Brief path locally and reports the baseline revision; it never includes unrelated staged or dirty changes.
+
+For a feature containing several independently valuable delivery outcomes,
+`discuss` may recommend a planning-family route before any Ready Brief exists:
+
+```text
+discuss -> Planned Feature Plan -> discuss Phase Seed -> Ready Brief -> build
+                                      ↑
+                         repeat for later eligible phases
+```
+
+The developer must explicitly agree to that route and later accept the complete
+Feature Plan plus its Phase Seeds. Planning artifacts map coarse end-to-end
+behavior, stable phase IDs, behavior custody, dependencies, shared invariants,
+uncertainties, and coherent stop states. They are deliberately non-buildable.
+Each seed is discussed separately into a self-contained ordinary Feature Brief;
+only that committed Ready Brief may enter Build. File count, document length,
+generic complexity, or implementation-task decomposition alone do not justify
+feature-family planning.
 
 ### Autonomous execution
 
@@ -93,7 +128,7 @@ New delegated Build is no longer offered. A feature that already recorded `plann
 
 ## Strategy selection
 
-After `discuss`, invoke `build` with the canonical Brief. It defaults to autonomous execution. Planned execution needs a concrete benefit from independent work, dependency coordination, coordinating multiple delegated tasks, or durable progress across sessions; file count or generic complexity alone is insufficient. Delegating one autonomous outcome needs no task graph and does not change strategy. Build announces its choice and reason, records them before implementation, and continues without another confirmation.
+After `discuss` has accepted a Ready Brief, invoke `build` with that canonical Brief. It defaults to autonomous execution. Planned execution needs a concrete benefit from independent work, dependency coordination, coordinating multiple delegated tasks, or durable progress across sessions; file count or generic complexity alone is insufficient. Delegating one autonomous outcome needs no task graph and does not change strategy. Build announces its choice and reason, records them before implementation, and continues without another confirmation.
 
 Claude Code:
 
@@ -156,7 +191,7 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 
 ## Skills
 
-- `discuss` — inspect evidence, create and accept one Feature Brief, then commit its Ready baseline locally.
+- `discuss` — inspect evidence; accept one bounded Feature Brief, or first accept a non-buildable Feature Plan and later expand one Phase Seed into its own Brief.
 - `consult` — optional bounded second opinion on a Draft/Ready Brief, or critique of a pending planned implementation plan; writes one `consult-{slug}.md` report and nothing else.
 - `build` — select autonomous or planned execution once, then implement and resume the recorded strategy with verified checkpoints.
 - `save` / `load` — durable cross-session context without hidden state.
@@ -166,6 +201,19 @@ The consulting session appends immutable `C-{NNN}` findings to `absolutforge/fea
 - `tech-debt` — static read-only debt audit.
 
 ## Artifact layout
+
+An accepted large-feature planning family uses:
+
+```text
+absolutforge/features/{family-slug}/
+├── feature-plan.md
+└── phases/
+    ├── P01-{phase-slug}.md
+    └── P02-{phase-slug}.md
+```
+
+Each seed declares a sibling canonical feature directory for the phase Brief.
+Once a phase is accepted, it uses the ordinary layout below.
 
 ```text
 absolutforge/features/{slug}/

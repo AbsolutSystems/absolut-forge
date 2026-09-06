@@ -1,12 +1,18 @@
 # AbsolutForge Skills
 
-Core delivery:
+Bounded-feature delivery:
 
 ```text
 discuss -> build -> review -> ship
 ```
 
 Optional: `consult`, `save`, `load`, `debug`, `tech-debt`.
+
+When one proposal contains several independently valuable, cancellation-safe
+outcomes, `discuss` can first accept a non-buildable Feature Plan and Phase
+Seeds. A later `discuss <phase-seed>` produces one ordinary self-contained
+Feature Brief. Only that Ready Brief may enter `build`; planning artifacts never
+do.
 
 `build` consumes the committed Ready Brief and selects autonomous or planned execution once. Autonomous is the default; planned needs concrete benefits from dependencies, bounded delegation or durable resume that repay its overhead. Optional `--strategy=autonomous` or `--strategy=planned` overrides this choice before Build start. The choice and reason are checkpointed without another confirmation. Resumes use recorded strategy and methodology; a conflicting override is refused. New planned work uses standard methodology; legacy delegated work keeps its fixed executor and cannot be converted or taken over by the orchestrator.
 

@@ -1,15 +1,15 @@
 {
   "name": "absolutforge",
-  "version": "0.7.2+codex.20260906154656",
-  "description": "Intent-driven development workflow with one Build command and automatic strategy selection.",
+  "version": "0.8.0+codex.20260906165504",
+  "description": "Intent-driven development with feature-family planning and one Build command.",
   "author": {
     "name": "Absolut Systems"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "AbsolutForge",
-    "shortDescription": "One Build command with automatic strategy selection",
-    "longDescription": "Discuss intent once; Build selects and preserves an execution strategy, followed by one independent review and local ship closeout.",
+    "shortDescription": "Phase large intent, then build accepted slices",
+    "longDescription": "Discuss bounded intent directly or plan large work as independently accepted phases; Build then selects and preserves an execution strategy for each Ready Brief.",
     "developerName": "Absolut Systems",
     "category": "Coding",
     "capabilities": [
@@ -17,7 +17,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Use AbsolutForge to discuss this change, then choose the appropriate build strategy."
+      "Use AbsolutForge to discuss this change, phase it first when needed, then build each accepted Brief."
     ],
     "brandColor": "#C2410C"
   }

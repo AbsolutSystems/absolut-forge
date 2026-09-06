@@ -4,6 +4,24 @@
 
 ## Active layout
 
+Large features may first use a non-buildable planning family:
+
+```text
+absolutforge/features/{family-slug}/
+├── feature-plan.md
+└── phases/
+    ├── P01-{phase-slug}.md
+    └── P02-{phase-slug}.md
+```
+
+Each Phase Seed declares the canonical sibling feature directory where its
+ordinary Brief will be created, for example
+`absolutforge/features/{family-slug}-p01-{phase-slug}/feature-brief.md`.
+Planning artifacts are durable product-planning context, not transient Build
+artifacts.
+
+An independently accepted phase uses the normal layout:
+
 ```text
 absolutforge/features/{slug}/
 ├── feature-brief.md
@@ -31,6 +49,181 @@ Draft -> Ready -> Building -> In Review -> Shipped
 ```
 
 `Ready` is the immutable intent baseline. One public `build` command selects either `autonomous` or `planned` under Build strategy selection below. New planned work uses `standard` methodology. Separate planned and delegated entrypoints are removed. Existing `delegated` builds resume through `build` under the unchanged fixed-executor restrictions in `planned-delegated-contract.md`; routing never converts methodology. `Building` resumes only through recorded strategy and methodology. Review blockers return to `build`. Switching strategy or methodology requires human abandonment/restart from a clean committed Ready baseline, never silent conversion of in-progress execution state.
+
+Feature-family planning precedes and does not extend this lifecycle:
+
+```text
+Feature Plan: Draft -> Planned
+Phase Seed -> discuss -> Feature Brief: Draft -> Ready -> Building -> In Review -> Shipped
+```
+
+`Planned` means the coarse family behavior and phase boundaries were explicitly
+accepted. It is not `Ready`, conveys no implementation authority, and cannot be
+passed to Build. Every phase enters the ordinary lifecycle only through its own
+self-contained accepted Feature Brief.
+
+## Feature Plan
+
+Use a Feature Plan only when one proposal contains multiple independently
+valuable and cancellation-safe delivery outcomes, later outcomes need material
+learning or product decisions from earlier delivery, or a single Ready Brief
+would freeze speculative detail across distinct rollout, migration, security,
+or operational boundaries. Document length, file count, generic complexity,
+and implementation-task decomposition are not triggers.
+
+The canonical path is
+`absolutforge/features/{family-slug}/feature-plan.md`. Its schema is:
+
+```markdown
+# Feature Plan: {name}
+
+## Artifact kind
+Feature Plan — not buildable
+
+## Status
+Draft | Planned
+
+## Plan revision
+{positive integer}
+
+## Problem and end-to-end behavior
+
+## Users and value
+
+## Current state and evidence
+
+## Shared constraints and invariants
+### PI-{NNN} — {title}
+
+## Behaviors and custody
+### PB-{NNN} — {behavior}
+- Custody: P{NN} | shared | deferred
+- Reason:
+- Revisit trigger: not applicable | {trigger}
+
+## Phase order
+### P{NN} — {phase name}
+- Stable slug: {phase-slug}
+- Seed: `absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md`
+- Intended Brief: `absolutforge/features/{family-slug}-p{nn}-{phase-slug}/feature-brief.md`
+- Depends on: none | P{NN}, ...
+- Goal and user value:
+- Stop state:
+
+## Cross-phase decisions
+
+## Uncertainties
+
+## Next eligible phase
+P{NN}
+
+## Reconciliation
+None yet.
+```
+
+`PI-`, `PB-`, and `P` IDs are unique and stable within the family. Phase order
+and dependencies may change without renaming phase IDs. Every behavior has
+exactly one custody classification. A phase boundary must not split one
+user-visible transaction, migration obligation, security boundary,
+compatibility window, or rollback unit unless the plan explicitly establishes
+an independently coherent intermediate contract.
+
+Only the next phase may carry near-term detail. Later phases retain goals,
+boundaries, dependencies, uncertainties, and stop states without speculative
+implementation decisions. Shared constraints remain canonical planning context;
+Discuss copies every applicable constraint and owned behavior into a phase's
+Feature Brief before it can become Ready, so Build never depends on a mutable
+Feature Plan.
+
+## Phase Seed
+
+Each declared phase has one canonical seed at
+`absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md`:
+
+```markdown
+# Phase Seed: P{NN} — {name}
+
+## Artifact kind
+Phase Seed — not buildable
+
+## Feature Plan
+- Path: `absolutforge/features/{family-slug}/feature-plan.md`
+- Revision: {positive integer}
+
+## Phase identity
+- ID: P{NN}
+- Stable slug: {phase-slug}
+- Intended Brief: `absolutforge/features/{family-slug}-p{nn}-{phase-slug}/feature-brief.md`
+
+## Goal and user value
+
+## Scope boundary
+### In scope
+### Out of scope
+
+## Behavior custody
+- PB-{NNN}
+
+## Dependencies and entry evidence
+
+## Inherited constraints
+- PI-{NNN}
+
+## Open questions for Discuss
+
+## Coherent stop state
+
+## Evidence to revisit
+```
+
+A Phase Seed has no `Ready` state and cannot authorize implementation. Discuss
+validates its family path, plan revision, intended Brief path, behavior custody,
+dependencies, and current evidence. It then creates or resumes that ordinary
+Feature Brief and excludes later-phase scope. An accepted phase Brief snapshots
+all applicable behavior and invariants in its own Ready baseline; a link to the
+plan alone is insufficient.
+
+## Feature Plan acceptance and reconciliation
+
+Discuss recommends planning with evidence and requires explicit human agreement
+before changing from the single-Brief route. It then presents the complete
+Feature Plan and all Phase Seeds for one explicit acceptance. Acceptance changes
+the plan to `Planned` and creates one local path-scoped commit containing exactly
+`feature-plan.md` and its declared seeds. Preserve unrelated index/worktree
+state, never include source or another workflow artifact, and verify that the
+commit changed exactly the accepted planning set. Reuse an identical accepted
+set already at HEAD instead of creating an empty commit. A commit or verification
+failure leaves the artifacts intact but blocks the phase handoff.
+
+As with Brief acceptance, Discuss requires a non-detached intended feature
+branch before requesting final planning acceptance. It never pushes, amends, or
+rewrites history as part of this checkpoint.
+
+After acceptance, Discuss emits one resolved continuation for the plan's `Next
+eligible phase`; it never emits Build for a Feature Plan or Phase Seed. Build
+must refuse both artifact kinds before mutation.
+
+Before discussing a later phase, reconcile the plan against shipped predecessor
+evidence and current repository truth. A material change to shared behavior,
+custody, dependencies, or an unexpanded seed requires a new explicit human
+acceptance, increments `Plan revision`, and appends an immutable entry:
+
+```markdown
+### PR-{NNN} — YYYY-MM-DD
+- Evidence:
+- Change:
+- Affected unexpanded phases:
+- Ready/Shipped phases unaffected: {IDs and reason}
+- Accepted by:
+```
+
+Reconciliation may replace only unexpanded seeds named by the accepted entry.
+Never silently rewrite a seed already used to create a Ready Brief, alter a Ready
+Brief, or make an accepted phase inherit changed plan text retroactively. If a
+change affects accepted intent, use that Brief's amendment rules independently.
+After explicit acceptance, create and verify one path-scoped local commit
+containing exactly the changed `feature-plan.md` and affected unexpanded seeds;
+unrelated paths remain outside it.
 
 ## Feature Brief
 

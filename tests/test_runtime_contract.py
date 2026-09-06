@@ -172,6 +172,67 @@ class RuntimeContractTests(unittest.TestCase):
             self.assertIn("`build`", text)
             self.assertNotIn("`build-planned`", text)
 
+    def test_discuss_routes_oversized_product_scope_before_ready(self):
+        discuss = read("skills/discuss/SKILL.md")
+        for obligation in (
+            "multiple independently valuable, cancellation-safe outcomes",
+            "Document length, file count, generic complexity",
+            "obtain explicit human agreement",
+            "Never split one user-visible transaction",
+            "Stable phase IDs identify phases",
+            "Every behavior is assigned to one phase, marked shared, or explicitly deferred",
+            "A Feature Plan and Phase Seed are never `Ready`",
+            "Materialize all applicable shared invariants",
+            "Keep later-phase scope out",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, discuss)
+
+    def test_feature_plan_and_phase_seed_contracts_are_non_buildable(self):
+        artifacts = read("references/artifact-contracts.md")
+        plan = section(artifacts, "Feature Plan")
+        seed = section(artifacts, "Phase Seed")
+        reconciliation = section(
+            artifacts, "Feature Plan acceptance and reconciliation"
+        )
+        for field in (
+            "## Artifact kind",
+            "Feature Plan — not buildable",
+            "## Behaviors and custody",
+            "## Phase order",
+            "## Next eligible phase",
+        ):
+            self.assertIn(field, plan)
+        for field in (
+            "Phase Seed — not buildable",
+            "## Phase identity",
+            "## Behavior custody",
+            "## Coherent stop state",
+            "## Evidence to revisit",
+        ):
+            self.assertIn(field, seed)
+        self.assertIn("containing exactly", reconciliation)
+        self.assertIn("Never silently rewrite a seed already used", reconciliation)
+        self.assertIn(
+            "Build\nmust refuse both artifact kinds", reconciliation
+        )
+        self.assertIn("explicitly refuse `feature-plan.md` and Phase Seed inputs",
+                      read("skills/build/SKILL.md"))
+        self.assertIn("planning context, never Ready intent or Build inputs",
+                      read("runtime/common.md"))
+
+    def test_planning_handoffs_are_native_and_resolved(self):
+        commands = read("references/harness-command-contract.md")
+        for prefix in ("/absolutforge:", "$absolutforge ", "/skill:"):
+            self.assertIn(
+                prefix
+                + "discuss absolutforge/features/{family-slug}/phases/P{NN}-{phase-slug}.md",
+                commands,
+            )
+        self.assertIn("Feature Plan -> Discuss", commands)
+        self.assertIn("Phase Discuss -> Build", commands)
+        self.assertIn("A planning artifact never routes to Build", commands)
+
     def test_entrypoints_select_runtime_instead_of_full_reference_preload(self):
         for skill, runtime in (
             ("build", "autonomous"),
@@ -497,7 +558,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.7.2"))
+                    self.assertTrue(data["version"].startswith("0.8.0"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

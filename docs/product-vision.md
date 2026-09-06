@@ -20,6 +20,29 @@ Build chooses once before implementation, announces the reason and records it in
 
 Both paths produce one complete verified feature, append durable Build Evidence, commit the feature locally, and hand the same Brief to one independent whole-feature Review. Neither path deploys, pushes, creates a PR, merges, or partially ships outcomes/tasks.
 
+## Feature-family planning
+
+Some product ideas are too broad for one honest Ready baseline: they contain
+multiple independently valuable outcomes, later behavior depends on learning
+from earlier delivery, or several rollout and operational boundaries would be
+prematurely frozen together. In that case `discuss` recommends — and the human
+must explicitly accept — a non-buildable Feature Plan before producing any
+phase Brief.
+
+```text
+idea -> Planned Feature Plan -> discuss Phase Seed -> Ready Brief -> build
+                               -> discuss later seed -> Ready Brief -> build
+```
+
+The plan owns coarse end-to-end behavior, stable phase identities, behavior
+custody, shared constraints, dependencies, uncertainty and a coherent stop
+state after every phase. Distant phases remain deliberately low-resolution.
+Each eligible seed later enters `discuss`, which snapshots its relevant behavior
+and invariants into an ordinary self-contained Brief. Build refuses plans and
+seeds; implementation authority still begins only at a committed Ready Brief.
+This is product-delivery phasing, distinct from Build's internal implementation
+strategy and task decomposition.
+
 ## Autonomous Build
 
 This is the default. Use it when a strong coding model can efficiently own the complete implementation trajectory. The model may use an outcome-oriented Execution Map for dependent work or resume state, but local implementation remains autonomous within the Ready Brief.
@@ -42,6 +65,7 @@ Both strategies share one positive, risk-based Test Charter. For each changed be
 
 ## Strategy invariants
 
+- Feature Plans and Phase Seeds never authorize Build; each phase requires its own Ready Brief.
 - One Ready Brief, one selected Build strategy per feature.
 - New planned Builds record standard methodology; legacy delegated state remains durable only for compatible resume.
 - No silent mid-feature strategy switching.

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-06
+
+### Added
+
+- `discuss` can now route an oversized product idea, with explicit human
+  agreement, into an accepted non-buildable Feature Plan and stable Phase Seeds.
+  Each eligible seed is later discussed into its own self-contained Ready Brief;
+  Build explicitly refuses planning artifacts.
+- Feature Plans record stable phase identity, behavior custody, shared
+  invariants, dependencies, uncertainties, coherent stop states, and one next
+  eligible phase. Explicitly accepted reconciliation can revise only unexpanded
+  seeds without retroactively changing Ready or Shipped phase intent.
+
+### Changed
+
+- Discuss handoffs now distinguish ordinary or phase Brief acceptance, which
+  continues to Build, from Feature Plan acceptance, which continues to the
+  resolved next Phase Seed through another Discuss run.
+
 ## [0.7.2] - 2026-09-06
 
 ### Changed

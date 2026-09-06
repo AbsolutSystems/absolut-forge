@@ -1,4 +1,4 @@
 interface:
   display_name: "AbsolutForge Discuss"
-  short_description: "Turn intent and evidence into one accepted Feature Brief"
-  default_prompt: "Use $absolutforge discuss to turn this product idea into an accepted Feature Brief."
+  short_description: "Plan large features or accept one bounded Brief"
+  default_prompt: "Use $absolutforge discuss to plan this feature or turn one bounded phase into an accepted Feature Brief."
