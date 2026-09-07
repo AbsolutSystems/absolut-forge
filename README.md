@@ -2,11 +2,20 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.8.1.** `discuss` can recover an idea from the active
-conversation, accept one bounded Feature Brief, or first plan oversized product
-intent as independently discussable phases. One `build` command still selects
-autonomous or planned execution only from an accepted Ready Brief and preserves
-that strategy on resume.
+**Current release: 0.8.2.** Build now separates unresolved high-tier decisions
+from implementation that becomes bounded after those decisions are recorded.
+One high-risk concern no longer makes an entire outcome or task high by
+inheritance; safely bounded residual work is reclassified and delegated.
+
+## Decision-boundary routing in 0.8.2
+
+Build owners retain architecture, migration, security/data, concurrency and
+state decisions. When resolving one of those decisions creates settled
+contracts, bounded ownership and a meaningful gate, Build reclassifies the
+remaining coherent implementation and delegates low/standard work. Work stays
+high when execution itself crosses the risk boundary, and the plan or outcome
+evidence records the concrete reason. This does not permit per-file splitting
+or handoffs that prewrite most of the patch merely to reach a cheaper tier.
 
 ## Conversation-derived Discuss in 0.8.1
 

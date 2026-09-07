@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-09-07
+
+### Changed
+
+- Build capability routing now classifies unresolved high-tier decisions
+  separately from residual implementation. After the owner records a genuine
+  architecture, migration, security/data, concurrency or state boundary,
+  bounded implementation is reclassified and delegated when low/standard.
+- A high concern no longer makes every edit in an enclosing outcome high by
+  inheritance. Residual implementation stays with the owner only when its
+  execution still crosses the high-risk boundary, with the concrete reason
+  recorded; artificial per-file or patch-prescriptive splitting remains
+  prohibited.
+
 ## [0.8.1] - 2026-09-06
 
 ### Added

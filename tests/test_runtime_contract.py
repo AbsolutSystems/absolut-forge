@@ -473,6 +473,9 @@ class RuntimeContractTests(unittest.TestCase):
         for obligation in (
             "to one fresh worker by default",
             "fewer owner interactions than preparing and validating the handoff",
+            "mixed outcome is not wholly high",
+            "reclassify and delegate the residual implementation",
+            "concrete unresolved judgment or execution risk that prevents delegation",
             "repetitive inventories, matrices, report rows",
             "treat it as durable evidence",
             "worker owns the local implementation loop",
@@ -489,6 +492,8 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("fresh-owner continuation", common)
         autonomous = read("runtime/autonomous.md")
         self.assertIn("Delegate a bounded low/standard outcome", autonomous)
+        self.assertIn("one high concern does not make the entire outcome high", autonomous)
+        self.assertIn("record the concrete risk preventing delegation", autonomous)
         self.assertIn("verified checkpointed inventory or classification", autonomous)
         planned = read("runtime/planned.md")
         self.assertIn("Classify failures found during owner validation", planned)
@@ -556,6 +561,8 @@ class RuntimeContractTests(unittest.TestCase):
             "settled shared contracts", "explicit production/test ownership",
             "meaningful fast gate and a return boundary",
             "Do not split solely by file, layer or code-versus-test work",
+            "one unresolved high-tier decision absorb otherwise delegable implementation",
+            "Reclassify the residual task on its own execution risk",
             "do not merge unrelated outcomes", "No fixed file/task count",
             "split coherently or escalate", "Grouping never removes targeted final integration checks",
             "revising pending tasks requires a canonical PC entry",
@@ -564,8 +571,11 @@ class RuntimeContractTests(unittest.TestCase):
             self.assertIn(obligation, design)
         routing = section(read("references/planned-build-contract.md"), "Capability routing")
         self.assertIn("high-tier corrections owned by the orchestrator", routing)
+        self.assertIn("Classify the unresolved decision and residual implementation separately", routing)
         runtime = read("runtime/planned.md")
         self.assertIn("group implementation, wiring and focused tests", runtime)
+        self.assertIn("classify that implementation on its own execution risk", runtime)
+        self.assertIn("does not inherit `high` solely from an enclosing outcome", runtime)
         self.assertIn("higher reasoning effort does not lower task risk", runtime)
         self.assertIn("shared writable paths execute sequentially", runtime)
         # Provider-specific policy must stay in the active host mapping.
@@ -583,7 +593,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.8.1"))
+                    self.assertTrue(data["version"].startswith("0.8.2"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"
