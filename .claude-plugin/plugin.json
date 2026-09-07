@@ -1,6 +1,6 @@
 {
   "name": "absolutforge",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Intent-driven delivery with feature-family planning and automatic Build strategy selection.",
   "author": {"name": "Absolut Systems"}
 }

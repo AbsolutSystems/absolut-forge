@@ -5,7 +5,14 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.9.1] - 2026-09-07
+
+### Changed
+
+- Codex Build owners now send compact milestone status to their launcher, and
+  launchers enforce a five-minute maximum between user-visible progress
+  updates without inheriting implementation supervision or passing transient
+  dialogue to a successor owner.
 
 ## [0.9.0] - 2026-09-07
 

@@ -2,10 +2,19 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.9.0.** Shipped phases can now form durable Feature Family
-histories without moving their individual records, actionable Review follow-ups
-gain one repository-wide index, and Build applies a bounded Scout rule to leave
-owned code better without silently expanding accepted scope.
+**Current release: 0.9.1.** Long-running Codex Builds now provide regular,
+evidence-based progress updates while preserving the fresh-owner isolation and
+durable checkpoint model.
+
+## Build progress feedback in 0.9.1
+
+Codex Build owners send a compact status at every material milestone and at
+least once every five minutes while work remains active. Each update says what
+finished, what is happening now, what comes next, and whether anything is
+blocked. If an owner stays silent, the launcher requests a status without
+interrupting the Build and reports only the last confirmed stage. These
+transient updates are never committed as Build Evidence or passed to a fresh
+successor owner.
 
 ## Durable delivery history in 0.9.0
 

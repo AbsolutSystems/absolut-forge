@@ -551,7 +551,7 @@ class RuntimeContractTests(unittest.TestCase):
             "the context being passed",
             "state that no conversation is inherited",
             "launcher waits and relays a completed result",
-            "handles only the `ROTATE` control envelope",
+            "only the `ROTATE` control envelope defined below plus the transient progress relay",
             "After every clean checkpoint containing implementation or test changes",
             "A Build-start-only checkpoint does not trigger rotation",
             "returns only `ROTATE: {canonical Build command}`",
@@ -572,6 +572,21 @@ class RuntimeContractTests(unittest.TestCase):
         entry = read("skills/build/SKILL.md")
         self.assertIn("Before loading runtime or repository evidence", entry)
         self.assertIn("launcher that hands off ownership does not inspect artifacts", entry)
+
+    def test_codex_build_owner_reports_progress_without_inheriting_supervision(self):
+        owner = section(read("references/codex-tools.md"), "Build owner")
+        for obligation in (
+            "compact user-facing `STATUS:` message",
+            "no five-minute period passes without an update",
+            "what completed, what is happening now, what comes next, and any blocker",
+            "waits in intervals short enough to enforce that deadline",
+            "requests a status without interrupting the owner",
+            "using only the last confirmed stage",
+            "not Build evidence",
+            "never passed to a successor owner",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, owner)
 
     def test_cost_aware_routing_classifies_work_and_rotates_context(self):
         routing = section(read("references/model-routing.md"), "Autonomous outcome routing")
@@ -698,7 +713,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.9.0"))
+                    self.assertTrue(data["version"].startswith("0.9.1"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"
