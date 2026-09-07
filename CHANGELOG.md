@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Codex Build-owner handoffs now show the exact model and reasoning effort,
+  the owner's current assignment, and the context passed at initial launch and
+  checkpoint rotation without exposing hidden instructions.
+
 ## [0.8.2] - 2026-09-07
 
 ### Changed
