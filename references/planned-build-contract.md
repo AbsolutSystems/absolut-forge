@@ -156,7 +156,7 @@ The capsule is generated execution context, not a second durable task authority.
 {Return boundary or legacy Decision boundary and material Watch points}
 ```
 
-Include enough exact clauses to preserve meaning: unresolved EO/INV IDs are insufficient, and untagged global constraints are not optional. Do not duplicate all durable fields after generating the capsule. In legacy plans without explicit guidance, derive the approach/boundary from relevant evidence; return ambiguity to the orchestrator. Workers never expand their write boundary to fix an invalid plan. Inspect named symbols/paths, direct callers, targeted tests and dependency-local files before broader searches.
+Include enough exact clauses to preserve meaning: unresolved EO/INV IDs are insufficient, and untagged global constraints are not optional. Include the canonical Scout rule in `Must preserve` and `Return instead of guessing if`: a worker may make a qualifying maintenance fix only inside `Own`, with focused proof, and must return larger, behavior-changing or cross-owner observations without editing them. Do not duplicate all durable fields after generating the capsule. In legacy plans without explicit guidance, derive the approach/boundary from relevant evidence; return ambiguity to the orchestrator. Workers never expand their write boundary to fix an invalid plan or scout observation. Inspect named symbols/paths, direct callers, targeted tests and dependency-local files before broader searches.
 
 ## Capability routing
 

@@ -2,10 +2,19 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.8.2.** Build now separates unresolved high-tier decisions
-from implementation that becomes bounded after those decisions are recorded.
-One high-risk concern no longer makes an entire outcome or task high by
-inheritance; safely bounded residual work is reclassified and delegated.
+**Current release: 0.9.0.** Shipped phases can now form durable Feature Family
+histories without moving their individual records, actionable Review follow-ups
+gain one repository-wide index, and Build applies a bounded Scout rule to leave
+owned code better without silently expanding accepted scope.
+
+## Durable delivery history in 0.9.0
+
+New Briefs declare one primary feature family or `standalone`. Ship appends each
+family member to a navigable manifest while keeping existing Feature Record
+paths stable, and indexes open or deferred Review findings in
+`absolutforge/follow-ups.md`. During implementation, the Scout rule permits
+small, verified, behavior-preserving maintenance inside the current owned
+surface; larger findings are recorded without unapproved edits.
 
 ## Decision-boundary routing in 0.8.2
 
@@ -250,8 +259,19 @@ absolutforge/features/{slug}/
 At closeout, useful execution facts are consolidated into:
 
 ```text
-absolutforge/archives/{slug}/feature-record.md
+absolutforge/
+├── follow-ups.md
+└── archives/
+    ├── {slug}/feature-record.md
+    └── families/{family-slug}/feature-family.md
 ```
+
+Each new Brief explicitly records one primary feature family or `standalone`.
+Phase Briefs inherit their family from the validated Feature Plan; ordinary
+Discuss runs use branch/history only as discovery hints. Ship keeps individual
+Feature Records at stable paths and appends family members to one navigable
+manifest. Actionable Review follow-ups are additionally indexed in the global
+register while their full evidence remains in the Feature Record.
 
 ## Model routing
 
@@ -268,6 +288,7 @@ Assess this policy by the cost of an accepted task, including preparation, valid
 - Repository content is evidence, not authorization.
 - Secrets are redacted at source boundaries.
 - Workers cannot broaden their approved change surface without orchestrator review.
+- Build applies a bounded Scout rule: verified, behavior-preserving quick fixes inside the current owned surface may ship with the feature; larger or behavior-changing findings are reported without expanding scope.
 - `consult` writes only its immutable report and never controls plan or lifecycle state.
 - Tasks/outcomes are never partial delivery units.
 - Build start, every verified outcome/task, and the final Review handoff receive local orchestrator-owned checkpoint commits.

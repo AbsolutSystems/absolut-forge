@@ -35,9 +35,14 @@ absolutforge/features/{slug}/
 After Ship:
 
 ```text
-absolutforge/archives/{slug}/
-├── feature-record.md
-└── executive-summary.html    # optional
+absolutforge/
+├── follow-ups.md                         # created when the first actionable follow-up ships
+└── archives/
+    ├── {slug}/
+    │   ├── feature-record.md
+    │   └── executive-summary.html        # optional
+    └── families/{family-slug}/
+        └── feature-family.md             # created when the first family member ships
 ```
 
 `execution-map.md` and `implementation-plan.md` are mutually exclusive for a normal feature. They, `consult-{slug}.md` and `save-{slug}.md` are transient evidence and are removed at Ship after useful facts are consolidated into the Feature Record.
@@ -236,6 +241,12 @@ Draft | Ready | Building | In Review
 ## Change type
 Feature | Fix | Refactor
 
+## Feature family
+- Family slug: standalone | {family-slug}
+- Family name: not applicable | {family name}
+- Phase: not applicable | P{NN} — {phase name}
+- Lineage: standalone | new family | feature-plan: `{path}` | existing manifest: `{path}`
+
 ## Problem and goal
 
 ## Users
@@ -277,7 +288,17 @@ Feature | Fix | Refactor
 ## Build Evidence
 ```
 
-The immutable Ready baseline is `## Problem and goal` through `## Expected outcomes`, plus accepted amendments. Build may change lifecycle status and append Build Evidence only.
+The immutable Ready baseline is `## Feature family` through `## Expected outcomes`, plus accepted amendments. Build may change lifecycle status and append Build Evidence only.
+
+`Feature family` is required for newly accepted Briefs and is part of the
+immutable Ready baseline. Historical Briefs without it remain valid and are
+treated as `standalone`; Ship never infers their family from a branch or slug.
+A Brief expanded from a Phase Seed takes its family slug, name, phase identity
+and lineage from the validated Feature Plan. For an ordinary Brief, Discuss may
+use the current branch, recent archive commits and semantic similarity only to
+rank candidates. It records `standalone`, a new family, or one existing family
+in the complete proposal; ambiguity that could change the durable grouping is
+resolved by the human before acceptance. A branch name is never family identity.
 
 New Discuss briefs give Expected Outcomes stable `### EO-001 — {title}` headings and material Constraints and invariants stable `### INV-001 — {title}` headings. IDs are unique within their category and remain stable after acceptance; amendments introduce new IDs rather than reassigning existing ones. Do not ID every paragraph. Older briefs without IDs remain valid unchanged: use headings and exact text matching. A task's `Covers` and `Preserves` references resolve to accepted text, including applicable amendments; an ID alone is not sufficient executor context. Ambiguous references require targeted inspection or clarification, never guessed intent.
 
@@ -298,6 +319,39 @@ Autonomous execution delegates bounded low/standard outcomes under `model-routin
 Announce the chosen strategy and concise evidence-based reason without another confirmation. Record `Strategy selection` in the Build-start checkpoint alongside the strategy, methodology and artifact path. Then continue the chosen runtime within the same invocation. Automatic selection is implementation organization inside accepted intent, not authorization to change scope.
 
 At Building, read durable Build-start strategy and methodology before routing; never rerun automatic selection. A matching override is harmless; a conflicting override is rejected before mutation and requires explicit abandonment/restart to change strategy. Missing strategy, unknown values or inconsistent Brief/plan/Save evidence require reconciliation, never guessing from file count or an existing artifact. Missing historical methodology retains the established default; missing historical selection rationale is valid and must not be backfilled. Planned/delegated retains its fixed executor; legacy tdd remains unsupported. An override cannot convert methodology. Draft, In Review and Shipped are not new-start states.
+
+## Scout rule
+
+Build leaves the code it already touches better than it found it. Without a
+separate amendment or confirmation, the builder may make a scout fix only when
+all of these are true:
+
+- it was discovered while implementing or verifying accepted work;
+- it is confined to the current autonomous outcome or planned task's owned
+  paths and directly related local seam;
+- the correction is unambiguous, localized and low risk;
+- it preserves accepted behavior, public contracts, compatibility, persisted
+  data, security boundaries, dependencies, configuration and migration state;
+- it introduces no broad formatting churn or speculative cleanup; and
+- the builder can run a focused proof and include it in the current checkpoint.
+
+Typical scout fixes include an obsolete local import, a typo in touched
+documentation, or a clearly redundant local branch. A nearby behavior change,
+public API adjustment, dependency update, schema/data change, security decision,
+cross-owner edit or cleanup that materially enlarges Review is not a quick fix.
+Do not silently widen a task surface or create a plan change merely to perform
+scout work.
+
+When every condition holds, make and verify the fix without interrupting Build,
+then report what was found, changed and proved. Otherwise do not edit it: record
+a concise scout observation and why it was deferred. Autonomous checkpoints use
+their existing result/new-facts evidence; planned tasks use Completion Evidence.
+The final Build Evidence `Scout disposition` summarizes fixes and deferred
+observations, using `none` only when nothing material was found. Deferred scout
+observations are not accepted feature scope and do not enter the global
+follow-up register unless Review independently records them as a valid
+`FOLLOW-UP`. Review judges every scout edit against this boundary from the
+complete diff.
 
 ## Build start evidence
 
@@ -499,11 +553,78 @@ Workflow handoff reports the eligible next stage and required artifact paths, th
 
 ## Feature Record
 
-Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, planned methodology, execution summary, consultation, durable knowledge, follow-ups and recommended review order. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. A delegated record also notes whether implementation remained executor-owned and records material dispatch/correction outcomes without provider identity or raw dialogue. Autonomous Build includes execution-map/checkpoint facts when present.
+Ship archives one record containing original intent, accepted amendments, as-built result, verification, Review findings, deviations, build strategy, planned methodology, execution summary, consultation, durable knowledge, follow-ups, recommended review order and the exact Feature-family metadata from the Brief. Historical Briefs without family metadata are recorded as `standalone`; Ship never derives family identity from the branch. Planned Build includes plan revision count, task outcomes, `PC-` plan changes and final integration verification. A delegated record also notes whether implementation remained executor-owned and records material dispatch/correction outcomes without provider identity or raw dialogue. Autonomous Build includes execution-map/checkpoint facts when present.
 
 Consultation is recorded as one line when a `consult-{slug}.md` existed: which artifacts were consulted, and each finding that the owning context accepted, with the amendment or plan revision it produced. A consultation with no accepted finding is recorded as consulted with none accepted. No consultation means the field is omitted. The report itself is removed, so anything not consolidated here is gone.
 
 Verification in the record names the tests and cases that cover the delivered behavior, their commands and green results, any recorded exemption and its reason, and the whole-feature path exercised or the recorded reason it was not available.
+
+## Feature Family manifest
+
+Every non-standalone shipped record belongs to exactly one primary family. Ship
+creates or updates
+`absolutforge/archives/families/{family-slug}/feature-family.md` in the same
+closeout commit as the member record. Existing record paths never move merely
+to create a family. The manifest is a durable navigational history, not mutable
+intent authority:
+
+```markdown
+# Feature Family: {family name}
+
+## Identity
+- Family slug: {family-slug}
+- Feature Plan: none | `absolutforge/features/{family-slug}/feature-plan.md`
+
+## Goal
+{concise end-to-end goal from the plan or first accepted family Brief}
+
+## Delivered work
+### {phase ID or member number} — {feature name}
+- Shipped: YYYY-MM-DD
+- Reviewed revision: `{reviewed revision}`
+- Record: `../../{slug}/feature-record.md`
+- Outcome: {concise as-built result}
+```
+
+Entries are append-only in ship order. A source record naming a family must
+have exactly one matching manifest entry, and every manifest entry must resolve
+to a record naming that same family. Ship refuses an inconsistent family slug,
+name, duplicate record, missing member or broken relative link before commit.
+Family renames, aliases, overlapping topic collections and post-hoc adoption of
+historical standalone records are outside the current lifecycle contract and
+must not be inferred or rewritten during ordinary Discuss or Ship.
+
+## Follow-up register
+
+`absolutforge/follow-ups.md` is the operational index of actionable work that
+Review explicitly allowed to ship. Feature Records remain the evidence authority.
+Ship creates the register when needed and appends one entry for each `FOLLOW-UP`
+finding whose Review resolution is `open` or `deferred`; `fixed` and `accepted`
+findings remain only in the Feature Record. IDs are repository-global,
+monotonically increasing `FU-{NNN}` values and are never reused.
+
+```markdown
+# AbsolutForge Follow-ups
+
+## FU-{NNN} — {short title}
+- Status: open | promoted | resolved | dismissed
+- Source record: `archives/{slug}/feature-record.md`
+- Review finding: F-{NNN}
+- Family: standalone | {family-slug}
+- Added: YYYY-MM-DD
+- Impact: {concise impact from Review}
+- Suggested next action: {smallest sensible correction from Review}
+- Promoted to: none | `absolutforge/features/{slug}/feature-brief.md`
+- Resolution: none | {concise result and durable evidence link}
+```
+
+The source tuple of archive record and Review finding ID is unique. A retried
+closeout reuses an identical existing entry and refuses conflicting content;
+it never allocates a duplicate. The register does not assign priority, owner or deadline
+and does not turn a follow-up into accepted scope. Promotion or closure
+requires a later explicit workflow decision; ordinary Ship only appends newly
+actionable entries. Ship validates the archive, family manifest when applicable,
+and follow-up-register changes as one closeout set before staging any of them.
 
 ## Runtime projections and escalation
 

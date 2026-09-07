@@ -7,8 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-09-07
+
+### Added
+
+- Newly accepted Briefs now record an explicit primary feature family or
+  `standalone`. Ship preserves stable per-feature archives while maintaining a
+  navigable `archives/families/{family-slug}/feature-family.md` delivery history.
+- Ship now indexes open or deferred Review follow-ups in the repository-wide
+  `absolutforge/follow-ups.md`, linked back to their authoritative Feature
+  Records with stable global IDs.
+
 ### Changed
 
+- Build now applies a bounded Scout rule: it repairs verified, unambiguous,
+  behavior-preserving maintenance issues inside the current owned surface and
+  records larger or behavior-changing observations without expanding scope.
 - Codex Build-owner handoffs now show the exact model and reasoning effort,
   the owner's current assignment, and the context passed at initial launch and
   checkpoint rotation without exposing hidden instructions.

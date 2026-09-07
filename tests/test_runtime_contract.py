@@ -258,6 +258,63 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("Phase Discuss -> Build", commands)
         self.assertIn("A planning artifact never routes to Build", commands)
 
+    def test_feature_family_identity_and_archive_manifest_are_durable(self):
+        artifacts = read("references/artifact-contracts.md")
+        brief = section(artifacts, "Feature Brief")
+        manifest = section(artifacts, "Feature Family manifest")
+        discuss = read("skills/discuss/SKILL.md")
+        ship = read("skills/ship/SKILL.md")
+
+        for field in (
+            "## Feature family",
+            "Family slug: standalone | {family-slug}",
+            "Family name: not applicable | {family name}",
+            "Phase: not applicable | P{NN}",
+            "Lineage: standalone | new family",
+        ):
+            self.assertIn(field, brief)
+        for obligation in (
+            "Historical Briefs without it remain valid",
+            "A branch name is never family identity",
+        ):
+            self.assertIn(obligation, brief)
+        for obligation in (
+            "archives/families/{family-slug}/feature-family.md",
+            "Existing record paths never move",
+            "exactly one matching manifest entry",
+            "every manifest entry must resolve",
+        ):
+            self.assertIn(obligation, manifest)
+        self.assertIn("current branch may rank candidates but never defines", discuss)
+        self.assertIn("acceptance covers that durable grouping", discuss)
+        self.assertIn("never infer family identity from its branch or slug", ship)
+        self.assertIn("Validate both directions of membership", ship)
+
+    def test_ship_indexes_actionable_review_followups_once(self):
+        followups = section(
+            read("references/artifact-contracts.md"), "Follow-up register"
+        )
+        ship = read("skills/ship/SKILL.md")
+        for obligation in (
+            "absolutforge/follow-ups.md",
+            "`open` or `deferred`",
+            "`fixed` and `accepted`",
+            "FU-{NNN}",
+            "never reused",
+            "source tuple",
+            "does not assign priority, owner or deadline",
+            "one closeout set",
+        ):
+            self.assertIn(obligation, followups)
+        for obligation in (
+            "first actionable follow-up ships",
+            "next never-reused global `FU-{NNN}`",
+            "Reuse an identical source entry on retry",
+            "do not treat registration as scope acceptance",
+            "one closeout set before staging",
+        ):
+            self.assertIn(obligation, ship)
+
     def test_entrypoints_select_runtime_instead_of_full_reference_preload(self):
         for skill, runtime in (
             ("build", "autonomous"),
@@ -324,6 +381,47 @@ class RuntimeContractTests(unittest.TestCase):
             "Lifecycle-only and Review-artifact commits do not invalidate it", artifacts
         )
         self.assertIn("Compact intermediate evidence never substitutes", artifacts)
+
+    def test_build_scout_rule_improves_owned_code_without_scope_drift(self):
+        artifacts = read("references/artifact-contracts.md")
+        scout = section(artifacts, "Scout rule")
+        for obligation in (
+            "leaves the code it already touches better than it found it",
+            "current autonomous outcome or planned task's owned",
+            "unambiguous, localized and low risk",
+            "preserves accepted behavior, public contracts, compatibility",
+            "focused proof",
+            "Otherwise do not edit it",
+            "concise scout observation",
+            "`Scout disposition`",
+            "do not enter the global",
+            "follow-up register unless Review",
+            "complete diff",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, scout)
+
+        common = read("runtime/common.md")
+        self.assertIn("Apply the canonical Scout rule", common)
+        self.assertIn("Report the fix after completing it", common)
+
+        autonomous = read("runtime/autonomous.md")
+        self.assertIn("Scout boundary in every delegated outcome package", autonomous)
+        self.assertIn("plus any scout fix or deferred observation", autonomous)
+        self.assertIn("Scout disposition", autonomous)
+
+        planned = read("runtime/planned.md")
+        self.assertIn("canonical Scout rule in Must preserve and Return", planned)
+        self.assertIn("Scout work never expands Own", planned)
+
+        capsule = section(read("references/planned-build-contract.md"), "Task Capsule")
+        self.assertIn("qualifying maintenance fix only inside `Own`", capsule)
+        self.assertIn("cross-owner observations without editing them", capsule)
+
+        self.assertIn("canonical Scout rule", read("skills/build/SKILL.md"))
+        worker = read("agents/planned-worker.md")
+        self.assertIn("Apply the capsule's Scout boundary", worker)
+        self.assertIn("report larger, behavior-changing or cross-owner observations", worker)
 
     def test_legacy_policy_preserves_ownership_and_tdd_rejection(self):
         legacy = read("references/planned-delegated-contract.md")
@@ -600,7 +698,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.8.2"))
+                    self.assertTrue(data["version"].startswith("0.9.0"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"
