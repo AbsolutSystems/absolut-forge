@@ -569,6 +569,17 @@ class RuntimeContractTests(unittest.TestCase):
         ):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, owner)
+        for dispatch_obligation in (
+            "explicit authorization for the nested owner",
+            "native agent-dispatch primitive",
+            "do not look for it inside a shell or tool-wrapper namespace",
+            "owner was itself launched as an agent",
+            "attempted dispatch with the required model and reasoning effort",
+            "Report that concrete failure before using an allowed owner fallback",
+            "absence of a predeclared bounded worker is not unavailability",
+        ):
+            with self.subTest(dispatch_obligation=dispatch_obligation):
+                self.assertIn(dispatch_obligation, owner)
         entry = read("skills/build/SKILL.md")
         self.assertIn("Before loading runtime or repository evidence", entry)
         self.assertIn("launcher that hands off ownership does not inspect artifacts", entry)

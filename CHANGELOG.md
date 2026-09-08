@@ -5,6 +5,14 @@ All notable changes to AbsolutForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Codex Build owners now attempt native exact-profile Luna dispatch before
+  declaring bounded worker execution unavailable; being launched as a nested
+  owner no longer qualifies as a fallback reason.
+
 ## [0.9.1] - 2026-09-07
 
 ### Changed
