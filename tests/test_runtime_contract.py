@@ -386,7 +386,7 @@ class RuntimeContractTests(unittest.TestCase):
         artifacts = read("references/artifact-contracts.md")
         scout = section(artifacts, "Scout rule")
         for obligation in (
-            "leaves the code it already touches better than it found it",
+            "leaves the code its assigned executor already touches better than it",
             "current autonomous outcome or planned task's owned",
             "unambiguous, localized and low risk",
             "preserves accepted behavior, public contracts, compatibility",
@@ -403,10 +403,15 @@ class RuntimeContractTests(unittest.TestCase):
 
         common = read("runtime/common.md")
         self.assertIn("Apply the canonical Scout rule", common)
+        self.assertIn("assigned executor may immediately fix", common)
+        self.assertIn("owner never implements the fix", common)
         self.assertIn("Report the fix after completing it", common)
 
+        self.assertIn("assigned executor already touches", scout)
+        self.assertIn("never implements a production-code or test Scout fix", scout)
+
         autonomous = read("runtime/autonomous.md")
-        self.assertIn("Scout boundary in every delegated outcome package", autonomous)
+        self.assertIn("canonical Scout boundary in every package", autonomous)
         self.assertIn("plus any scout fix or deferred observation", autonomous)
         self.assertIn("Scout disposition", autonomous)
 
@@ -419,6 +424,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("cross-owner observations without editing them", capsule)
 
         self.assertIn("canonical Scout rule", read("skills/build/SKILL.md"))
+        self.assertIn("Build owner never implements a Scout fix", read("skills/build/SKILL.md"))
         worker = read("agents/planned-worker.md")
         self.assertIn("Apply the capsule's Scout boundary", worker)
         self.assertIn("report larger, behavior-changing or cross-owner observations", worker)
@@ -449,7 +455,9 @@ class RuntimeContractTests(unittest.TestCase):
             "final Build Evidence",
             "base_commit..HEAD",
             "changed/new tests",
-            "fresh generic read-only reviewer",
+            "fresh high-capability generic read-only reviewer",
+            "inline pass is valid only in a high-capability context",
+            "otherwise stop before writing Review",
             "advisory (not fully isolated)",
             "Write only review.md and Brief lifecycle status",
             "BLOCKING",
@@ -515,19 +523,23 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(rows, [
             ("low", "`gpt-5.6-luna`", "`high`"),
             ("standard", "`gpt-5.6-luna`", "`xhigh`"),
-            ("high", "Build owner (`gpt-5.6-sol`)", "`medium`"),
+            ("high", "`gpt-5.6-luna`", "`max`"),
         ])
         for obligation in (
             "For new standard planned builds",
             "designated Sol Build owner",
-            "explicit model and reasoning-effort overrides",
+            "explicit model and reasoning-effort overrides for every worker",
             'fork_turns="none"',
             "exact requested worker profile is unavailable",
             "never silently substitute another worker model/effort",
-            "This fallback never applies to legacy delegated state",
-            "any explicitly recorded execution commitments",
+            "never edits production code or tests",
+            "stop at the last clean boundary",
+            "Luna `max` owns high execution",
+            "assumptions, containment, rollback when applicable and intermediate proof points",
+            "Pending standard tasks adopt this worker-owned mapping on resume",
+            "historical pending `high` task first receives Risk controls",
             "Each Luna worker fixes local failures and repeats its focused gate",
-            "corrections discovered later by Sol validation or final verification",
+            "Corrections discovered later by Sol validation or final verification",
         ):
             self.assertIn(obligation, current)
         legacy = mapping.split("### Legacy delegated resume", 1)[1]
@@ -575,7 +587,7 @@ class RuntimeContractTests(unittest.TestCase):
             "do not look for it inside a shell or tool-wrapper namespace",
             "owner was itself launched as an agent",
             "attempted dispatch with the required model and reasoning effort",
-            "Report that concrete failure before using an allowed owner fallback",
+            "Report that concrete failure and stop at the last clean boundary",
             "absence of a predeclared bounded worker is not unavailability",
         ):
             with self.subTest(dispatch_obligation=dispatch_obligation):
@@ -599,22 +611,25 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, owner)
 
-    def test_cost_aware_routing_classifies_work_and_rotates_context(self):
+    def test_compiler_first_routing_separates_decisions_from_execution(self):
         routing = section(read("references/model-routing.md"), "Autonomous outcome routing")
         for obligation in (
-            "to one fresh worker by default",
-            "fewer owner interactions than preparing and validating the handoff",
-            "mixed outcome is not wholly high",
-            "reclassify and delegate the residual implementation",
-            "concrete unresolved judgment or execution risk that prevents delegation",
+            "dispatches one fresh worker for all production-code and test edits",
+            "mixed outcome is not wholly `high`",
+            "genuinely high execution remains worker-owned",
+            "settled decision, assumptions, containment, rollback when applicable",
+            "never takes over production-code or test edits",
             "repetitive inventories, matrices, report rows",
             "treat it as durable evidence",
             "worker owns the local implementation loop",
             "repeat that gate until green",
-            "owner does not interleave validation turns into this local loop",
+            "run and report every intermediate proof obligation",
             "When owner validation or final verification discovers a failure",
-            "settled API-usage corrections remain low/standard work",
+            "settled API-usage corrections retain their tier",
+            "then to a fresh worker for any production-code or test edit",
             "Never reload the full Brief, history or raw prior logs",
+            "stop at the last clean boundary",
+            "never substitute a profile, implement inline or claim delegation",
         ):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, routing)
@@ -622,14 +637,20 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("At a substantial checkpoint and before final verification", common)
         self.assertIn("fresh-owner continuation", common)
         autonomous = read("runtime/autonomous.md")
-        self.assertIn("Delegate a bounded low/standard outcome", autonomous)
-        self.assertIn("one high concern does not make the entire outcome high", autonomous)
-        self.assertIn("record the concrete risk preventing delegation", autonomous)
+        self.assertIn("just-in-time compilation", autonomous)
+        self.assertIn("Dispatch every bounded low, standard or high outcome", autonomous)
+        self.assertIn("never edits production code or tests", autonomous)
+        self.assertIn("failure containment, rollback when applicable", autonomous)
         self.assertIn("verified checkpointed inventory or classification", autonomous)
         planned = read("runtime/planned.md")
         self.assertIn("Classify failures found during owner validation", planned)
-        self.assertIn("fix local low/standard failures and repeat until green", planned)
+        self.assertIn("fix local failures and repeat until green", planned)
+        self.assertIn("every low, standard and high production-code or test task", planned)
+        self.assertIn("never implements them", planned)
+        self.assertIn("two failed attempts at the same blocker", planned)
         self.assertIn("fresh-owner continuation", planned)
+        self.assertIn("older standard runtime began a task inline", planned)
+        self.assertIn("historical `high` task without Risk controls", planned)
 
     def test_claude_standard_worker_profile_and_methodology_boundary(self):
         mapping = section(read("references/claude-tools.md"), "Planned Build")
@@ -640,13 +661,15 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(rows, [
             ("low", "`claude-opus-5`", "`low`"),
             ("standard", "`claude-opus-5`", "`low`"),
-            ("high", "Main-session orchestrator", "Current session setting"),
+            ("high", "`claude-opus-5`", "`low`"),
         ])
         self.assertIn('subagent_type: "absolutforge:planned-worker"', current)
         self.assertIn("one fresh call per task", current)
-        self.assertIn("This fallback never applies to legacy delegated state", current)
         self.assertIn("does not switch it automatically", current)
-        self.assertIn("High tasks and high-risk corrections stay with the main-session", current)
+        self.assertIn("every low, standard and high task", current)
+        self.assertIn("High execution also requires the owner-settled decision", current)
+        self.assertIn("never silently substitute another worker model/effort, implement in the main session", current)
+        self.assertIn("Pending standard tasks adopt this worker-owned mapping on resume", current)
         self.assertIn('subagent_type: "absolutforge:delegated-executor"', legacy)
         self.assertIn("never edits production code or tests", legacy)
         self.assertIn("stop without starting or continuing implementation", legacy)
@@ -663,7 +686,8 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("fix local failures inside Own", worker)
         self.assertIn("repeat the focused gate until green", worker)
         self.assertIn("Write only inside Own", worker)
-        self.assertIn("Never accept legacy delegated work or high-tier responsibilities", worker)
+        self.assertIn("Accept high execution risk only with settled decisions", worker)
+        self.assertIn("Never accept legacy delegated work", worker)
         self.assertIn("do not compensate by broad redesign", worker)
         self.assertIn("do not use for new plans", read("agents/delegated-executor.md"))
 
@@ -678,8 +702,7 @@ class RuntimeContractTests(unittest.TestCase):
             "CLAUDE_CODE_SUBAGENT_MODEL` to be exactly `claude-opus-5`",
             "any other non-empty force value as unsupported",
             "Do not unset or rewrite the user's environment automatically",
-            "new standard work uses the reported main-session fallback",
-            "legacy delegated work stops before implementation",
+            "both new standard and legacy delegated work stop before implementation",
         ):
             self.assertIn(obligation, profile)
         self.assertIn("validate its effective profile below", mapping)
@@ -692,20 +715,25 @@ class RuntimeContractTests(unittest.TestCase):
             "settled shared contracts", "explicit production/test ownership",
             "meaningful fast gate and a return boundary",
             "Do not split solely by file, layer or code-versus-test work",
-            "one unresolved high-tier decision absorb otherwise delegable implementation",
-            "Reclassify the residual task on its own execution risk",
+            "Do not encode an unresolved high-tier decision inside an implementation task",
+            "Classify the resulting task on its execution risk",
+            "Such a task stays worker-owned",
+            "must carry explicit Risk controls",
             "do not merge unrelated outcomes", "No fixed file/task count",
-            "split coherently or escalate", "Grouping never removes targeted final integration checks",
-            "revising pending tasks requires a canonical PC entry",
+            "split coherently or return the unresolved decision", "Grouping never removes targeted final integration checks",
+            "Other pending definition changes still require a PC entry",
             "Legacy delegated ownership and decomposition rules remain authoritative",
         ):
             self.assertIn(obligation, design)
         routing = section(read("references/planned-build-contract.md"), "Capability routing")
-        self.assertIn("high-tier corrections owned by the orchestrator", routing)
-        self.assertIn("Classify the unresolved decision and residual implementation separately", routing)
+        self.assertIn("Decision risk and execution risk are separate", routing)
+        self.assertIn("every production-code and test correction returns to a fresh bounded worker", routing)
+        self.assertIn("Two failed attempts at the same blocker", routing)
+        self.assertIn("pending standard tasks adopt the worker-owned runtime boundary", design)
+        self.assertIn("pending `high` task created before `Risk controls` existed", design)
         runtime = read("runtime/planned.md")
         self.assertIn("group implementation, wiring and focused tests", runtime)
-        self.assertIn("classify that implementation on its own execution risk", runtime)
+        self.assertIn("classify the resulting implementation on its own execution risk", runtime)
         self.assertIn("does not inherit `high` solely from an enclosing outcome", runtime)
         self.assertIn("higher reasoning effort does not lower task risk", runtime)
         self.assertIn("shared writable paths execute sequentially", runtime)
@@ -713,6 +741,79 @@ class RuntimeContractTests(unittest.TestCase):
         for path in ("references/planned-build-contract.md", "references/model-routing.md",
                      "runtime/planned.md", "skills/build/SKILL.md"):
             self.assertNotRegex(read(path), r"gpt-5\.6|Luna|Terra|Sol|xhigh")
+
+    def test_review_routes_corrections_through_owner_compilation_and_workers(self):
+        review = section(read("runtime/review.md"), "Record and route")
+        self.assertIn("Build owner classifies each blocker", review)
+        self.assertIn("settles any decision it exposes", review)
+        self.assertIn("every production-code or test edit returns to a fresh worker", review)
+        self.assertIn("Review never reopens the plan itself or dispatches an executor", review)
+        self.assertIn("After two failed attempts at the same blocker", review)
+
+        autonomous = section(read("runtime/autonomous.md"), "Final verification")
+        self.assertIn("owner classifies each final-verification failure", autonomous)
+        self.assertIn("dispatches a fresh worker for every production-code or test correction", autonomous)
+
+        codex_review = section(read("references/codex-tools.md"), "Review")
+        for obligation in (
+            "fresh read-only `gpt-6-astra` reviewer with `low` reasoning",
+            'fork_turns="none"',
+            "different model family from Luna execution",
+            "fresh `gpt-5.6-sol` reviewer with `medium` reasoning",
+            "no fresh high-capability reviewer",
+            "advisory (not fully isolated)",
+        ):
+            self.assertIn(obligation, codex_review)
+
+        host_review_obligations = {
+            "claude": (
+                "effective profile is guaranteed high-capability",
+                "invoking Review context is itself high-capability",
+                "stop before writing Review",
+            ),
+            "opencode": (
+                "installation guarantees a high-capability profile",
+                "invoking Review context is itself high-capability",
+                "stop before writing Review",
+            ),
+            "pi": (
+                "select a high-capability model/profile",
+                "may record Review mode `fresh` only when its selected profile is high-capability",
+                "stop before writing Review",
+            ),
+        }
+        for host, obligations in host_review_obligations.items():
+            mapping = section(
+                read(f"references/{host}-tools.md"),
+                "Clean-context Review" if host == "pi" else "Review"
+                if host == "claude" else "Planned Build and Review dispatch",
+            )
+            for obligation in obligations:
+                with self.subTest(host=host, obligation=obligation):
+                    self.assertIn(obligation, mapping)
+
+    def test_standard_build_is_executor_owned_across_hosts(self):
+        shared = read("references/model-routing.md")
+        self.assertIn("fresh workers own every production-code and test edit", shared)
+        self.assertIn("Capability tier always changes preparation and validation intensity", shared)
+        self.assertIn("when the active host mapping differentiates tiers", shared)
+        self.assertIn("never changes that ownership boundary", shared)
+
+        host_obligations = {
+            "codex": ("never edits production code or tests", "stop at the last clean boundary"),
+            "claude": ("every low, standard and high task", "implement in the main session"),
+            "opencode": ("worker owns every production-code and test edit", "orchestrator implementation is unavailable"),
+            "pi": ("executor-owned production-code and test edits", "never implement directly"),
+        }
+        for host, obligations in host_obligations.items():
+            text = read(f"references/{host}-tools.md")
+            for obligation in obligations:
+                with self.subTest(host=host, obligation=obligation):
+                    self.assertIn(obligation, text)
+
+        legacy = read("references/planned-delegated-contract.md")
+        self.assertIn("one fixed, lower-cost host-mapped executor profile", legacy)
+        self.assertIn("orchestrator must not reserve implementation work for itself", legacy)
 
     def test_distribution_json_release_and_skill_roots(self):
         descriptors = [
@@ -724,7 +825,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.9.1"))
+                    self.assertTrue(data["version"].startswith("0.10.0"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

@@ -314,7 +314,7 @@ The public `build <brief-path>` chooses once at Ready, before the Build-start ch
 
 Without an override, inspect accepted intent/amendments and relevant repository evidence using targeted reads. Default to autonomous for a cohesive change with little independent work. Choose planned only when concrete independent write surfaces/dependencies, useful bounded delegation, or a durable multi-session task graph repay compilation and coordination overhead. File count or generic complexity alone is insufficient; security or architecture risk alone does not require a graph. Lack of workers removes delegation as a benefit, but standard planned execution may still be justified by durable recovery. If no concrete benefit is established, select autonomous. Do not compile a plan or load both execution runtimes merely to make this decision.
 
-Autonomous execution delegates bounded low/standard outcomes under `model-routing.md#autonomous-outcome-routing` by default; that handoff alone is not a reason to select planned. Delegation justifies a graph only when coordinating multiple tasks provides the benefit above. Inline versus worker execution does not change recorded strategy or methodology and adds no artifact requirement.
+Autonomous execution compiles each bounded low, standard or high outcome just in time and dispatches every production-code and test edit under `model-routing.md#autonomous-outcome-routing`; that handoff alone is not a reason to select planned. A graph is justified only when coordinating multiple tasks provides the benefit above. Worker execution does not change recorded strategy or methodology and adds no artifact requirement.
 
 Announce the chosen strategy and concise evidence-based reason without another confirmation. Record `Strategy selection` in the Build-start checkpoint alongside the strategy, methodology and artifact path. Then continue the chosen runtime within the same invocation. Automatic selection is implementation organization inside accepted intent, not authorization to change scope.
 
@@ -322,9 +322,9 @@ At Building, read durable Build-start strategy and methodology before routing; n
 
 ## Scout rule
 
-Build leaves the code it already touches better than it found it. Without a
-separate amendment or confirmation, the builder may make a scout fix only when
-all of these are true:
+Build leaves the code its assigned executor already touches better than it
+found it. Without a separate amendment or confirmation, that executor may make
+a scout fix only when all of these are true:
 
 - it was discovered while implementing or verifying accepted work;
 - it is confined to the current autonomous outcome or planned task's owned
@@ -333,7 +333,7 @@ all of these are true:
 - it preserves accepted behavior, public contracts, compatibility, persisted
   data, security boundaries, dependencies, configuration and migration state;
 - it introduces no broad formatting churn or speculative cleanup; and
-- the builder can run a focused proof and include it in the current checkpoint.
+- the executor can run a focused proof and include it in the current checkpoint.
 
 Typical scout fixes include an obsolete local import, a typo in touched
 documentation, or a clearly redundant local branch. A nearby behavior change,
@@ -342,9 +342,12 @@ cross-owner edit or cleanup that materially enlarges Review is not a quick fix.
 Do not silently widen a task surface or create a plan change merely to perform
 scout work.
 
-When every condition holds, make and verify the fix without interrupting Build,
-then report what was found, changed and proved. Otherwise do not edit it: record
-a concise scout observation and why it was deferred. Autonomous checkpoints use
+When every condition holds, the assigned executor makes and verifies the fix
+without interrupting Build, then reports what was found, changed and proved.
+The Build owner may classify the observation, include it in the current worker
+package or a correction package, validate it and record its disposition, but it
+never implements a production-code or test Scout fix. Otherwise do not edit it:
+record a concise scout observation and why it was deferred. Autonomous checkpoints use
 their existing result/new-facts evidence; planned tasks use Completion Evidence.
 The final Build Evidence `Scout disposition` summarizes fixes and deferred
 observations, using `none` only when nothing material was found. Deferred scout

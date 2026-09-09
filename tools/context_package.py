@@ -217,6 +217,9 @@ def _shape(task):
     capability = _require(f, "Capability")
     if capability not in ("low", "standard", "high"):
         raise ContextError("invalid task capability")
+    risk = f.get("Risk controls", "none").strip()
+    if capability == "high" and (not risk or risk.lower() == "none"):
+        raise ContextError("high task requires Risk controls")
     return {
         "status": _require(f, "Status"),
         "capability": capability,
@@ -228,6 +231,7 @@ def _shape(task):
         if modern
         else f.get("Implementation guidance", ""),
         "prove": _require(f, "Test obligations"),
+        "risk": risk,
         "verify": _require(f, "Verification"),
         "return": _require(f, "Return boundary")
         if modern
@@ -438,6 +442,7 @@ def build_capsule(plan_text, brief_text, task_id):
         "Implement": shape["implement"]
         or "Return to the orchestrator for missing legacy guidance.",
         "Prove": shape["prove"],
+        "Risk controls": shape["risk"],
         "Verify": shape["verify"],
         "Return instead of guessing if": shape["return"]
         or "Return ambiguity to the orchestrator.",
@@ -454,7 +459,7 @@ def _synthetic(label, files, tasks):
         for n in range(1, tasks)
     )
     current = (
-        "### T-%03d — Current\n- Status: pending\n- Capability: standard\n- Covers: EO-001\n- Depends on: T-%03d\n- Change surface: src/current.py\n- Preserves: INV-001\n- Implementation intent: bounded\n  continuation\n- Test obligations: focused\n- Return boundary: ambiguity\n- Verification: python -m unittest\n- Completion evidence: pending"
+        "### T-%03d — Current\n- Status: pending\n- Capability: standard\n- Covers: EO-001\n- Depends on: T-%03d\n- Change surface: src/current.py\n- Preserves: INV-001\n- Implementation intent: bounded\n  continuation\n- Test obligations: focused\n- Risk controls: none\n- Return boundary: ambiguity\n- Verification: python -m unittest\n- Completion evidence: pending"
         % (tasks, tasks - 1)
     )
     plan = (

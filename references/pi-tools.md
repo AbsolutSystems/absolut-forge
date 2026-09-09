@@ -20,21 +20,21 @@ Use `/reload` after local skill changes, or start a new session. Skill descripti
 
 ## Planned Build
 
-Pi core has no native subagent primitive. Keep the invoking high-capability context as orchestrator and execute tasks directly unless the user has installed a trusted extension that exposes genuinely fresh bounded workers. Never pretend delegation occurred.
+Pi core has no native subagent primitive. Keep the invoking high-capability context as orchestrator, but do not start implementation unless the user has installed a trusted extension that exposes genuinely fresh bounded workers. Standard Build requires executor-owned production-code and test edits; never implement directly or pretend delegation occurred.
 
-When such a worker primitive exists, send one Task Capsule with relevant accepted clauses, direct dependency facts and source/tests, never the whole Brief/plan/history or inherited orchestrator dialogue. Apply the same capability tiers, write boundaries, fresh-context isolation and orchestrator validation as the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation.
+When such a worker primitive exists, send one Task Capsule with relevant accepted clauses, direct dependency facts and source/tests, never the whole Brief/plan/history or inherited orchestrator dialogue. Apply all execution-risk tiers, write boundaries, high-risk controls, fresh-context isolation and orchestrator validation from the shared planned contract. Standard methodology may use a fully disjoint parallel wave only when the extension supports isolation. Without that primitive, report the limitation and stop at the last clean boundary.
 
 New delegated starts are unavailable. A feature that records legacy delegated methodology resumes through `build` only when a trusted extension can still request its explicitly configured fixed executor and reasoning profile. Dispatch one fresh bounded task at a time and keep every production/test edit in that executor; otherwise stop at the clean boundary and never fall back to direct primary-context implementation.
 
 ## Clean-context Review
 
-Pi's normal Review handoff uses a fresh top-level session rather than an unavailable native subagent. After Build reaches `In Review` and commits its handoff, instruct the human to run:
+Pi's normal Review handoff uses a fresh high-capability top-level session rather than an unavailable native subagent. After Build reaches `In Review` and commits its handoff, instruct the human to select a high-capability model/profile, then run:
 
 ```text
 /new
 /skill:review absolutforge/features/{slug}/feature-brief.md absolutforge/features/{slug}/review.md
 ```
 
-The post-`/new` context is the fresh read-only reviewer context and may record Review mode `fresh`. Its startup package is only the Brief and accepted amendments, final Build Evidence, `base_commit..HEAD` diff, and changed/new tests. Load plan or history lazily only for a concrete coverage, lifecycle, or legacy-ownership question; never preload implementation conversation or conclusions.
+The post-`/new` context may record Review mode `fresh` only when its selected profile is high-capability. Its startup package is only the Brief and accepted amendments, final Build Evidence, `base_commit..HEAD` diff, and changed/new tests. Load plan or history lazily only for a concrete coverage, lifecycle, or legacy-ownership question; never preload implementation conversation or conclusions. If the selected profile cannot be confirmed high-capability, stop before writing Review.
 
-If a trusted extension provides a fresh reviewer primitive, dispatch exactly one generic read-only reviewer with the same bounded startup package instead. If Review is run in the Build session without either `/new` or a fresh worker, use that same bounded package inline and label it `advisory (not fully isolated)`.
+If a trusted extension provides a fresh reviewer primitive, dispatch exactly one read-only reviewer only when the extension guarantees a high-capability profile, preferably from a different model family than the implementation worker. If Review is run in the Build session without either `/new` or a fresh worker, use that same bounded package inline only when the current context is high-capability and label it `advisory (not fully isolated)`; otherwise stop before writing Review.

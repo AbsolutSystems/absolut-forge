@@ -68,6 +68,7 @@ PLAN = """## Context
 - Implementation intent: do the thing
   retaining continuation
 - Test obligations: prove it
+- Risk controls: none
 - Return boundary: return ambiguity
 - Verification: python -m unittest
 - Completion evidence: pending
@@ -98,6 +99,28 @@ class TestContextPackage(unittest.TestCase):
             result["Relevant dependency facts"], ["T-001: only this dependency fact"]
         )
         self.assertIn("Return instead of guessing if", result)
+        self.assertEqual(result["Risk controls"], "none")
+
+    def test_high_execution_capsule_projects_settled_risk_controls(self):
+        controls = (
+            "Decision: preserve mixed-version reads; assumptions: additive schema; "
+            "containment: feature flag; rollback: disable writes; proof: verify old and new readers."
+        )
+        plan = PLAN.replace("- Capability: standard", "- Capability: high", 1).replace(
+            "- Risk controls: none", "- Risk controls: " + controls, 1
+        )
+        capsule = build_capsule(plan, BRIEF, "T-002")
+        self.assertEqual(capsule["Risk controls"], controls)
+        self.assertEqual(capsule["Own"], "b.py\ntests/test_b.py")
+        self.assertNotIn("Task graph", str(capsule))
+
+    def test_high_execution_capsule_rejects_missing_or_none_risk_controls(self):
+        high = PLAN.replace("- Capability: standard", "- Capability: high", 1)
+        with self.assertRaisesRegex(ContextError, "high task requires Risk controls"):
+            build_capsule(high, BRIEF, "T-002")
+        missing = high.replace("- Risk controls: none\n", "", 1)
+        with self.assertRaisesRegex(ContextError, "high task requires Risk controls"):
+            build_capsule(missing, BRIEF, "T-002")
 
     def test_behavior_slice_capsule_keeps_wiring_tests_and_return_boundary(self):
         owned = "src/filter.py\nsrc/list.py\nsrc/routes.py\ntests/test_filter.py\ntests/test_list.py"

@@ -7,8 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-09-09
+
+### Changed
+
+- Standard Build now uses a compiler/executor boundary: the high-capability
+  owner resolves intent and difficult decisions, while fresh workers own every
+  production-code and test edit at low, standard and high execution risk.
+- Capability tiers now describe execution risk, always select preparation and
+  validation intensity, and select an executor profile when the host mapping
+  differentiates tiers. High execution requires settled
+  decisions, assumptions, containment, rollback when applicable and
+  intermediate proof points in the worker package.
+- Missing required worker profiles now stop standard Build at the last clean
+  boundary instead of falling back to owner implementation. Pi therefore needs
+  a trusted fresh-worker extension for Build implementation.
+- Existing standard plans keep completed evidence and adopt worker ownership
+  for pending work; historical pending high tasks gain Risk controls through a
+  plan change before dispatch. Legacy delegated resumes retain their fixed
+  executor contract unchanged.
+
+### Added
+
+- Generated planned Task Capsules now project `Risk controls`, while remaining
+  compatible with older low/standard task definitions that omit the field.
+
 ### Fixed
 
+- Scout fixes and autonomous final-verification corrections now preserve the
+  worker-only production-code/test ownership boundary instead of using generic
+  action wording that a Build owner could interpret as inline edit authority.
+- Claude, opencode and Pi now require a confirmed high-capability reviewer for
+  full or advisory Review, matching the shared Review tier contract.
+- Planned capsule generation now rejects `high` tasks with missing or `none`
+  Risk controls instead of silently dispatching an under-specified worker.
+- Codex Review now requests a fresh Astra reviewer explicitly, with fresh Sol
+  as its high-capability fallback, instead of leaving reviewer capability to an
+  inherited generic-agent default.
 - Codex Build owners now attempt native exact-profile Luna dispatch before
   declaring bounded worker execution unavailable; being launched as a nested
   owner no longer qualifies as a fallback reason.

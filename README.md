@@ -2,9 +2,26 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.9.1.** Long-running Codex Builds now provide regular,
-evidence-based progress updates while preserving the fresh-owner isolation and
-durable checkpoint model.
+**Current release: 0.10.0.** Build now separates high-capability decision
+compilation and supervision from worker-owned implementation at every
+execution-risk tier.
+
+## Compiler-first Build in 0.10.0
+
+Build separates reasoning from execution. The high-capability owner compiles
+accepted intent and repository evidence into bounded work, resolves difficult
+architecture, migration, security/data, concurrency and state decisions, and
+then supervises fresh workers. Workers own every production-code and test edit
+at low, standard and high execution risk. The owner validates diffs, tests,
+integration and lifecycle evidence but never implements those edits itself.
+
+Capability now describes execution risk rather than implementation ownership.
+High execution requires a settled decision, explicit assumptions, failure
+containment, rollback when applicable and intermediate proof points. New facts
+that invalidate those controls return to the owner for recompilation before a
+fresh worker continues. If the required worker profile is unavailable, Build
+stops at the last clean boundary instead of silently falling back to owner
+implementation.
 
 ## Build progress feedback in 0.9.1
 
@@ -29,11 +46,10 @@ surface; larger findings are recorded without unapproved edits.
 
 Build owners retain architecture, migration, security/data, concurrency and
 state decisions. When resolving one of those decisions creates settled
-contracts, bounded ownership and a meaningful gate, Build reclassifies the
-remaining coherent implementation and delegates low/standard work. Work stays
-high when execution itself crosses the risk boundary, and the plan or outcome
-evidence records the concrete reason. This does not permit per-file splitting
-or handoffs that prewrite most of the patch merely to reach a cheaper tier.
+contracts, bounded ownership and a meaningful gate, Build classifies the
+remaining coherent implementation on its own execution risk. High execution
+stays worker-owned but receives stronger controls and proof. This does not
+permit per-file splitting or handoffs that prewrite most of the patch.
 
 ## Conversation-derived Discuss in 0.8.1
 
@@ -78,9 +94,9 @@ implementation/test checkpoint and the boundary before final verification
 rotate remaining work to another fresh Sol owner, rehydrated from durable
 artifacts and Git rather than accumulated dialogue.
 
-Settled low/standard outcomes and local corrections default to fresh bounded
-workers. The owner keeps intent, shared contracts, high-tier decisions,
-validation, checkpoints and final integration. Repetitive inventories and
+Settled low/standard/high outcomes and every code or test correction go to
+fresh bounded workers. The owner keeps intent, shared contracts, high-tier
+decisions, validation, checkpoints and final integration. Repetitive inventories and
 verified classifications become durable evidence instead of being rebuilt in
 later turns. Each worker runs and repairs its own focused gate until green;
 Sol reruns it only for missing, stale or doubtful evidence. One bounded
@@ -144,17 +160,17 @@ feature-family planning.
 
 ### Autonomous execution
 
-Use a high-capability coding model as the owner of the feature. It chooses local implementation steps, optionally persists an outcome-oriented `execution-map.md`, verifies coherent outcomes, then performs final whole-feature checks.
+Use a high-capability model as the owner of the feature. It compiles each outcome just in time, resolves controlling decisions, optionally persists an outcome-oriented `execution-map.md`, validates worker results, then performs final whole-feature checks without editing production code or tests.
 
-The owner delegates one bounded low/standard outcome at a time by default, including implementation and focused tests. An inline exception is allowed only when completing the work requires fewer owner interactions than preparing and validating the handoff, and its reason is recorded. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. This requires no implementation plan or strategy change.
+The owner dispatches one bounded low, standard or high outcome at a time, including implementation and focused tests. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. High execution additionally receives the settled decision, assumptions, containment, rollback when applicable and intermediate proof points. This requires no implementation plan or strategy change.
 
-In Codex, the Build owner is a fresh Sol `medium` agent; local low-tier work uses Luna `high` and standard behavior slices use Luna `xhigh`. Local test-gate corrections retain their low/standard tier and return to a fresh worker, while high-risk decisions remain with the Sol owner. Newly discovered ambiguity or risk returns to the owner, who can clarify the scope or take over. The owner checks the diff and tests and alone updates lifecycle evidence and commits. A nested owner invokes native agent dispatch directly and may call a worker unavailable only after the primitive is absent or an exact-profile dispatch attempt fails; its own agent role is not a reason to skip Luna. The owner then reports that concrete limitation and continues inline when capable of handling the work. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
+In Codex, the Build owner is a fresh Sol `medium` agent; low execution uses Luna `high`, standard uses Luna `xhigh`, and high uses Luna `max`. Every production-code and test correction returns to a fresh Luna worker at its classified tier, while difficult decisions remain with Sol. Newly discovered ambiguity or risk returns to Sol for a corrected contract and fresh dispatch. Sol checks the diff and tests and alone updates lifecycle evidence and commits. A nested owner invokes native agent dispatch directly and may call a worker unavailable only after the primitive is absent or an exact-profile dispatch attempt fails; its own agent role is not a reason to skip Luna. It reports concrete unavailability and stops at the last clean boundary. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Workers inventory exact tests added or changed. Final verification reuses current green evidence, reruns stale or doubtful targets, and adds targeted integration/e2e checks; a full suite needs cross-cutting risk, unreliable target selection, a repository mandate, or no required CI fallback. The number of tests follows distinct risks, not the number of outcomes.
 
-### Planned execution — orchestrator and capability-routed workers
+### Planned execution — compile, execute and integrate
 
-Use this higher-overhead strategy when durable decomposition, coordination of multiple delegated tasks, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, capability tiers, Test Obligations, fast green task gates, and final verification. The final gate is built from task test inventories, reusable current evidence, focused affected regressions, targeted integration/e2e checks, and the primary accepted path; broad unrelated coverage may be deferred to required PR CI. The orchestrator validates every result and the semantic value of its tests, owns plan changes and checkpoint commits, and executes high-risk tasks when appropriate.
+Use this higher-overhead strategy when durable decomposition, coordination of multiple delegated tasks, or cross-session resume justifies `implementation-plan.md`. The plan is a bounded dependency graph with change surfaces, invariants, execution-risk tiers, Test Obligations, fast green task gates, and final verification. The final gate is built from task test inventories, reusable current evidence, focused affected regressions, targeted integration/e2e checks, and the primary accepted path; broad unrelated coverage may be deferred to required PR CI. The orchestrator compiles the plan, resolves difficult decisions, validates every result and the semantic value of its tests, and owns plan changes and checkpoint commits. Fresh workers execute every implementation task and correction.
 
 New standard plans favor complete behavior slices: implementation, wiring and focused tests can belong to one bounded task across several files. Split at meaningful dependency, acceptance, ownership or risk boundaries, rather than making a task per file or separating code from its tests. Larger tasks still require settled shared contracts and explicit return boundaries; unrelated outcomes stay separate.
 
@@ -286,7 +302,7 @@ register while their full evidence remains in the Feature Record.
 
 Workflow contracts use semantic tiers rather than model names. See `references/model-routing.md`.
 
-Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#build-owner) uses a fresh Sol `medium` owner and specifies Luna worker profiles; the [Claude Code mapping](references/claude-tools.md#planned-build) specifies worker models and reasoning profiles by task capability while retaining its invoking orchestrator. High tasks stay with the owner, while bounded standard tasks may include a complete behavior slice and its tests. Missing worker profiles use an explicitly reported owner fallback only under standard methodology. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
+Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#build-owner) uses a fresh Sol `medium` owner and Luna workers for every execution-risk tier; the [Claude Code mapping](references/claude-tools.md#planned-build) specifies its worker model and reasoning profile while retaining the invoking orchestrator. High tasks remain worker-owned after the orchestrator settles their controlling decisions. Missing required worker profiles stop Build at the last clean boundary. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
 
 Assess this policy by the cost of an accepted task, including preparation, validation and corrections. Higher worker reasoning effort and fewer handoffs are not measured token savings by themselves.
 
