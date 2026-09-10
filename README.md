@@ -22,6 +22,22 @@ with `--check`; they are non-authoritative caches of canonical clauses. The
 Codex standard worker candidate is Luna `high`; Git release 0.10.1 retains the
 Luna `xhigh` comparison baseline.
 
+### Stable findings across repeated Review
+
+A repeated independent Review receives a compact continuity registry from the
+existing `review.md`: finding ID and severity, stable root issue, resolution,
+smallest correction, correction-attempt count and last reviewed revision. The
+fresh reviewer still verifies every finding independently against current
+intent, diff and tests; earlier conclusions are navigation evidence, not
+authority.
+
+The same root issue keeps its `F-ID` even when its symptom, line or affected
+file changes. A new ID is reserved for a distinct root cause. New findings
+start with zero correction attempts, Review-only reruns do not increment the
+count, and two evidenced failed Build corrections escalate to the human instead
+of opening another ordinary Build/Review loop. Older reports without the new
+fields remain valid and treat the attempt count as unknown rather than zero.
+
 ## Automatic measurement and reliable dispatch in 0.10.1
 
 An opt-in Codex collector snapshots cumulative host counters before Build and

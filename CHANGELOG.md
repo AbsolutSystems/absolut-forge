@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Repeated independent Review now receives a bounded continuity registry,
-  reuses finding IDs for the same root issue and escalates after two evidenced
-  failed corrections instead of silently starting another correction loop.
+- Repeated independent Review now receives a bounded continuity registry with
+  stable `Root issue` and `Correction attempts` fields. It reuses finding IDs
+  for the same root cause, keeps earlier conclusions non-authoritative, and
+  escalates after two evidenced failed Build corrections instead of silently
+  starting another correction loop. Older reports remain compatible and treat
+  a missing attempt count as unknown rather than zero.
 
 ## [0.11.0] - 2026-09-10
 
