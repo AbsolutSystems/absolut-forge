@@ -242,10 +242,20 @@ def _delta(current, baseline):
 
 
 def _role_stage(session):
-    path = session["agent_path"].lower()
+    # Ancestor names describe other agents; only the leaf identifies this role.
+    path = session["agent_path"].lower().rstrip("/").rsplit("/", 1)[-1]
     model = (session["model"] or "").lower()
     if "review" in path:
         return "reviewer", "review", 0
+    if "advisor" in path:
+        return "owner", "validation", 0
+    correction = "correction" in path or "fix" in path
+    if "worker" in path:
+        return "worker", "correction" if correction else "implementation", int(correction)
+    if "owner" in path or session["thread_source"] != "subagent":
+        stage = "correction" if correction else "final_verification" if "final" in path else "bootstrap"
+        return "owner", stage, int(correction)
+    # Compatibility for historical captures before explicit role task names.
     if "correction" in path or "_fix" in path or "/fix" in path:
         return ("worker" if "luna" in model else "owner"), "correction", 1
     if "final" in path:
@@ -281,7 +291,7 @@ def finish(repo, session_root, outcome, gates, observed_blockers, escaped_blocke
             raise CodexCollectorError("newly discovered session predates capture start")
         role, stage, corrections = _role_stage(session)
         rotations = []
-        if role == "owner" and session["thread_source"] == "subagent":
+        if role == "owner" and stage != "validation" and session["thread_source"] == "subagent":
             rotations = ["build_invocation" if owner_launch == 0 else "implementation_checkpoint"]
             if stage == "final_verification":
                 rotations = ["final_verification"]

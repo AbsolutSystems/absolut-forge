@@ -88,12 +88,24 @@ rtk python3 /path/to/installed/absolutforge/tools/codex_benchmark.py \
 ```
 
 When capture was explicitly requested, the Codex mapping runs `start` before
-the Build-owner handoff and `finish` after release-ready independent Review.
+in-session Build work or the Build-owner handoff and `finish` after release-ready
+independent Review.
 Transient state is stored below the repository's Git directory, so it neither
 dirties checkpoints nor enters commits. Owner rotations, Luna workers,
 corrections and separate Review sessions are included. Only `session_meta`,
 `turn_context` and `token_usage_record` lines are parsed; prompt/message records
 are ignored and never copied into output.
+
+During capture, use the Codex mapping's role task names (`build_owner`,
+`build_advisor`, `build_worker`, `build_worker_correction`, `build_review`),
+optionally suffixed for uniqueness. Classification uses the leaf assignment,
+so a Luna owner stays an owner and a worker does not inherit its parent's role.
+The existing schema accounts for advisors as owner/validation events, including
+their tokens and launches but no owner rotation. An in-session owner has zero
+owner launches. Unnamed historical subagents retain the older model heuristic;
+their inferred roles/stages are not host-measured facts. Rotation reasons remain
+inferred from launch order and stage, not evidence of a specific context-pressure
+signal. Keep new routing variants distinct from the retained release baselines.
 
 This adapter targets the currently observed Codex session format and is not a
 public OpenAI log-format contract. It fails closed on unknown shapes or counters

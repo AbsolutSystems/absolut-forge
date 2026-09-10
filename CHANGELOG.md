@@ -7,8 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Codex autonomous and standard planned Builds keep the active Luna `xhigh`
+  or Terra owner without a launcher; other or unconfirmed profiles hand off to
+  Luna `xhigh`. Legacy delegated ownership and executor profiles are preserved.
+- Luna and Terra owners obtain bounded Sol `medium` advice for sensitive or
+  unresolved decisions and after two failed attempts at the same blocker.
+  Advisors can inspect primary sources; decision evidence is reused while valid.
+- Final verification reuses current owner-produced checks as well as worker
+  results; lifecycle transitions alone do not require database/migration reruns.
+
 ### Fixed
 
+- Codex benchmark capture distinguishes Luna owners from workers by leaf task
+  assignment and counts advisors as owner validation without an owner rotation.
 - Repeated independent Review now receives a bounded continuity registry with
   stable `Root issue` and `Correction attempts` fields. It reuses finding IDs
   for the same root cause, keeps earlier conclusions non-authoritative, and

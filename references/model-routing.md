@@ -1,16 +1,16 @@
 # Model Routing Contract
 
-Provider and model names are host deployment mechanics, not shared workflow or artifact semantics. Standard workflows separate high-capability compilation and supervision from bounded execution: the Build owner resolves intent, decisions and risk controls, while fresh workers own every production-code and test edit. Capability tier always changes preparation and validation intensity and may select a different worker profile when the active host mapping differentiates tiers; it never changes that ownership boundary. Legacy delegated methodology still binds one fixed executor profile in each active host mapping; new plans cannot select delegated methodology.
+Provider and model names are host deployment mechanics, not shared workflow or artifact semantics. Standard workflows separate operational ownership and high-capability decision support from bounded execution: the Build owner resolves intent, decisions and risk controls using the active host's required advice, while fresh workers own every production-code and test edit. Capability tier always changes preparation and validation intensity and may select a different worker profile when the active host mapping differentiates tiers; it never changes that ownership boundary. Legacy delegated methodology still binds one fixed executor profile in each active host mapping; new plans cannot select delegated methodology.
 
 | Role | Tier | Priority |
 | --- | --- | --- |
 | Discuss / Brief | high | intent fidelity, repository comprehension, product/architecture judgment |
-| Autonomous Build owner | high | whole-feature ownership, difficult decisions, verification |
+| Autonomous Build owner | host-mapped owner with high-capability decision support | whole-feature ownership, difficult decisions, verification |
 | Autonomous outcome worker | low / standard / high | all bounded implementation and focused tests after owner compilation |
-| Planned Build orchestrator | high | decomposition, dependency analysis, worker supervision, integration |
+| Planned Build orchestrator | host-mapped owner with high-capability decision support | decomposition, dependency analysis, worker supervision, integration |
 | Planned task worker | low / standard / high | all bounded implementation according to execution risk |
 | Delegated planned executor | fixed host mapping | all production/test edits from a senior-authored bounded plan |
-| Diagnostic advisor | high | root-cause reasoning from a small evidence package |
+| Decision / diagnostic advisor | high | bounded planning, risk analysis and root-cause reasoning from primary evidence |
 | Review | high, preferably independent | fresh failure modes and intent fidelity |
 
 ## Practical mappings
@@ -18,6 +18,22 @@ Provider and model names are host deployment mechanics, not shared workflow or a
 Model and reasoning profiles belong exclusively to the active host mapping. Read only that mapping, including its fixed executor profile when resuming legacy delegated state.
 
 Prefer a different model family for Review when practical, because correlated implementation/review failures are less useful than independent failure modes.
+
+## Decision advice
+
+A host may retain a high-capability owner or map operational ownership to a lower-cost profile with mandatory high-capability advice. Use the active host mapping to determine which owners must consult and the exact advisor profile. Advice supplies evidence; the owner retains lifecycle, scope, decision recording and acceptance responsibility.
+
+For owners requiring advice, consult before dependent implementation or acceptance when:
+
+- a decision or claimed guarantee concerns authorization/security, data integrity, migration strategy, public-contract compatibility, concurrency/state transitions, or a large blast radius;
+- architecture, cross-task dependencies, conflicting requirements/evidence or material ambiguity remain unresolved;
+- two attempts have failed to resolve the same blocker, even if the owner considers the next retry routine.
+
+Assess the behavior being changed or prescribed, not the file extension: an operational runbook for role updates or a migration can trigger advice despite being documentation-only. Planning for settled bounded work, inventories, routine gates, lifecycle updates and commits do not trigger consultation on their own. The owner may also ask one bounded question voluntarily; confidence alone never waives a mandatory trigger.
+
+Consult once per coherent decision, with accepted clauses and primary evidence accessible to the advisor. Preserve the decision, assumptions, affected boundary and proof obligations in existing Outcome evidence or plan/PC records. Reuse that decision across unchanged dependent tasks; reconsult when relevant evidence invalidates an assumption, introduces a new boundary or leaves the required decision unresolved. Historical decisions without sufficient evidence must be checked before dependent work resumes; do not rewrite completed history. After two failed attempts, obtain diagnosis and a changed decision, decomposition or proof plan before another attempt, rather than issuing a substantially identical third capsule.
+
+A short owner summary is navigation, not the advisor's sole evidence. The advisor may inspect relevant source, tests and the diff read-only and must state unresolved facts. Required advice must complete before dependent work proceeds; unavailable advice follows the host's stop rule. Material intent changes still require accepted amendments. This is internal Build decision support, not invocation of the optional public `consult` stage, and never replaces independent Review.
 
 ## Planned task routing
 
@@ -31,7 +47,7 @@ Use the lowest capability tier that accurately describes the execution risk of a
 
 Classify unresolved judgment separately from execution risk. Architecture, migration strategy, security/data policy, concurrency semantics, public contracts and material ambiguity are owner decisions, not implementation tasks. The owner investigates and records those decisions before dispatch. The resulting implementation may still be `high` when executing the settled design crosses a risky boundary; it remains worker-owned and carries explicit assumptions, containment, rollback when applicable, intermediate proof obligations and return conditions. If owner acceptance is required between two implementation phases, split them at that real dependency boundary instead of pausing one task. Do not manufacture decision-only work, prewrite most of the patch in the handoff, or downgrade execution risk after settling the design.
 
-A worker must not compensate for an invalid plan by broad redesign. It returns a deviation to the high-capability orchestrator. The owner then repairs the decision or task contract and dispatches a fresh bounded worker; after two failed attempts at the same blocker, it must re-open the underlying decision or decomposition instead of issuing a substantially identical capsule. The Build owner never edits production code or tests under standard methodology. Evaluate execution by accepted-task cost including preparation, validation and correction rounds, not worker token price alone; no token-savings claim follows from this policy.
+A worker must not compensate for an invalid plan by broad redesign. It returns a deviation to the owner. The owner then repairs the decision or task contract and dispatches a fresh bounded worker; after two failed attempts at the same blocker, it must re-open the underlying decision or decomposition instead of issuing a substantially identical capsule. The Build owner never edits production code or tests under standard methodology. Evaluate execution by accepted-task cost including preparation, validation and correction rounds, not worker token price alone; no token-savings claim follows from this policy.
 
 ## Autonomous outcome routing
 

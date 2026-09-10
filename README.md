@@ -7,11 +7,37 @@ Codex owner rotation, deterministic owner/final packages, compiled planned
 runtime projections and Luna `high` for standard work. It makes no efficiency
 claim until paired 0.10.1 versus 0.11.0 runs are complete.
 
+## Cost-aware Codex ownership (unreleased)
+
+Autonomous and standard planned Build continue in the current session when its
+effective profile is Luna `xhigh` or Terra at its current reasoning effort.
+Other or unconfirmed profiles hand off to a fresh Luna `xhigh` owner. There is
+no launcher for an eligible in-session owner; a launcher exists only after an
+actual ownership handoff. Legacy delegated resumes retain their Sol `medium`
+owner and fixed Luna executor.
+
+The operational owner obtains bounded read-only Sol `medium` advice for
+security/authorization, data integrity, migrations, public-contract compatibility,
+concurrency/state risks, unresolved architecture or conflicting evidence, and
+after two failed attempts at the same blocker. This includes runbooks prescribing
+sensitive operations. Advisors can inspect primary sources; their findings become
+existing decision evidence, not a new lifecycle stage. Reuse decisions while
+their assumptions remain valid. Routine gates, checkpoints and settled small
+outcomes need no consultation. Independent Review remains separate.
+
+Owner and worker write boundaries remain unchanged. Current green verification
+evidence can be reused even when produced by the owner: a final-verification
+boundary alone does not require another temporary database or migration run.
+The complete final diff and accepted outcomes still require verification.
+These are cost-control hypotheses, not measured savings; benchmark through
+accepted independent Review including consultations and corrections.
+
 ## Experimental token-efficient runtime in 0.11.0
 
 Codex keeps ordinary owners across resumable checkpoints and rotates only for
 context pressure, a materially changed decision frame, an independent
-high-risk/final phase, unsafe compaction or a later explicit Build invocation.
+high-risk/final phase or unsafe compaction. A later explicit Build invocation
+reapplies owner selection and resumes durable state.
 `tools/context_package.py owner` and `final` reconstruct navigation, freshness,
 coverage, ownership and blocker checks from durable artifacts and Git while
 leaving semantic test and full-diff judgment with the owner.
@@ -50,13 +76,13 @@ aggregation commands.
 
 Codex Build launchers and nested owners now call `spawn_agent` directly with
 the exact required profile. `list_agents` is only an inventory of already
-running agents: seeing `/root` alone is not evidence that a fresh Sol owner or
+running agents: seeing `/root` alone is not evidence that a required owner or
 Luna worker cannot be created. Build reports unavailability only after the
 primitive is genuinely absent or an exact-profile dispatch attempt fails.
 
 ## Compiler-first Build in 0.10.0
 
-Build separates reasoning from execution. The high-capability owner compiles
+Build separates reasoning from execution. The host-mapped owner compiles
 accepted intent and repository evidence into bounded work, resolves difficult
 architecture, migration, security/data, concurrency and state decisions, and
 then supervises fresh workers. Workers own every production-code and test edit
@@ -76,7 +102,8 @@ implementation.
 Codex Build owners send a compact status at every material milestone and at
 least once every five minutes while work remains active. Each update says what
 finished, what is happening now, what comes next, and whether anything is
-blocked. If an owner stays silent, the launcher requests a status without
+blocked. Direct owners report to the user. When a launcher exists and an owner
+stays silent, the launcher requests a status without
 interrupting the Build and reports only the last confirmed stage. These
 transient updates are never committed as Build Evidence or passed to a fresh
 successor owner.
@@ -133,23 +160,12 @@ and adds focused regressions plus targeted integration/e2e checks for changed
 boundaries. Full local suites are reserved for cross-cutting or unselectable
 risk, repository mandates, or the absence of a required CI gate.
 
-## Cost-aware Build ownership in 0.7.1
+## Earlier ownership policy
 
-On Codex, a Build invocation launches one fresh GPT-5.6 Sol owner with medium
-reasoning before repository inspection or mutation. The invoking context only
-handles compact rotation signals and relays the result. Every clean
-implementation/test checkpoint and the boundary before final verification
-rotate remaining work to another fresh Sol owner, rehydrated from durable
-artifacts and Git rather than accumulated dialogue.
-
-Settled low/standard/high outcomes and every code or test correction go to
-fresh bounded workers. The owner keeps intent, shared contracts, high-tier
-decisions, validation, checkpoints and final integration. Repetitive inventories and
-verified classifications become durable evidence instead of being rebuilt in
-later turns. Each worker runs and repairs its own focused gate until green;
-Sol reruns it only for missing, stale or doubtful evidence. One bounded
-read-only Astra advisor may be used for an exact unresolved high-tier decision;
-it never owns or inherits the Build.
+Release 0.7.1 introduced a fresh Sol owner and checkpoint rotation. Release
+0.11.0 made rotation conditional; the current unreleased Codex policy above
+also allows Luna and Terra to retain in-session ownership with Sol advice.
+Historical release behavior remains documented in [CHANGELOG.md](CHANGELOG.md).
 
 ## Runtime context in 0.7.0
 
@@ -208,11 +224,11 @@ feature-family planning.
 
 ### Autonomous execution
 
-Use a high-capability model as the owner of the feature. It compiles each outcome just in time, resolves controlling decisions, optionally persists an outcome-oriented `execution-map.md`, validates worker results, then performs final whole-feature checks without editing production code or tests.
+Use the active host's owner profile and required high-capability decision support. It compiles each outcome just in time, resolves controlling decisions, optionally persists an outcome-oriented `execution-map.md`, validates worker results, then performs final whole-feature checks without editing production code or tests.
 
 The owner dispatches one bounded low, standard or high outcome at a time, including implementation and focused tests. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. High execution additionally receives the settled decision, assumptions, containment, rollback when applicable and intermediate proof points. This requires no implementation plan or strategy change.
 
-In Codex, the Build owner is a fresh Sol `medium` agent; low and standard execution use Luna `high`, and high uses Luna `max`. Every production-code and test correction returns to a fresh Luna worker at its classified tier, while difficult decisions remain with Sol. Newly discovered ambiguity or risk returns to Sol for a corrected contract and fresh dispatch. Sol checks the diff and tests and alone updates lifecycle evidence and commits. A nested owner invokes native agent dispatch directly and may call a worker unavailable only after the primitive is absent or an exact-profile dispatch attempt fails; its own agent role is not a reason to skip Luna. It reports concrete unavailability and stops at the last clean boundary. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. The Luna `high` standard mapping is an experimental candidate and does not establish measured cost savings.
+In Codex, Luna `xhigh` or Terra can continue as the owner without a launcher; other profiles hand off to Luna `xhigh`. Required Sol advice precedes sensitive decisions and dependent work. Low and standard execution use fresh Luna `high` workers, and high execution uses Luna `max`. The owner checks the diff and tests, records decisions, updates lifecycle evidence and commits; every production-code and test correction stays worker-owned. Native dispatch failure is reported at the last clean boundary. See [owner selection and advice](references/codex-tools.md#build-owner) and [outcome routing](references/model-routing.md#autonomous-outcome-routing). These mappings do not establish measured cost savings.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Workers inventory exact tests added or changed. Final verification reuses current green evidence, reruns stale or doubtful targets, and adds targeted integration/e2e checks; a full suite needs cross-cutting risk, unreliable target selection, a repository mandate, or no required CI fallback. The number of tests follows distinct risks, not the number of outcomes.
 
@@ -222,9 +238,9 @@ Use this higher-overhead strategy when durable decomposition, coordination of mu
 
 New standard plans favor complete behavior slices: implementation, wiring and focused tests can belong to one bounded task across several files. Split at meaningful dependency, acceptance, ownership or risk boundaries, rather than making a task per file or separating code from its tests. Larger tasks still require settled shared contracts and explicit return boundaries; unrelated outcomes stay separate.
 
-The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
+The planned path separates operational ownership from bounded implementation. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. Codex rotates between fresh Sol owners only at documented value triggers; on other hosts, invoke `build` again at a clean task boundary when a fresh-owner primitive is unavailable. Use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
+The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh host-mapped owner to continue without the previous conversation. Codex rotates owners only at documented value triggers; on other hosts, invoke `build` again at a clean task boundary when a fresh-owner primitive is unavailable. Use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
 ### Legacy delegated resumes
 
@@ -291,7 +307,7 @@ Pi:
 /skill:consult absolutforge/features/my-feature/implementation-plan.md
 ```
 
-The consulting session appends immutable `C-{NNN}` findings to `absolutforge/features/{slug}/consult-{slug}.md`. The receiving `discuss` or Build context decides whether they still apply and records accepted changes in its own artifact. Build never offers, awaits, or settles consultation; findings are evidence, never authorization.
+The consulting session appends immutable `C-{NNN}` findings to `absolutforge/features/{slug}/consult-{slug}.md`. The receiving `discuss` or Build context decides whether they still apply and records accepted changes in its own artifact. Build never offers, awaits, or settles this optional public Consult stage; findings are evidence, never authorization. Required internal decision advice follows the active host mapping and does not create a Consult report.
 
 ## Skills
 
@@ -350,7 +366,7 @@ register while their full evidence remains in the Feature Record.
 
 Workflow contracts use semantic tiers rather than model names. See `references/model-routing.md`.
 
-Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#build-owner) uses a fresh Sol `medium` owner and Luna workers for every execution-risk tier; the [Claude Code mapping](references/claude-tools.md#planned-build) specifies its worker model and reasoning profile while retaining the invoking orchestrator. High tasks remain worker-owned after the orchestrator settles their controlling decisions. Missing required worker profiles stop Build at the last clean boundary. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
+Deployment-specific mappings live only in the active host reference. For new standard builds, the [Codex mapping](references/codex-tools.md#build-owner) retains an eligible Luna `xhigh` or Terra owner in-session, otherwise dispatches Luna `xhigh`, with required Sol advice and Luna workers for every execution-risk tier; the [Claude Code mapping](references/claude-tools.md#planned-build) specifies its worker model and reasoning profile while retaining the invoking orchestrator. High tasks remain worker-owned after the orchestrator settles their controlling decisions. Missing required worker profiles stop Build at the last clean boundary. Legacy delegated builds retain their fixed profile and ownership. Cross-family Review is preferable when available.
 
 Assess this policy by the cost of an accepted task, including preparation, validation and corrections. Higher worker reasoning effort and fewer handoffs are not measured token savings by themselves.
 

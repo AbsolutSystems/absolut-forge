@@ -527,7 +527,7 @@ class RuntimeContractTests(unittest.TestCase):
         ])
         for obligation in (
             "For new standard planned builds",
-            "designated Sol Build owner",
+            "selected Build owner",
             "explicit model and reasoning-effort overrides for every worker",
             'fork_turns="none"',
             "exact requested worker profile is unavailable",
@@ -539,7 +539,7 @@ class RuntimeContractTests(unittest.TestCase):
             "Pending standard tasks adopt this worker-owned mapping on resume",
             "historical pending `high` task first receives Risk controls",
             "Each Luna worker fixes local failures and repeats its focused gate",
-            "Corrections discovered later by Sol validation or final verification",
+            "Corrections discovered later by owner validation or final verification",
         ):
             self.assertIn(obligation, current)
         legacy = mapping.split("### Legacy delegated resume", 1)[1]
@@ -551,60 +551,73 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertNotIn("xhigh", legacy)
         self.assertIn("stop without substituting another model or taking over implementation", legacy)
 
-    def test_codex_build_owner_rotation_and_bounded_astra_advice(self):
+    def test_codex_owner_selection_and_bounded_advice_contract(self):
         owner = section(read("references/codex-tools.md"), "Build owner")
+        rows = re.findall(r"^\| (.*?) \| (.*?) \|$", owner, re.M)
+        actions = dict(rows[2:])
+        self.assertEqual(set(actions), {
+            "`gpt-5.6-luna` with `xhigh` reasoning",
+            "`gpt-5.6-terra` with any current reasoning effort",
+            "Any other or unconfirmed profile",
+        })
+        self.assertIn("no launcher or owner spawn", actions["`gpt-5.6-luna` with `xhigh` reasoning"])
+        self.assertIn("preserve that effort", actions["`gpt-5.6-terra` with any current reasoning effort"])
+        self.assertIn("fresh `gpt-5.6-luna` owner with `xhigh`", actions["Any other or unconfirmed profile"])
         for obligation in (
-            "`gpt-5.6-sol` agent with `medium` reasoning",
-            "`Role: Codex Build owner`",
-            'fork_turns="none"',
-            "Before reading the Brief, runtime or repository evidence",
-            "announce the handoff to the user with the exact model and reasoning effort",
-            "a concise assignment describing what the owner will work on",
-            "the context being passed",
-            "state that no conversation is inherited",
-            "launcher waits and relays a completed result",
-            "only the `ROTATE` control envelope defined below plus the transient progress relay",
+            "effective model and reasoning effort reported for the active session",
+            "not a config default",
+            "never recursively dispatch another owner to repair confirmation",
+            "role marker alone is not proof of the effective profile",
+            "Legacy delegated resumes keep a fresh `gpt-5.6-sol` owner",
+            "Do not route legacy ownership through the standard table",
+            "does not merge owner and worker write authority",
+            "stop before Build mutation",
+            "no conversation is inherited",
+            "only the `ROTATE` control envelope",
             "its existence alone never triggers rotation",
-            "reliable host context-pressure signal exceeds its configured threshold",
-            "substantial `PC-`/replan or long diagnosis",
-            "materially independent high-risk phase",
-            "final verification needs independence",
-            "durable facts cannot be compacted safely",
-            "explicit later Build invocation",
-            "returns only `ROTATE: {canonical Build command}`",
-            "announces the successor's exact model and effort",
-            "resume the named canonical Build command from durable repository state",
-            "only the owner marker and canonical command are passed",
+            "does not by itself force an eligible session to spawn",
+            "becomes the launcher for one fresh successor",
             "never build a nested successor chain",
-            "final verification needs independence",
-            "Pass no conversation or raw-log summary",
-            "`gpt-6-astra` advisor with `low` reasoning",
-            "read-only",
-            "Astra is never the Build owner",
+            "only the owner marker and canonical command are passed",
+            "fresh read-only `gpt-5.6-sol` advisor with `medium` reasoning",
+            "Give the advisor read-only repository access",
             "does not edit, commit, inherit the Build conversation or take over execution",
-            "recorded legacy delegated executor remains fixed",
+            "stop the dependent work at the last clean boundary",
+            "do not call `list_agents` first",
+            "absent from the actual tool registry",
+            "direct attempted dispatch with the required model and reasoning effort",
         ):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, owner)
-        for dispatch_obligation in (
-            "explicit authorization for the nested owner",
-            "native `spawn_agent` primitive",
-            "result containing only `/root` means that no child is running",
-            "Do not query or interpret the active-agent list",
-            "do not call `list_agents` first",
-            "`list_agents` reports existing agents only",
-            "being a nested owner does not prove",
-            "absent from the actual tool registry",
-            "direct attempted dispatch with the required model and reasoning effort",
-            "without that direct attempt, violates this mapping",
-            "Report the concrete missing primitive or dispatch error",
-            "absence of a predeclared bounded worker is not unavailability",
-        ):
-            with self.subTest(dispatch_obligation=dispatch_obligation):
-                self.assertIn(dispatch_obligation, owner)
         entry = read("skills/build/SKILL.md")
         self.assertIn("Before loading runtime or repository evidence", entry)
-        self.assertIn("launcher that hands off ownership does not inspect artifacts", entry)
+        self.assertIn("select an in-session or freshly dispatched Build owner", entry)
+        self.assertIn("compaction does not provide independence", read("references/planned-build-contract.md"))
+
+    def test_decision_advice_and_verification_reuse_preserve_gates(self):
+        advice = section(read("references/model-routing.md"), "Decision advice")
+        for obligation in (
+            "authorization/security", "data integrity", "migration strategy",
+            "public-contract compatibility", "concurrency/state transitions",
+            "conflicting requirements/evidence", "two attempts have failed",
+            "documentation-only", "confidence alone never waives a mandatory trigger",
+            "reconsult when relevant evidence invalidates an assumption",
+            "rather than issuing a substantially identical third capsule",
+            "not the advisor's sole evidence", "Required advice must complete",
+            "never replaces independent Review",
+        ):
+            self.assertIn(obligation, advice)
+        for path in ("runtime/common.md", "references/codex-tools.md", "references/planned-build-contract.md"):
+            self.assertIn("model-routing.md#decision-advice", read(path))
+        doctrine = read("references/verification-doctrine.md")
+        for obligation in (
+            "checks run by the owner as well as workers",
+            "relevant dependencies/environment, exact command and result",
+            "distinct accepted path requires fresh-state proof",
+            "checkpoint, owner rotation or entry into final verification alone",
+            "exact final operation was exercised",
+        ):
+            self.assertIn(obligation, doctrine)
 
     def test_codex_build_owner_reports_progress_without_inheriting_supervision(self):
         owner = section(read("references/codex-tools.md"), "Build owner")
