@@ -869,7 +869,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.11.0"))
+                    self.assertTrue(data["version"].startswith("0.12.0"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

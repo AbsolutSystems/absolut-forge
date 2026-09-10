@@ -66,10 +66,10 @@ role totals, correction attribution and redaction behavior; it is never a live
 baseline. `docs/token-efficiency-corpus-manifest.json` records the only locally
 retained replayable execution and fails the required 10–20 item selection in an
 explicit `blocked` state. Populate it only from verified external history or
-purpose-built fixtures before running the baseline. The 0.11.0 candidate is an
-explicitly authorized exception: implementation precedes the paired baseline,
-but no candidate behavior may be called better until equivalent accepted runs
-through independent Review supply that evidence.
+purpose-built fixtures before running the baseline. The 0.12.0 release carries
+forward the explicitly authorized 0.11.0 implementation-before-baseline
+exception, but no routing behavior may be called better until equivalent
+accepted runs through independent Review supply that evidence.
 
 ### Automatic Codex capture
 

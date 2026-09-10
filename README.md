@@ -2,12 +2,12 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.11.0.** This experimental candidate adds value-triggered
-Codex owner rotation, deterministic owner/final packages, compiled planned
-runtime projections and Luna `high` for standard work. It makes no efficiency
-claim until paired 0.10.1 versus 0.11.0 runs are complete.
+**Current release: 0.12.0.** This release adds cost-aware Codex ownership:
+eligible Luna `xhigh` and Terra sessions continue without a launcher, while
+other profiles hand off to Luna `xhigh`. It also adds bounded Sol decision
+advice, verification reuse and role-aware benchmark accounting.
 
-## Cost-aware Codex ownership (unreleased)
+## Cost-aware Codex ownership in 0.12.0
 
 Autonomous and standard planned Build continue in the current session when its
 effective profile is Luna `xhigh` or Terra at its current reasoning effort.
@@ -32,9 +32,9 @@ The complete final diff and accepted outcomes still require verification.
 These are cost-control hypotheses, not measured savings; benchmark through
 accepted independent Review including consultations and corrections.
 
-## Experimental token-efficient runtime in 0.11.0
+## Token-efficient runtime in 0.12.0
 
-Codex keeps ordinary owners across resumable checkpoints and rotates only for
+Codex keeps eligible owners across resumable checkpoints and rotates only for
 context pressure, a materially changed decision frame, an independent
 high-risk/final phase or unsafe compaction. A later explicit Build invocation
 reapplies owner selection and resumes durable state.
@@ -163,8 +163,8 @@ risk, repository mandates, or the absence of a required CI gate.
 ## Earlier ownership policy
 
 Release 0.7.1 introduced a fresh Sol owner and checkpoint rotation. Release
-0.11.0 made rotation conditional; the current unreleased Codex policy above
-also allows Luna and Terra to retain in-session ownership with Sol advice.
+0.11.0 made rotation conditional; 0.12.0 also allows Luna and Terra to retain
+in-session ownership with Sol advice.
 Historical release behavior remains documented in [CHANGELOG.md](CHANGELOG.md).
 
 ## Runtime context in 0.7.0
