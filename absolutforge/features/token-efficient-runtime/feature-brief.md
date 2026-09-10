@@ -210,3 +210,19 @@ None. The user accepted the complete Brief and recommended resolutions on 2026-0
 - Scout disposition: none.
 - Documentation maintenance: README and changelog describe 0.11.0 and its experimental/no-claim boundary; benchmark docs include automatic JSON capture, owner/final commands, compiler check and the authorized comparison order.
 - Durable memory lesson: none.
+
+### Build evidence — 2026-09-10 (0.11.0 corrected base revision)
+- Base revision / review diff: `eb14a7e57297d52142f7dc01299d2c90512aa28a..HEAD`
+- Build strategy: planned
+- Planned methodology: standard
+- Changed areas: Codex rotation/routing and planned-boundary contracts; shared runtimes; deterministic artifact/Git projections and compiler; generated planned Codex runtimes; focused/runtime tests; 0.11.0 manifests, README, changelog and benchmark documentation.
+- Tests added/updated: `tests/test_build_projection.py` — owner/final durable-state projection, clean success, dirty/unowned/open-BLOCKING/stale/incomplete/illegal-lifecycle refusal, deterministic compiler and canonical-source mutation; `tests/test_runtime_contract.py` — value-triggered rotation, Luna high standard mapping, packaged generated links and 0.11.0 descriptors. Existing 21 context-package compatibility cases remain green.
+- Verification commands and results: `rtk python3 -m unittest discover -s tests -v` -> pass, 64 tests; `rtk python3 tools/compile_runtime.py --check` -> pass; `UV_CACHE_DIR=/private/tmp/absolutforge-uv-cache rtk uv run --with pyyaml python /Users/kamil/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py /Users/kamil/Projekty/absolut-forge` -> pass; distribution JSON parsing -> pass; `rtk git diff --cached --check` -> pass before implementation checkpoint.
+- Whole-feature path exercised: canonical Build/common/planned/Codex sources compiled into both committed planned runtime states with repaired local links and source hashes; a temporary Git repository exercised successful owner/final reconstruction and every fail-closed boundary, while the repository-wide suite validated packaged links and lifecycle/host contracts -> pass.
+- Execution state: plan revision 5; T-001 through T-011 complete; 0.11 candidate implementation checkpoint `2809352`; prior 0.11 evidence entry superseded only because its expanded base SHA was invalid.
+- Material implementation decisions: ordinary clean checkpoints no longer rotate by themselves; generated runtime remains a disposable non-authoritative projection; final JSON points at but does not duplicate the complete diff; Luna high for standard work is experimental pending paired 0.10.1 comparison.
+- Deviations from accepted baseline: A-001 explicitly defers only empirical prerequisite and winner-selection gates until the two implementations can be compared; no efficiency or quality win is claimed.
+- Plan changes: PC-001 through PC-004.
+- Scout disposition: none.
+- Documentation maintenance: README and changelog describe 0.11.0 and its experimental/no-claim boundary; benchmark docs include automatic JSON capture, owner/final commands, compiler check and the authorized comparison order.
+- Durable memory lesson: validate expanded revision identifiers with Git before writing final lifecycle evidence.
