@@ -2,7 +2,7 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.12.0.** This release adds cost-aware Codex ownership:
+**Current release: 0.12.2.** This release adds namespaced Codex agent dispatch:
 eligible Luna `xhigh` and Terra sessions continue without a launcher, while
 other profiles hand off to Luna `xhigh`. It also adds bounded Sol decision
 advice, verification reuse and role-aware benchmark accounting.

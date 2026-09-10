@@ -568,6 +568,9 @@ class RuntimeContractTests(unittest.TestCase):
             "not a config default",
             "never recursively dispatch another owner to repair confirmation",
             "role marker alone is not proof of the effective profile",
+            "host-generated `Host dispatch attestation`",
+            "matching attestation is sufficient confirmation",
+            "must not infer it from ordinary prompt prose",
             "Legacy delegated resumes keep a fresh `gpt-5.6-sol` owner",
             "Do not route legacy ownership through the standard table",
             "does not merge owner and worker write authority",
@@ -883,7 +886,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.12.0"))
+                    self.assertTrue(data["version"].startswith("0.12.2"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

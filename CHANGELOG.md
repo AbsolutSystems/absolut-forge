@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-09-11
+
+### Fixed
+
+- Codex Build owner handoff now accepts a host-generated exact-profile
+  attestation when child sessions cannot expose their effective model and
+  reasoning effort, preventing redundant Luna owner handoffs.
+
+## [0.12.1] - 2026-09-10
+
+### Fixed
+
+- Codex Build dispatch now resolves namespaced native agent tools such as
+  `multi_agent_v1__spawn_agent` while preserving the no-inherited-context
+  contract for owners, workers, advisors, and Review.
+- Dispatched Luna owners can use a host-generated exact-profile attestation
+  when child sessions do not expose their effective model and effort, avoiding
+  recursive owner handoffs while retaining strict profile matching.
+- Codex plugin cachebusting is refreshed so local installations load the
+  current host mapping after a release update.
+
 ## [0.12.0] - 2026-09-10
 
 ### Changed
