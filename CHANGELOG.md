@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Repeated independent Review now receives a bounded continuity registry,
+  reuses finding IDs for the same root issue and escalates after two evidenced
+  failed corrections instead of silently starting another correction loop.
+
 ## [0.11.0] - 2026-09-10
 
 ### Added

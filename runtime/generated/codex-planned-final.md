@@ -7,7 +7,7 @@
 - `skills/build/SKILL.md` sha256 `21f7985bb35ba6878a8c8cb94f60d19997a3227e529ea60b8c643b1b64fe5530`; rule `build-entrypoint`
 - `runtime/common.md` sha256 `82c1740066f419a7679ee9552f6473d1adb64e8180f0cb316511951af95fbdca`; rule `common-runtime`
 - `runtime/planned.md` sha256 `4b57fc6d5960c4f04d7816cb5af2b67d8381ea78f461c144633f3b62fb6711ef`; rule `planned-runtime`
-- `references/codex-tools.md` sha256 `554ca7b21506c561175bbbf41299d15b3268882bc75266ba4b5f864497a8e877`; rule `codex-host`
+- `references/codex-tools.md` sha256 `e4e9e42e7bb01f5fcbaa4c8c5973cf258e27a97269ba5fcfae84fd9f6adf0c1a`; rule `codex-host`
 
 <!-- source: skills/build/SKILL.md; rule: build-entrypoint -->
 

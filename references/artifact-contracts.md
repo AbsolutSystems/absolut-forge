@@ -525,9 +525,11 @@ In Review | Complete
 
 ## Findings
 ### F-{NNN} — BLOCKING | FOLLOW-UP
+- Root issue: {stable violated contract or failure mechanism}
 - Evidence:
 - Impact:
 - Smallest sensible correction:
+- Correction attempts: {nonnegative integer}
 - Resolution: open | fixed | accepted | deferred
 - Resolution details:
 
@@ -540,6 +542,8 @@ In Review | Complete
 ## Decision
 Fixes required | Ready for ship
 ```
+
+`Root issue` is the stable violated contract or failure mechanism used to correlate passes; it is not merely the current line or symptom. `Correction attempts` starts at `0` and counts only evidenced Build corrections for the same root issue that a later Review finds incomplete; Review-only reruns do not increment it. Repeated Review reuses the existing finding ID for the same root issue even when its symptom, line or affected file changes, and allocates a new ID only for a distinct root issue. Reports created before these fields remain valid; absent `Correction attempts` means `unknown`, not zero, and the next reviewer reconstructs the count from recorded revisions when possible or reports the ambiguity to the human. The existing Review report is continuity/navigation evidence only and never authority for the fresh reviewer's correctness judgment.
 
 Review treats the Brief as intent authority, source/tests and `base_commit..HEAD` as implementation truth, and execution artifacts only as supporting evidence. It never excuses a Brief violation because the plan/map said otherwise.
 

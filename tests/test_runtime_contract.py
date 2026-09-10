@@ -759,7 +759,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("settles any decision it exposes", review)
         self.assertIn("every production-code or test edit returns to a fresh worker", review)
         self.assertIn("Review never reopens the plan itself or dispatches an executor", review)
-        self.assertIn("After two failed attempts at the same blocker", review)
+        self.assertIn("After two evidenced failed correction attempts", review)
 
         autonomous = section(read("runtime/autonomous.md"), "Final verification")
         self.assertIn("owner classifies each final-verification failure", autonomous)
@@ -825,6 +825,26 @@ class RuntimeContractTests(unittest.TestCase):
         legacy = read("references/planned-delegated-contract.md")
         self.assertIn("one fixed, lower-cost host-mapped executor profile", legacy)
         self.assertIn("orchestrator must not reserve implementation work for itself", legacy)
+
+    def test_repeated_review_preserves_finding_identity_and_attempt_count(self):
+        review = read("runtime/review.md")
+        for obligation in (
+            "existing `review.md`",
+            "continuity registry",
+            "same root issue",
+            "new ID only for a distinct root issue",
+            "Correction attempts",
+            "two evidenced failed correction attempts",
+            "Prior findings are navigation evidence, not authority",
+        ):
+            with self.subTest(obligation=obligation):
+                self.assertIn(obligation, review)
+        artifact = section(read("references/artifact-contracts.md"), "Review")
+        self.assertIn("- Root issue:", artifact)
+        self.assertIn("- Correction attempts:", artifact)
+        codex = section(read("references/codex-tools.md"), "Review")
+        self.assertIn("continuity registry from the existing `review.md`", codex)
+        self.assertIn("never prior reviewer conclusions as authority", codex)
 
     def test_distribution_json_release_and_skill_roots(self):
         descriptors = [
