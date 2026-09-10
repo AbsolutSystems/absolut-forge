@@ -147,7 +147,9 @@ None. The user accepted the complete Brief and recommended resolutions on 2026-0
 
 ## Amendments
 
-None.
+### A-001 — Experimental 0.11.0 candidate before paired measurement
+- Status: Accepted
+- Change: Implement WP-2 through WP-5 from `docs/0.10-token-efficiency-implementation-plan.md` as version 0.11.0 now. Defer only their empirical prerequisite and winner-selection gates until a paired 0.10.1 versus 0.11.0 comparison can run; retain all correctness, lifecycle, freshness, ownership, generation and verification gates. Treat the 0.11 rotation, compiled projections and Luna `high` standard profile as experimental candidates and make no efficiency claim before that comparison.
 
 ---
 

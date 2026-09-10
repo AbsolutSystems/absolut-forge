@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-09-10
+
+### Added
+
+- Read-only `owner` and `final` context projections derive lifecycle,
+  frontier, coverage, changed-path ownership, evidence freshness and Review
+  blockers from durable artifacts and Git, failing closed on contradictions.
+- Deterministic non-authoritative Codex planned-runtime projections include
+  canonical-source hashes and rule coverage, with a stale-generation check.
+
+### Changed
+
+- Codex owner rotation is value-triggered instead of mandatory after every
+  implementation checkpoint; every checkpoint remains cleanly resumable.
+- Planned compilation now challenges task boundaries that lack recovery,
+  dependency, acceptance, ownership, risk or context value.
+- Codex standard workers use Luna `high` as an experimental candidate. The
+  0.10.1 Luna `xhigh` behavior remains the comparison baseline, and no token or
+  quality improvement is claimed before paired runs.
+
+### Validation policy
+
+- By explicit maintainer authorization, empirical WP-1 prerequisite gates are
+  deferred until both 0.10.1 and 0.11.0 implementations exist. Correctness,
+  lifecycle, generation, freshness, ownership and test gates remain required.
+
 ## [0.10.1] - 2026-09-10
 
 ### Added

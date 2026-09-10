@@ -66,9 +66,10 @@ role totals, correction attribution and redaction behavior; it is never a live
 baseline. `docs/token-efficiency-corpus-manifest.json` records the only locally
 retained replayable execution and fails the required 10–20 item selection in an
 explicit `blocked` state. Populate it only from verified external history or
-purpose-built fixtures before running the baseline. Do not begin a dependent
-rotation, projection, generated-runtime or effort experiment until that corpus
-and the real baseline records exist.
+purpose-built fixtures before running the baseline. The 0.11.0 candidate is an
+explicitly authorized exception: implementation precedes the paired baseline,
+but no candidate behavior may be called better until equivalent accepted runs
+through independent Review supply that evidence.
 
 ### Automatic Codex capture
 
@@ -105,6 +106,9 @@ sanitized export accepted by `benchmark_runs.py`.
 ```sh
 rtk python3 tools/context_package.py resume path/to/implementation-plan.md
 rtk python3 tools/context_package.py capsule path/to/implementation-plan.md path/to/feature-brief.md T-002
+rtk python3 tools/context_package.py owner path/to/feature-brief.md path/to/implementation-plan.md --review path/to/review.md --repo .
+rtk python3 tools/context_package.py final path/to/feature-brief.md path/to/implementation-plan.md --review path/to/review.md --repo .
+rtk python3 tools/compile_runtime.py --check
 rtk python3 -m unittest discover -s tests -v
 ```
 
@@ -126,6 +130,14 @@ not this task-dispatch helper. Novel amendment-defined IDs or legacy guidance
 that cannot be resolved automatically require targeted canonical inspection;
 the helper does not invent or migrate task metadata. Missing legacy guidance
 is explicitly returned as an orchestrator decision, not fabricated code advice.
+
+`owner` derives lifecycle, strategy, methodology, base/head, current frontier,
+Review blockers and freshness. `final` additionally requires a clean
+checkpoint, complete task schema and coverage, owned changed paths, current
+source/test evidence and no open BLOCKING finding; it returns the exact diff
+range without duplicating diff content. Its semantic exceptions deliberately
+leave full-diff inspection, test quality, boundary classification and primary
+path execution with the owner.
 
 The harness is a regression check for bounded projections, not a general
 workflow engine or a claim about production model cost.

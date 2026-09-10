@@ -1,82 +1,23 @@
 #!/usr/bin/env python3
-"""Read-only bounded context projections for planned-build artifacts."""
+"""Read-only task, owner and final projections for Build artifacts."""
 
 from __future__ import annotations
 import argparse, json, re, subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+try:  # Supports both direct execution and module imports.
+    from artifact_state import ContextError, fields as _fields, items as _items
+    from artifact_state import require as _require
+    from artifact_state import sections as _sections
+except ImportError:  # pragma: no cover - selected by import style
+    from tools.artifact_state import ContextError, fields as _fields, items as _items
+    from tools.artifact_state import require as _require
+    from tools.artifact_state import sections as _sections
+
 BASELINE = "f47dfbc45563b5fce6b8de49cd005f40b7b655fb"
 TASK_RE = re.compile(r"^### (T-\d+)\s+—\s+(.+)$", re.M)
 FIELD_RE = re.compile(r"^- ([A-Za-z][A-Za-z -]+):\s*(.*)$")
-
-
-class ContextError(ValueError):
-    pass
-
-
-def _sections(text, level):
-    # Fenced examples are content, never section boundaries.
-    out, name, lines, fence = {}, None, [], None
-
-    def save():
-        if name is not None:
-            if name in out:
-                raise ContextError("ambiguous section: " + name)
-            out[name] = "".join(lines).strip()
-
-    for line in text.splitlines(keepends=True):
-        marker = re.match(r"^\s*(`{3,}|~{3,})", line)
-        if marker:
-            token = marker.group(1)
-            if fence is None:
-                fence = token
-            elif token[0] == fence[0] and len(token) >= len(fence):
-                fence = None
-            if name is not None:
-                lines.append(line)
-            continue
-        heading = (
-            re.match(r"^" + "#" * level + r" (.+?)\s*$", line)
-            if fence is None
-            else None
-        )
-        if heading:
-            save()
-            name, lines = heading.group(1), []
-        elif name is not None:
-            lines.append(line)
-    if fence is not None:
-        raise ContextError("unclosed fenced block")
-    save()
-    return out
-
-
-def _fields(text):
-    out, key, values = {}, None, []
-
-    def save():
-        if key:
-            if key in out:
-                raise ContextError("ambiguous field: " + key)
-            out[key] = "\n".join(values).strip()
-
-    for line in text.splitlines():
-        found = FIELD_RE.match(line)
-        if found:
-            save()
-            key, values = found.group(1).strip(), [found.group(2).strip()]
-        elif key is not None:
-            values.append(line.strip())
-    save()
-    return out
-
-
-def _require(data, key):
-    value = data.get(key, "").strip()
-    if not value:
-        raise ContextError("missing required field: " + key)
-    return value
 
 
 def _ids(value, prefix):
@@ -107,18 +48,6 @@ def _blocked(value):
     return out
 
 
-def _items(body):
-    result = []
-    for line in body.splitlines():
-        if line.startswith("- "):
-            result.append(line[2:].strip())
-        elif line.strip():
-            if not result:
-                raise ContextError("frontier content must use bullet items")
-            result[-1] += "\n" + line.strip()
-    if not result:
-        raise ContextError("missing frontier facts")
-    return result
 
 
 @dataclass(frozen=True)
@@ -598,17 +527,27 @@ def main(argv=None):
     b.add_argument("task_id")
     c = sub.add_parser("benchmark")
     c.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
+    for name in ("owner", "final"):
+        projection = sub.add_parser(name)
+        projection.add_argument("brief", type=Path)
+        projection.add_argument("execution", type=Path)
+        projection.add_argument("--review", type=Path)
+        projection.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
     args = parser.parse_args(argv)
     try:
-        result = (
-            build_resume(args.plan.read_text())
-            if args.command == "resume"
-            else build_capsule(
-                args.plan.read_text(), args.brief.read_text(), args.task_id
-            )
-            if args.command == "capsule"
-            else benchmark_report(args.repo)
-        )
+        if args.command == "resume":
+            result = build_resume(args.plan.read_text())
+        elif args.command == "capsule":
+            result = build_capsule(args.plan.read_text(), args.brief.read_text(), args.task_id)
+        elif args.command == "benchmark":
+            result = benchmark_report(args.repo)
+        else:
+            try:
+                from build_projection import final_projection, owner_projection
+            except ImportError:  # pragma: no cover
+                from tools.build_projection import final_projection, owner_projection
+            function = final_projection if args.command == "final" else owner_projection
+            result = function(args.repo, args.brief, args.execution, args.review)
     except (OSError, subprocess.SubprocessError, ContextError) as error:
         parser.error(str(error))
     print(json.dumps(result, indent=2, sort_keys=True))

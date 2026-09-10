@@ -2,9 +2,25 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.10.1.** Codex benchmark runs can now emit validated,
-secret-redacted token records automatically, and Build no longer mistakes an
-empty active-agent inventory for unavailable Luna dispatch.
+**Current release: 0.11.0.** This experimental candidate adds value-triggered
+Codex owner rotation, deterministic owner/final packages, compiled planned
+runtime projections and Luna `high` for standard work. It makes no efficiency
+claim until paired 0.10.1 versus 0.11.0 runs are complete.
+
+## Experimental token-efficient runtime in 0.11.0
+
+Codex keeps ordinary owners across resumable checkpoints and rotates only for
+context pressure, a materially changed decision frame, an independent
+high-risk/final phase, unsafe compaction or a later explicit Build invocation.
+`tools/context_package.py owner` and `final` reconstruct navigation, freshness,
+coverage, ownership and blocker checks from durable artifacts and Git while
+leaving semantic test and full-diff judgment with the owner.
+
+Planned Building and final-verification projections under `runtime/generated/`
+are reproducible with `python3 tools/compile_runtime.py --write` and checked
+with `--check`; they are non-authoritative caches of canonical clauses. The
+Codex standard worker candidate is Luna `high`; Git release 0.10.1 retains the
+Luna `xhigh` comparison baseline.
 
 ## Automatic measurement and reliable dispatch in 0.10.1
 
@@ -180,7 +196,7 @@ Use a high-capability model as the owner of the feature. It compiles each outcom
 
 The owner dispatches one bounded low, standard or high outcome at a time, including implementation and focused tests. A worker receives fresh context with only the accepted outcome, owned paths, constraints, relevant dependency facts, test obligations, verification commands and return conditions. High execution additionally receives the settled decision, assumptions, containment, rollback when applicable and intermediate proof points. This requires no implementation plan or strategy change.
 
-In Codex, the Build owner is a fresh Sol `medium` agent; low execution uses Luna `high`, standard uses Luna `xhigh`, and high uses Luna `max`. Every production-code and test correction returns to a fresh Luna worker at its classified tier, while difficult decisions remain with Sol. Newly discovered ambiguity or risk returns to Sol for a corrected contract and fresh dispatch. Sol checks the diff and tests and alone updates lifecycle evidence and commits. A nested owner invokes native agent dispatch directly and may call a worker unavailable only after the primitive is absent or an exact-profile dispatch attempt fails; its own agent role is not a reason to skip Luna. It reports concrete unavailability and stops at the last clean boundary. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. These defaults do not establish measured cost savings.
+In Codex, the Build owner is a fresh Sol `medium` agent; low and standard execution use Luna `high`, and high uses Luna `max`. Every production-code and test correction returns to a fresh Luna worker at its classified tier, while difficult decisions remain with Sol. Newly discovered ambiguity or risk returns to Sol for a corrected contract and fresh dispatch. Sol checks the diff and tests and alone updates lifecycle evidence and commits. A nested owner invokes native agent dispatch directly and may call a worker unavailable only after the primitive is absent or an exact-profile dispatch attempt fails; its own agent role is not a reason to skip Luna. It reports concrete unavailability and stops at the last clean boundary. See [outcome routing](references/model-routing.md#autonomous-outcome-routing) and the host mappings for dispatch details. The Luna `high` standard mapping is an experimental candidate and does not establish measured cost savings.
 
 Each outcome is `implement -> cover applicable risks -> green fast unit gate -> checkpoint commit`. Test obligations cover the primary behavior plus relevant failure/boundary, state/data, seam-contract, security, persistence, concurrency, migration, or regression risks. Tests must assert repository-owned observable behavior rather than mock setup, framework internals, or incidental implementation details. Workers inventory exact tests added or changed. Final verification reuses current green evidence, reruns stale or doubtful targets, and adds targeted integration/e2e checks; a full suite needs cross-cutting risk, unreliable target selection, a repository mandate, or no required CI fallback. The number of tests follows distinct risks, not the number of outcomes.
 
@@ -192,7 +208,7 @@ New standard plans favor complete behavior slices: implementation, wiring and fo
 
 The planned path is not a handoff of feature ownership to small models. Workers receive one bounded task and cannot rewrite the plan, Brief, lifecycle, branch history or remote state. Dependency-ready tasks may run in a parallel wave only when their write surfaces are fully disjoint; the orchestrator validates and commits each task separately.
 
-The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. Codex rotates substantial standard Builds between fresh Sol owners automatically; on other hosts, invoke `build` again at a clean task boundary when a fresh-owner primitive is unavailable. Use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
+The active orchestrator context is disposable. Where the host supports it, workers use fresh bounded context with no inherited full orchestrator chat. Every completed-task checkpoint leaves the Brief, plan, source, tests and Git history sufficient for a fresh high-capability context to continue without the previous conversation. Codex rotates between fresh Sol owners only at documented value triggers; on other hosts, invoke `build` again at a clean task boundary when a fresh-owner primitive is unavailable. Use `save/load` mainly for a mid-task or otherwise unresolved stop. Planned per-task evidence lives only in the plan, while the Brief receives one consolidated final Build Evidence entry.
 
 ### Legacy delegated resumes
 

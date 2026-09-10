@@ -7,7 +7,7 @@ Complete
 - Feature Brief: `absolutforge/features/token-efficient-runtime/feature-brief.md`
 - Feature branch: `feature/0.7-token-efficient-runtime`
 - Base revision: `f47dfbc45563b5fce6b8de49cd005f40b7b655fb`
-- Plan revision: 4
+- Plan revision: 5
 - Build strategy: planned
 - Planned methodology: standard
 
@@ -23,9 +23,10 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - EO-006: T-001, T-002, T-003, T-005
 - EO-007: T-001, T-002, T-005 and final verification
 - EO-008: T-004, T-005 and final verification
+- A-001: T-008, T-009, T-010, T-011 and final verification
 
 ## Active frontier
-- Plan revision: 4
+- Plan revision: 5
 - Next task: none
 - Ready tasks: none
 - Blocked tasks: none
@@ -41,7 +42,7 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - INV-005: shared behavior and schema ownership remain canonical; host mechanics stay local.
 
 ### Pending final-verification obligations
-- None; authoritative 28-test suite, fresh-process context workflow, three static benchmark scenarios and complete diff/accepted coverage review passed. Current final Build Evidence appended after correction checkpoint b317784.
+- None; authoritative 64-test suite, generated-runtime freshness check, projection failure fixtures and complete 0.11 candidate diff/accepted coverage review passed. Paired live comparison remains deliberately post-release under A-001 and is not claimed as implementation evidence.
 
 ## Task graph
 
@@ -124,6 +125,62 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Verification: `rtk python3 -m unittest discover -s tests -p test_context_package.py -v`; `rtk git diff --check`.
 - Completion evidence: `tools/context_package.py` resolves modern Covers to full accepted heading/text clauses, including comma-containing headings, or valid EO IDs; unknown/ambiguous and mixed ID-plus-invented references refuse dispatch. `tests/test_context_package.py` adds heading/text preservation and unknown/mixed/ambiguous refusal regressions. Fresh bounded standard worker implemented only the two owned files; orchestrator independently inspected the diff, unchanged legacy consumers and semantic assertions. Focused `rtk python3 -m unittest discover -s tests -p test_context_package.py -v` passed all 18 tests; `rtk git diff --check` passed. Review F-001 correction is ready for final verification and independent re-review. Checkpoint: this checkpoint.
 
+### T-008 — Value-triggered rotation and boundary economics
+- Status: complete
+- Capability: standard
+- Covers: A-001; EO-002, EO-003, EO-007
+- Depends on: T-007
+- Change surface: `references/codex-tools.md`; `references/planned-build-contract.md`; `runtime/common.md`; `runtime/planned.md`; `runtime/autonomous.md`; `tests/test_runtime_contract.py`
+- Preserves: INV-001 through INV-005; every checkpoint remains durable; explicit later Build invocations retain fresh ownership; final independence remains conditional and enforceable.
+- Implementation intent: replace checkpoint-only rotation with explicit value triggers and require a concrete economic reason for adjacent plan boundaries.
+- Test obligations: prove ordinary checkpoints do not rotate; lock every retained trigger, clean resume policy and boundary question.
+- Risk controls: none
+- Return boundary: return if a change weakens checkpoint recoverability, final verification or host isolation claims.
+- Verification: `rtk python3 -m unittest discover -s tests -p test_runtime_contract.py -v`; `rtk git diff --check`.
+- Completion evidence: Codex mapping and shared runtimes retain recoverable checkpoints while enumerating context pressure, changed decision frame, independent high-risk/final phase, unsafe compaction and later-invocation triggers. Planned compilation challenges boundaries without merging unrelated outcomes. Runtime contract coverage passes in the 64-test suite.
+
+### T-009 — Deterministic owner and final packages
+- Status: complete
+- Capability: high
+- Covers: A-001; EO-002, EO-005, EO-007
+- Depends on: T-008
+- Change surface: `tools/artifact_state.py`; `tools/build_projection.py`; `tools/context_package.py`; `tests/test_build_projection.py`; `tests/test_context_package.py`; `docs/runtime-benchmark.md`
+- Preserves: INV-001 through INV-005; projections are read-only derived caches; existing resume/capsule API and legacy compatibility remain unchanged.
+- Implementation intent: share Markdown/Git parsing and expose fail-closed owner/final JSON with lifecycle, frontier, coverage, ownership, freshness and blocker checks.
+- Test obligations: deterministic durable-state output; dirty, unowned, stale and blocking refusal; complete diff pointer without diff duplication; existing capsule regressions green.
+- Risk controls: parsing never executes artifact commands or mutates state; semantic exceptions remain explicit; ambiguous or contradictory data refuses output.
+- Return boundary: return if a fact cannot be reconstructed from artifacts and Git or would require a new authoritative schema.
+- Verification: `rtk python3 -m unittest discover -s tests -p 'test_*projection.py' -v`; existing context tests; full suite.
+- Completion evidence: reusable parser primitives extracted without changing resume/capsule behavior. Owner/final commands derive the required state, validate plan schemas/coverage/write ownership/cleanliness/evidence ancestry/open blockers and emit PASS plus semantic exceptions. Four failure modes and successful final navigation are covered; all prior capsule tests remain green.
+
+### T-010 — Generated effective Codex runtime
+- Status: complete
+- Capability: standard
+- Covers: A-001; EO-001, EO-003, EO-007
+- Depends on: T-009
+- Change surface: `tools/compile_runtime.py`; `runtime/generated/`; `references/codex-tools.md`; `tests/test_build_projection.py`; `tests/test_runtime_contract.py`
+- Preserves: INV-001, INV-003, INV-005; canonical source wins; generated files contain no unique normative rules; artifact schemas and full diff remain links.
+- Implementation intent: deterministically compile planned Building and final states with source hashes, rule coverage and repaired package-relative links.
+- Test obligations: byte-deterministic output; canonical mutation changes output; stale check; all local links resolve; lifecycle/worker/final gates remain present.
+- Risk controls: none
+- Return boundary: return rather than expanding to autonomous or other hosts before the later paired comparison.
+- Verification: `rtk python3 tools/compile_runtime.py --check`; full runtime/link tests.
+- Completion evidence: two non-authoritative generated Codex planned projections are reproducible from four named canonical sources, include SHA-256 provenance and rule IDs, and pass mutation/staleness plus repository-wide link checks.
+
+### T-011 — 0.11 candidate policy and release surfaces
+- Status: complete
+- Capability: standard
+- Covers: A-001; EO-003, EO-006, EO-008
+- Depends on: T-010
+- Change surface: `references/codex-tools.md`; `README.md`; `CHANGELOG.md`; `package.json`; `.claude-plugin/plugin.json`; `.codex-plugin/plugin.json`; `docs/0.10-token-efficiency-implementation-plan.md`; `docs/runtime-benchmark.md`; `tests/test_runtime_contract.py`
+- Preserves: INV-001 through INV-005; host-specific model names remain in Codex mapping; no unmeasured efficiency claim; 0.10.1 remains the paired baseline.
+- Implementation intent: ship 0.11.0 candidate with Luna high for standard work and record the explicit empirical-gate deferral.
+- Test obligations: lock exact Codex tier mapping and all distribution versions; retain legacy delegated Luna high behavior; document comparison limitation.
+- Risk controls: none
+- Return boundary: do not claim a winning policy or remove 0.10.1 comparison evidence before controlled paired runs.
+- Verification: distribution JSON parsing and full runtime-contract suite.
+- Completion evidence: manifests and public docs identify 0.11.0; standard Codex mapping is Luna high and explicitly experimental; changelog and amendment record the narrow validation override and no-claim boundary. Full suite passes 64 tests.
+
 ## Final verification
 - Run `rtk python3 -m unittest discover -s tests -v` once for the final attempt; integration/context scenario is included in that suite.
 - Run the documented synthetic benchmark for all three sizes and report estimates, not live measurements.
@@ -165,3 +222,14 @@ Define canonical runtime and compatibility semantics first. Then update skill en
 - Dependency changes: T-007 depends on completed T-004; sequential reuse of its two-file write surface.
 - Plan revision: 3 -> 4
 - Validation: outcomes covered; dependencies acyclic; write surfaces valid and sequential; test obligations complete; no intent expansion.
+
+### PC-004 — 2026-09-10
+- Evidence: accepted A-001 explicitly authorizes implementing the maintainer WP-2 through WP-5 candidate before paired empirical validation, while retaining correctness and lifecycle gates.
+- Reason: create both 0.10.1 and 0.11.0 implementations before measuring them comparatively, as directed by the maintainer.
+- Preserved completed tasks: T-001 through T-007
+- Revised pending tasks: none
+- Removed pending tasks: none
+- Added tasks: T-008 through T-011 — value-triggered rotation, deterministic packages, generated planned runtime, experimental Luna high mapping and 0.11.0 release surfaces.
+- Dependency changes: sequential T-008 -> T-009 -> T-010 -> T-011 to keep shared runtime/tool/version surfaces coherent.
+- Plan revision: 4 -> 5
+- Validation: A-001 and EO coverage complete; dependencies acyclic; shared write surfaces sequential; empirical gates alone deferred; correctness, lifecycle, freshness, ownership and generation gates retained.

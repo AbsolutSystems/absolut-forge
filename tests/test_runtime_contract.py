@@ -522,7 +522,7 @@ class RuntimeContractTests(unittest.TestCase):
         )
         self.assertEqual(rows, [
             ("low", "`gpt-5.6-luna`", "`high`"),
-            ("standard", "`gpt-5.6-luna`", "`xhigh`"),
+            ("standard", "`gpt-5.6-luna`", "`high`"),
             ("high", "`gpt-5.6-luna`", "`max`"),
         ])
         for obligation in (
@@ -564,14 +564,19 @@ class RuntimeContractTests(unittest.TestCase):
             "state that no conversation is inherited",
             "launcher waits and relays a completed result",
             "only the `ROTATE` control envelope defined below plus the transient progress relay",
-            "After every clean checkpoint containing implementation or test changes",
-            "A Build-start-only checkpoint does not trigger rotation",
+            "its existence alone never triggers rotation",
+            "reliable host context-pressure signal exceeds its configured threshold",
+            "substantial `PC-`/replan or long diagnosis",
+            "materially independent high-risk phase",
+            "final verification needs independence",
+            "durable facts cannot be compacted safely",
+            "explicit later Build invocation",
             "returns only `ROTATE: {canonical Build command}`",
             "announces the successor's exact model and effort",
             "resume the named canonical Build command from durable repository state",
             "only the owner marker and canonical command are passed",
             "never build a nested successor chain",
-            "before final verification",
+            "final verification needs independence",
             "Pass no conversation or raw-log summary",
             "`gpt-6-astra` advisor with `low` reasoning",
             "read-only",
@@ -639,8 +644,8 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(obligation=obligation):
                 self.assertIn(obligation, routing)
         common = read("runtime/common.md")
-        self.assertIn("At a substantial checkpoint and before final verification", common)
-        self.assertIn("fresh-owner continuation", common)
+        self.assertIn("A checkpoint alone does not require a fresh owner", common)
+        self.assertIn("value-triggered continuation", common)
         autonomous = read("runtime/autonomous.md")
         self.assertIn("just-in-time compilation", autonomous)
         self.assertIn("Dispatch every bounded low, standard or high outcome", autonomous)
@@ -653,7 +658,8 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("every low, standard and high production-code or test task", planned)
         self.assertIn("never implements them", planned)
         self.assertIn("two failed attempts at the same blocker", planned)
-        self.assertIn("fresh-owner continuation", planned)
+        self.assertIn("does not itself require rotation", planned)
+        self.assertIn("active host's value triggers", planned)
         self.assertIn("older standard runtime began a task inline", planned)
         self.assertIn("historical `high` task without Risk controls", planned)
 
@@ -830,7 +836,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.10.1"))
+                    self.assertTrue(data["version"].startswith("0.11.0"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"
