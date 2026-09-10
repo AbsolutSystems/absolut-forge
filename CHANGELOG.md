@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.3] - 2026-09-11
+
+### Fixed
+
+- Codex Build owners without native dispatch can yield bounded worker,
+  correction and advisor requests to their launcher, which dispatches fresh
+  siblings and resumes the same owner with each result. A completed control
+  yield no longer means Build completion or a recursive ownership handoff.
+- Preserve exact profiles, owner-only acceptance, duplicate-request protection
+  and partial-work reconciliation across the relay. Rotation successors receive
+  profile attestation and the actual relay capability.
+- Recognize registered native dispatch exposed through a host tool bridge;
+  retain stop rules when neither direct dispatch nor relay is available.
+
 ## [0.12.2] - 2026-09-11
 
 ### Fixed

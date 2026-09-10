@@ -2,10 +2,10 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.12.2.** This release adds namespaced Codex agent dispatch:
-eligible Luna `xhigh` and Terra sessions continue without a launcher, while
-other profiles hand off to Luna `xhigh`. It also adds bounded Sol decision
-advice, verification reuse and role-aware benchmark accounting.
+**Current release: 0.12.3.** Codex owners without native worker dispatch can
+request sibling workers and advisors through their launcher. Results return
+to the same owner; exact profiles, bounded assignments and owner validation
+remain mandatory.
 
 ## Cost-aware Codex ownership in 0.12.0
 
@@ -74,11 +74,12 @@ incomplete attempts remain distinguishable from accepted-feature cost. See the
 [runtime benchmark protocol](docs/runtime-benchmark.md) for activation and
 aggregation commands.
 
-Codex Build launchers and nested owners now call `spawn_agent` directly with
-the exact required profile. `list_agents` is only an inventory of already
-running agents: seeing `/root` alone is not evidence that a required owner or
-Luna worker cannot be created. Build reports unavailability only after the
-primitive is genuinely absent or an exact-profile dispatch attempt fails.
+Codex resolves registered native `spawn_agent` names with the exact required
+profile. If a nested owner lacks dispatch, an available launcher creates the
+worker or advisor as a sibling and returns its result to that same owner.
+The launcher is transport only, not a replacement orchestrator. `list_agents`
+is an inventory, not a capability check. If neither dispatch path is available
+or an exact-profile dispatch fails, dependent work stops without substitution.
 
 ## Compiler-first Build in 0.10.0
 
