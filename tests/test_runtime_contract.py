@@ -529,7 +529,7 @@ class RuntimeContractTests(unittest.TestCase):
             "For new standard planned builds",
             "selected Build owner",
             "explicit model and reasoning-effort overrides for every worker",
-            'fork_turns="none"',
+            "host-native no-inheritance parameter",
             "exact requested worker profile is unavailable",
             "never silently substitute another worker model/effort",
             "never edits production code or tests",
@@ -583,8 +583,8 @@ class RuntimeContractTests(unittest.TestCase):
             "Give the advisor read-only repository access",
             "does not edit, commit, inherit the Build conversation or take over execution",
             "stop the dependent work at the last clean boundary",
-            "do not call `list_agents` first",
-            "absent from the actual tool registry",
+            "Do not call `list_agents` first",
+            "no unique matching name exists in the actual tool registry",
             "direct attempted dispatch with the required model and reasoning effort",
         ):
             with self.subTest(obligation=obligation):
@@ -593,6 +593,20 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("Before loading runtime or repository evidence", entry)
         self.assertIn("select an in-session or freshly dispatched Build owner", entry)
         self.assertIn("compaction does not provide independence", read("references/planned-build-contract.md"))
+
+    def test_codex_dispatch_accepts_namespaced_spawn_agent_tool_names(self):
+        mapping = read("references/codex-tools.md")
+        pattern = r"(?:^|[^A-Za-z0-9])spawn_agent$"
+        self.assertIn(pattern, mapping)
+        matcher = re.compile(pattern)
+        for name in ("spawn_agent", "multi_agent_v1__spawn_agent", "native.spawn_agent"):
+            with self.subTest(name=name):
+                self.assertIsNotNone(matcher.search(name))
+        for name in ("spawn_agent_v2", "spawn_agent_helper"):
+            with self.subTest(name=name):
+                self.assertIsNone(matcher.search(name))
+        self.assertIn("host-native equivalent of `fork_turns=\"none\"`", mapping)
+        self.assertIn("If no unique matching dispatch primitive is registered", mapping)
 
     def test_decision_advice_and_verification_reuse_preserve_gates(self):
         advice = section(read("references/model-routing.md"), "Decision advice")
