@@ -1,0 +1,113 @@
+[
+  {
+    "schema_version": 1,
+    "record_type": "absolutforge.token-efficiency-run",
+    "run_id": "synthetic-a1",
+    "feature_id": "synthetic-feature",
+    "experiment_id": "rotation-baseline",
+    "variant": "baseline",
+    "attempt": 1,
+    "continuation_of": null,
+    "outcome": "rejected",
+    "controlled_run": {
+      "accepted_intent_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "base_revision": "0123456789abcdef",
+      "gates_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host_config_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "order": 1
+    },
+    "events": [
+      {
+        "role": "owner",
+        "stage": "implementation",
+        "provider": "synthetic-host",
+        "model": "owner-model",
+        "effort": "high",
+        "launch_count": 1,
+        "correction_attempts": 0,
+        "rotation_reasons": ["build_invocation"],
+        "tokens": {
+          "input": {"status": "measured", "value": 100, "source": "fixture-export", "counter": "input_tokens"},
+          "output": {"status": "measured", "value": 20, "source": "fixture-export", "counter": "output_tokens"},
+          "cached": {"status": "unavailable", "reason": "fixture host omitted this counter"}
+        }
+      },
+      {
+        "role": "worker",
+        "stage": "implementation",
+        "provider": "synthetic-host",
+        "model": "worker-model",
+        "effort": "high",
+        "launch_count": 1,
+        "correction_attempts": 1,
+        "rotation_reasons": [],
+        "tokens": {
+          "input": {"status": "estimated", "value": 400, "method": "serialized characters divided by four"},
+          "output": {"status": "unavailable", "reason": "fixture exercises missing counters"},
+          "cached": {"status": "unavailable", "reason": "fixture exercises missing counters"}
+        }
+      }
+    ],
+    "gates": [{"name": "focused-tests", "result": "fail"}],
+    "review_blockers": {"observed": 1, "escaped": 0},
+    "wall_time_seconds": {"status": "measured", "value": 12, "source": "fixture-export", "counter": "elapsed_seconds"},
+    "redaction": {"raw_traces_included": false, "secrets_removed": true}
+  },
+  {
+    "schema_version": 1,
+    "record_type": "absolutforge.token-efficiency-run",
+    "run_id": "synthetic-a2",
+    "feature_id": "synthetic-feature",
+    "experiment_id": "rotation-baseline",
+    "variant": "baseline",
+    "attempt": 2,
+    "continuation_of": "synthetic-a1",
+    "outcome": "accepted",
+    "controlled_run": {
+      "accepted_intent_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "base_revision": "0123456789abcdef",
+      "gates_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host_config_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "order": 2
+    },
+    "events": [
+      {
+        "role": "owner",
+        "stage": "correction",
+        "provider": "synthetic-host",
+        "model": "owner-model",
+        "effort": "high",
+        "launch_count": 1,
+        "correction_attempts": 1,
+        "rotation_reasons": ["replan_or_diagnosis"],
+        "tokens": {
+          "input": {"status": "measured", "value": 30, "source": "fixture-export", "counter": "input_tokens"},
+          "output": {"status": "measured", "value": 10, "source": "fixture-export", "counter": "output_tokens"},
+          "cached": {"status": "measured", "value": 5, "source": "fixture-export", "counter": "cached_tokens"}
+        }
+      },
+      {
+        "role": "reviewer",
+        "stage": "review",
+        "provider": "synthetic-host",
+        "model": "review-model",
+        "effort": "high",
+        "launch_count": 1,
+        "correction_attempts": 0,
+        "rotation_reasons": [],
+        "tokens": {
+          "input": {"status": "measured", "value": 50, "source": "fixture-export", "counter": "input_tokens"},
+          "output": {"status": "measured", "value": 5, "source": "fixture-export", "counter": "output_tokens"},
+          "cached": {"status": "measured", "value": 10, "source": "fixture-export", "counter": "cached_tokens"}
+        }
+      }
+    ],
+    "gates": [
+      {"name": "focused-tests", "result": "pass"},
+      {"name": "independent-review", "result": "pass"}
+    ],
+    "review_blockers": {"observed": 0, "escaped": 0},
+    "wall_time_seconds": {"status": "measured", "value": 8, "source": "fixture-export", "counter": "elapsed_seconds"},
+    "redaction": {"raw_traces_included": false, "secrets_removed": true}
+  }
+]

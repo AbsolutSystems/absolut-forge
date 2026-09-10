@@ -2,9 +2,25 @@
 
 AbsolutForge is an intent-driven delivery workflow for Claude Code, Codex and Pi. It separates accepted product intent from implementation strategy and gives one independent whole-feature review before local closeout.
 
-**Current release: 0.10.0.** Build now separates high-capability decision
-compilation and supervision from worker-owned implementation at every
-execution-risk tier.
+**Current release: 0.10.1.** Codex benchmark runs can now emit validated,
+secret-redacted token records automatically, and Build no longer mistakes an
+empty active-agent inventory for unavailable Luna dispatch.
+
+## Automatic measurement and reliable dispatch in 0.10.1
+
+An opt-in Codex collector snapshots cumulative host counters before Build and
+emits one validated JSON record after release-ready independent Review. It
+includes owner, worker and reviewer usage, rotations, corrections, gates and
+wall time without copying prompts or raw traces into the record. Failed or
+incomplete attempts remain distinguishable from accepted-feature cost. See the
+[runtime benchmark protocol](docs/runtime-benchmark.md) for activation and
+aggregation commands.
+
+Codex Build launchers and nested owners now call `spawn_agent` directly with
+the exact required profile. `list_agents` is only an inventory of already
+running agents: seeing `/root` alone is not evidence that a fresh Sol owner or
+Luna worker cannot be created. Build reports unavailability only after the
+primitive is genuinely absent or an exact-profile dispatch attempt fails.
 
 ## Compiler-first Build in 0.10.0
 

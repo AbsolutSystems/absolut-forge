@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://absolutforge.dev/schemas/benchmark-run-record-v1.schema.json",
+  "title": "AbsolutForge token-efficiency benchmark run record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "record_type", "run_id", "feature_id", "experiment_id",
+    "variant", "attempt", "continuation_of", "outcome", "controlled_run",
+    "events", "gates", "review_blockers", "wall_time_seconds", "redaction"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_type": {"const": "absolutforge.token-efficiency-run"},
+    "run_id": {"$ref": "#/$defs/text"},
+    "feature_id": {"$ref": "#/$defs/text"},
+    "experiment_id": {"$ref": "#/$defs/text"},
+    "variant": {"$ref": "#/$defs/text"},
+    "attempt": {"type": "integer", "minimum": 1},
+    "continuation_of": {"oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "outcome": {"enum": ["accepted", "rejected", "incomplete"]},
+    "controlled_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_intent_sha256", "base_revision", "gates_sha256", "host_config_sha256", "order"],
+      "properties": {
+        "accepted_intent_sha256": {"$ref": "#/$defs/digest"},
+        "base_revision": {"$ref": "#/$defs/text"},
+        "gates_sha256": {"$ref": "#/$defs/digest"},
+        "host_config_sha256": {"$ref": "#/$defs/digest"},
+        "order": {"type": "integer", "minimum": 1}
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "stage", "provider", "model", "effort", "launch_count", "correction_attempts", "rotation_reasons", "tokens"],
+        "properties": {
+          "role": {"enum": ["owner", "worker", "reviewer"]},
+          "stage": {"enum": ["bootstrap", "implementation", "validation", "correction", "final_verification", "review"]},
+          "provider": {"$ref": "#/$defs/text"},
+          "model": {"$ref": "#/$defs/text"},
+          "effort": {"$ref": "#/$defs/text"},
+          "launch_count": {"type": "integer", "minimum": 0},
+          "correction_attempts": {"type": "integer", "minimum": 0},
+          "rotation_reasons": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"enum": ["build_invocation", "implementation_checkpoint", "context_pressure", "replan_or_diagnosis", "independent_high_risk_phase", "final_verification", "unsafe_compaction"]}
+          },
+          "tokens": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["input", "output", "cached"],
+            "properties": {
+              "input": {"$ref": "#/$defs/metric"},
+              "output": {"$ref": "#/$defs/metric"},
+              "cached": {"$ref": "#/$defs/metric"}
+            }
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "result"],
+        "properties": {
+          "name": {"$ref": "#/$defs/text"},
+          "result": {"enum": ["pass", "fail", "unavailable"]}
+        }
+      }
+    },
+    "review_blockers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed", "escaped"],
+      "properties": {
+        "observed": {"type": "integer", "minimum": 0},
+        "escaped": {"type": "integer", "minimum": 0}
+      }
+    },
+    "wall_time_seconds": {"$ref": "#/$defs/metric"},
+    "redaction": {
+      "const": {"raw_traces_included": false, "secrets_removed": true}
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "metric": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "value", "source", "counter"],
+          "properties": {
+            "status": {"const": "measured"}, "value": {"type": "integer", "minimum": 0},
+            "source": {"$ref": "#/$defs/text"}, "counter": {"$ref": "#/$defs/text"}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "value", "method"],
+          "properties": {
+            "status": {"const": "estimated"}, "value": {"type": "integer", "minimum": 0},
+            "method": {"$ref": "#/$defs/text"}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {"status": {"const": "unavailable"}, "reason": {"$ref": "#/$defs/text"}}
+        }
+      ]
+    }
+  }
+}

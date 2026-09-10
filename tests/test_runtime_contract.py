@@ -583,11 +583,16 @@ class RuntimeContractTests(unittest.TestCase):
                 self.assertIn(obligation, owner)
         for dispatch_obligation in (
             "explicit authorization for the nested owner",
-            "native agent-dispatch primitive",
-            "do not look for it inside a shell or tool-wrapper namespace",
-            "owner was itself launched as an agent",
-            "attempted dispatch with the required model and reasoning effort",
-            "Report that concrete failure and stop at the last clean boundary",
+            "native `spawn_agent` primitive",
+            "result containing only `/root` means that no child is running",
+            "Do not query or interpret the active-agent list",
+            "do not call `list_agents` first",
+            "`list_agents` reports existing agents only",
+            "being a nested owner does not prove",
+            "absent from the actual tool registry",
+            "direct attempted dispatch with the required model and reasoning effort",
+            "without that direct attempt, violates this mapping",
+            "Report the concrete missing primitive or dispatch error",
             "absence of a predeclared bounded worker is not unavailability",
         ):
             with self.subTest(dispatch_obligation=dispatch_obligation):
@@ -825,7 +830,7 @@ class RuntimeContractTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 data = json.loads(path.read_text())
                 if "version" in data:
-                    self.assertTrue(data["version"].startswith("0.10.0"))
+                    self.assertTrue(data["version"].startswith("0.10.1"))
         self.assertEqual(json.loads(read("package.json"))["pi"]["skills"], ["skills"])
         self.assertEqual(
             json.loads(read(".codex-plugin/plugin.json"))["skills"], "./skills/"

@@ -27,10 +27,78 @@ infer success or zero defects from a static count. A shallow checkout lacking
 the pinned revision must fetch/restore that history separately before running
 the comparison; the tool never fetches or substitutes another baseline.
 
-For later live runs, hold accepted intent, repository base, test gates and host
-configuration constant across 0.6/0.7. Record provider/tokenizer and actual host
-input counters, include correction loops and independent Review, and compare
-only completed accepted features. Live runs are deferred, not a delivery gate.
+## Controlled live-run protocol
+
+Live measurements use the versioned, secret-redacted record contract in
+`references/benchmark-run-record-v1.schema.json`. Raw host traces, prompts,
+messages, credentials and repository content stay outside feature artifacts and
+Git. Convert an export to the narrow record locally, then validate and aggregate
+it with:
+
+```sh
+rtk python3 tools/benchmark_runs.py validate path/to/run.json
+rtk python3 tools/benchmark_runs.py aggregate path/to/run-*.json
+```
+
+For each paired comparison:
+
+1. Freeze the accepted intent, base revision, named gates and host
+   configuration. Record SHA-256 digests for intent, gates and configuration.
+2. Use the same replay fixture and complete gates for both variants. Alternate
+   order across pairs or randomize it before launch, and record the order.
+3. Record every owner, worker and reviewer launch by role and stage. Each actual
+   host counter is `measured` and names its export source and counter. Missing
+   counters are `unavailable`; static approximations are `estimated` with their
+   method and are excluded from measured totals.
+4. Preserve failed/corrected attempts as a linear chain using `continuation_of`.
+   The accepted feature cost includes every attempt in that chain. An incomplete
+   or rejected chain is reported but never counted as accepted-feature cost.
+5. Run the fixed tests and independent Review. Acceptance requires all declared
+   gates to pass. Record observed blockers, escaped blockers, corrections,
+   rotations and wall time even when a run fails.
+6. Compare total measured input plus output tokens per accepted feature first.
+   Use accepted-feature rate, escaped blockers, correction attempts, final
+   verification validity and clean resume as guardrails. Treat role splits,
+   launches, cached tokens and wall time as diagnostics.
+
+`tests/fixtures/token-efficiency-runs.json` is synthetic proof of validation,
+role totals, correction attribution and redaction behavior; it is never a live
+baseline. `docs/token-efficiency-corpus-manifest.json` records the only locally
+retained replayable execution and fails the required 10–20 item selection in an
+explicit `blocked` state. Populate it only from verified external history or
+purpose-built fixtures before running the baseline. Do not begin a dependent
+rotation, projection, generated-runtime or effort experiment until that corpus
+and the real baseline records exist.
+
+### Automatic Codex capture
+
+Codex runs can opt into automatic, secret-redacted collection. Arm a feature
+once from its repository; use an output directory outside Git:
+
+```sh
+rtk python3 /path/to/installed/absolutforge/tools/codex_benchmark.py \
+  --repo . arm \
+  --feature-id my-feature \
+  --experiment-id 0.10-baseline \
+  --variant current-rotation \
+  --intent absolutforge/features/my-feature/feature-brief.md \
+  --gates absolutforge/features/my-feature/feature-brief.md \
+  --output-dir /private/tmp/absolutforge-benchmarks
+```
+
+When capture was explicitly requested, the Codex mapping runs `start` before
+the Build-owner handoff and `finish` after release-ready independent Review.
+Transient state is stored below the repository's Git directory, so it neither
+dirties checkpoints nor enters commits. Owner rotations, Luna workers,
+corrections and separate Review sessions are included. Only `session_meta`,
+`turn_context` and `token_usage_record` lines are parsed; prompt/message records
+are ignored and never copied into output.
+
+This adapter targets the currently observed Codex session format and is not a
+public OpenAI log-format contract. It fails closed on unknown shapes or counters
+that move backwards. Keep a benchmarked repository isolated from other Codex
+work until the run finishes. Other hosts still require their own adapters or a
+sanitized export accepted by `benchmark_runs.py`.
 
 ## Read-only artifact projection
 

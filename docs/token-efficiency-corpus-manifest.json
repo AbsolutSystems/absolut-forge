@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "selection_status": "blocked",
+  "required_entry_count": {"minimum": 10, "maximum": 20},
+  "reason": "This repository retains one complete feature execution. External historical feature artifacts or purpose-built replay fixtures are required before baseline capture.",
+  "entries": [
+    {
+      "feature_id": "token-efficient-runtime",
+      "size": "large",
+      "strategy": "planned",
+      "brief": "absolutforge/features/token-efficient-runtime/feature-brief.md",
+      "execution_artifact": "absolutforge/features/token-efficient-runtime/implementation-plan.md",
+      "replayable": true
+    }
+  ]
+}

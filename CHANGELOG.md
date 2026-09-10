@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-09-10
+
+### Added
+
+- A versioned, secret-redacted benchmark run schema and read-only aggregator
+  now report accepted-feature and per-role measured token totals while keeping
+  estimated and unavailable counters distinct.
+- Opt-in Codex capture now snapshots cumulative session counters around Build,
+  includes owner, Luna worker, correction and independent Review usage, and
+  writes validated JSON outside feature artifacts and Git.
+
+### Changed
+
+- The runtime benchmark documentation now defines controlled paired runs,
+  correction attribution, acceptance gating and the external-history corpus
+  requirement before rotation or routing experiments begin.
+
+### Fixed
+
+- Codex launchers and nested Build owners now invoke `spawn_agent` directly
+  with the exact model and effort. An active-agent inventory containing only
+  `/root` no longer causes a false "Luna unavailable" stop before dispatch is
+  attempted.
+
 ## [0.10.0] - 2026-09-09
 
 ### Changed
@@ -44,10 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codex Review now requests a fresh Astra reviewer explicitly, with fresh Sol
   as its high-capability fallback, instead of leaving reviewer capability to an
   inherited generic-agent default.
-- Codex Build owners now attempt native exact-profile Luna dispatch before
-  declaring bounded worker execution unavailable; being launched as a nested
-  owner no longer qualifies as a fallback reason.
-
 ## [0.9.1] - 2026-09-07
 
 ### Changed
